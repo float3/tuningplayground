@@ -14,7 +14,7 @@ default = ["console_error_panic_hook"]
 wasm-bindgen = "0.2.91"
 tuning_systems = { path= "../" }
 console_error_panic_hook = { version = "0.1.6", optional = true } # greater code size but forward panics to console
-wee_alloc = { version = "0.4.5", optional = true } # smaller code size but smaller 
+# wee_alloc = { version = "0.4.5", optional = true } # smaller code size but smaller 
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.41"
