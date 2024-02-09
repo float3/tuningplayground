@@ -3,13 +3,14 @@ name = "tuning_systems"
 version = "0.1.0"
 authors = ["hill <hill@hilll.dev>"]
 edition = "2021"
+license = "AGPL-3.0"
+description = "a crate that provides ratios for different musical tuning systems"
+repository = "https://github.com/float3/tuning_systems"
+keywords = ["music", "tuning"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-[workspace]
-members=["tuning_systems-wasm"]
 
 [profile.release]
 opt-level = "s"
