@@ -157,7 +157,6 @@ function playFrequencyToneJS(frequency: number, volume: number): void {
   synth.triggerAttackRelease(frequency, "8n");
 }
 
-// TODO: use piano sample instead of synth
 
 function playFrequencyNative(
   frequency: number,
@@ -224,20 +223,6 @@ function getRatioFromStepAlgorithm(n: number, stepsize: number, max: number) {
 
 
 
-// TODO: unused tables: just_intonation_24, indian_scale, indian_scale_full, five_limit
-// TODO: different equal temeperaments?
-// TODO: arabic scales
-// TODO: visualise keyboard
-// TODO: japanese/chinese scales
-// TODO: MIDI file playing
-// TODO: calculate co primes for base size and let user choose one of them??
-// TODO: tell user about VPMK
-// TODO: add a record button to record and output midi
-// TODO: have tuning system with just_intonation but derrive half of the ratios from the reverse ratio of the first one so the perfect fifth also provides the perfect fourth and the major third also provides minor 6th
-
-
-
-
 
 
 const step_method_1: FractionTable = {
@@ -254,7 +239,6 @@ const step_method_11: FractionTable = {
 
 
 
-// TODO: implement Midi player
 
 const keyboard: Record<string, number> = {
   //TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts

@@ -1,4 +1,7 @@
-struct Fraction(i32, i32);
+use crate::tuning_systems::TuningSystem;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Fraction(pub i32, pub i32);
 
 impl From<Fraction> for f64 {
     fn from(num: Fraction) -> f64 {
@@ -10,6 +13,23 @@ impl From<(i32, i32)> for Fraction {
     fn from(nums: (i32, i32)) -> Fraction {
         Fraction(nums.0, nums.1)
     }
+}
+
+pub fn access_lut(tuning_sytem: TuningSystem, index: usize) -> Fraction {
+    let lut: &[Fraction] = match tuning_sytem {
+        TuningSystem::JustIntonation => &JUST_INTONATION,
+        TuningSystem::JustIntonation24 => &JUST_INTONATION_24,
+        TuningSystem::PythogoreanTuning => &PYTHOGREAN_TUNING,
+        TuningSystem::FiveLimit => &FIVE_LIMIT,
+        TuningSystem::ElevenLimit => &ELEVEN_LIMIT,
+        TuningSystem::FortyThreeTone => &FORTYTHREE_TONE,
+        TuningSystem::Indian => &INDIAN_SCALE,
+        TuningSystem::IndianFull => &INDIAN_SCALE_FULL,
+
+        TuningSystem::StepMethod | TuningSystem::EqualTemperament => panic!(),
+    };
+
+    lut[index % lut.len()]
 }
 
 const JUST_INTONATION: [Fraction; 12] = [

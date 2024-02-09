@@ -1,4 +1,4 @@
 mod algorithms;
+pub mod luts;
 mod math_helpers;
-mod tables;
-mod tuning_systems;
+pub mod tuning_systems;
