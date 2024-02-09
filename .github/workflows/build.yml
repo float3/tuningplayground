@@ -33,7 +33,7 @@ jobs:
         with:
           name: website
           path: |
-            tunning_system-wasm/www/dist/
+            tunning_system-wasm/pkg/
 
       - name: Trigger Github Pages
         uses: peter-evans/repository-dispatch@v1
