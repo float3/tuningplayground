@@ -1,4 +1,4 @@
-use crate::fraction;
+use super::fraction;
 
 pub const JUST_INTONATION: [fraction::Fraction; 12] = [
     fraction::Fraction(1, 1),

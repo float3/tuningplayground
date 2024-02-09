@@ -1,4 +1,5 @@
-use crate::{algorithms, fraction, luts};
+use super::{algorithms, fraction, luts};
+
 pub enum TuningSystem {
     JustIntonation,
     JustIntonation24,
@@ -20,19 +21,12 @@ pub enum TuningSystem {
 
 pub fn get_ratio(tuning_sytem: TuningSystem, index: usize, size: Option<u32>) -> f64 {
     match tuning_sytem {
-        TuningSystem::JustIntonation
-        | TuningSystem::JustIntonation24
-        | TuningSystem::PythogoreanTuning
-        | TuningSystem::FiveLimit
-        | TuningSystem::ElevenLimit
-        | TuningSystem::FortyThreeTone
-        | TuningSystem::Indian
-        | TuningSystem::IndianFull => get_ratio_from_table(tuning_sytem, index).into(),
         TuningSystem::StepMethod => todo!(),
         TuningSystem::EqualTemperament => algorithms::equal_temperament(
             index as u32,
             size.expect("you have to provide a size when using this tuning system"),
         ),
+        _ => get_ratio_from_table(tuning_sytem, index).into(),
     }
 }
 
