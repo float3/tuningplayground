@@ -25,8 +25,8 @@ jobs:
           cd tuning_systems-wasm
           wasm-pack build
           cd www
-          npm install
-          npm run build
+          #npm install
+          #npm run build
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
