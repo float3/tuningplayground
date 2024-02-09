@@ -24,7 +24,7 @@ jobs:
           cargo build
           cd tuning_systems-wasm
           wasm-pack build
-          cd www
+          #cd www
           #npm install
           #npm run build
 
