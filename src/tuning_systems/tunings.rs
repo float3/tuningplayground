@@ -1,4 +1,5 @@
 use super::{algorithms, fraction, luts};
+use std::str::FromStr;
 
 pub enum TuningSystem {
     JustIntonation,
@@ -17,6 +18,25 @@ pub enum TuningSystem {
     //ethnic scales
     Indian,
     IndianFull,
+}
+
+impl FromStr for TuningSystem {
+    type Err = ();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "JustIntonation" => Ok(TuningSystem::JustIntonation),
+            "JustIntonation24" => Ok(TuningSystem::JustIntonation24),
+            "StepMethod" => Ok(TuningSystem::StepMethod),
+            "EqualTemperament" => Ok(TuningSystem::EqualTemperament),
+            "PythogoreanTuning" => Ok(TuningSystem::PythogoreanTuning),
+            "FiveLimit" => Ok(TuningSystem::FiveLimit),
+            "ElevenLimit" => Ok(TuningSystem::ElevenLimit),
+            "FortyThreeTone" => Ok(TuningSystem::FortyThreeTone),
+            "Indian" => Ok(TuningSystem::Indian),
+            "IndianFull" => Ok(TuningSystem::IndianFull),
+            _ => Err(()),
+        }
+    }
 }
 
 pub fn get_ratio(tuning_sytem: TuningSystem, index: usize, size: Option<u32>) -> f64 {
