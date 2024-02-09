@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: |
           cargo build
-          cd tuning_system-wasm
+          cd tuning_systems-wasm
           wasm-pack build
           cd www
           npm install
