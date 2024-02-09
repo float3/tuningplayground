@@ -2,13 +2,13 @@ struct Fraction(i32, i32);
 
 impl From<Fraction> for f64 {
     fn from(num: Fraction) -> f64 {
-        return num.0 as f64 / num.1 as f64;
+        num.0 as f64 / num.1 as f64
     }
 }
 
 impl From<(i32, i32)> for Fraction {
     fn from(nums: (i32, i32)) -> Fraction {
-        return Fraction(nums.0, nums.1);
+        Fraction(nums.0, nums.1)
     }
 }
 
