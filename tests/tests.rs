@@ -1,8 +1,17 @@
 #[cfg(test)]
-use tuning_systems::{luts, tuning_systems::TuningSystem};
-
 #[test]
 fn test_octave() {
-    let ratio = luts::access_lut(TuningSystem::JustIntonation, 12);
-    assert_eq!(ratio, luts::Fraction(1, 1));
+    use tuning_systems::{
+        fraction,
+        tuning_systems::{get_ratio, TuningSystem},
+    };
+
+    let twoone = fraction::Fraction(2, 1).into();
+
+    let ratio = get_ratio(TuningSystem::JustIntonation, 12, None);
+    assert_eq!(ratio, twoone);
+    let ratio = get_ratio(TuningSystem::JustIntonation24, 24, None);
+    assert_eq!(ratio, twoone);
+    let ratio = get_ratio(TuningSystem::EqualTemperament, 12, Some(12));
+    assert_eq!(ratio, twoone);
 }
