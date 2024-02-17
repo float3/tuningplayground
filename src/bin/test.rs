@@ -1,7 +1,11 @@
+use tuning_systems::Fraction;
+use tuning_systems::Tone;
+
 fn main() {
-    use tuning_systems::Fraction;
-    let tone = tuning_systems::Tone::new("C", Fraction::new(1, 1), 4, 0);
-    println!("Tone: {}", tone.fraction().numerator);
-    println!("Tone: {}", tone.frequency());
-    println!("Tone: {}", tone.fraction().numerator);
+    let tone = Tone::new("C", Fraction::new(1, 1), 1, 0);
+    println!("tone: {:?}", tone);
+    let tone = Tone::new("C", Fraction::new(1, 1), 2, 0);
+    println!("tone: {:?}", tone);
+    let tone = Tone::new("C", Fraction::new(1, 1), 3, 0);
+    println!("tone: {:?}", tone);
 }

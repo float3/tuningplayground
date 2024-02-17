@@ -1,9 +1,8 @@
-use std::ops::Mul;
-
 use crate::{Fraction, A0, OCTAVE_SIZE};
 
 use super::algorithms::equal_temperament;
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct Tone {
     name: String,
     fraction: Fraction,
@@ -14,7 +13,9 @@ pub struct Tone {
 
 impl Tone {
     pub fn new(name: &str, mut fraction: Fraction, octave: u32, tone_index: u32) -> Tone {
-        fraction.numerator += 2u32.pow(octave) * fraction.denominator;
+        println!("fraction: {:?}", fraction);
+        fraction.numerator += (2u32.pow(octave) - 1) * fraction.denominator;
+        println!("fraction: {:?}", fraction);
         Tone {
             name: name.to_string(),
             fraction,
@@ -68,6 +69,6 @@ impl Tone {
 
     pub fn frequency(&self) -> f64 {
         let ratio: f64 = self.fraction.into();
-        A0.mul(ratio)
+        *A0 * ratio
     }
 }
