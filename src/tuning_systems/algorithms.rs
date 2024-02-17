@@ -9,5 +9,5 @@ pub fn equal_temperament_12(tone: u32) -> Fraction {
 }
 
 pub fn equal_temperament_default(tone: u32) -> Fraction {
-    equal_temperament(tone, *OCTAVE_SIZE)
+    equal_temperament(tone, OCTAVE_SIZE)
 }
