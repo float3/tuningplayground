@@ -67,7 +67,7 @@ impl Tone {
     }
 
     pub fn frequency(&self) -> f64 {
-        let mut ratio: Fraction = self.fraction;
-        A0.mul(ratio.into() as f64)
+        let ratio: f64 = self.fraction.into();
+        A0.mul(ratio)
     }
 }
