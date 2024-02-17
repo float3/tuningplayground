@@ -1,5 +1,9 @@
 use crate::Fraction;
 
+pub const TWELVE_TONE_NAMES: [&str; 12] = [
+    "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B",
+];
+
 pub const JUST_INTONATION: [Fraction; 12] = [
     Fraction(1, 1),
     Fraction(17, 16),
@@ -150,18 +154,30 @@ pub const FORTYTHREE_TONE: [Fraction; 43] = [
     Fraction(160, 81),
 ];
 
-pub const INDIAN_SCALE: [Fraction; 8] = [
+// an array of strings same length as INDIA_SCALE
+pub const INDIAN_SCALE_NAMES: [&str; 7] = ["Sa", "Re", "Ga", "Ma", "Pa", "Dha", "Ni"];
+
+pub const INDIAN_SCALE: [Fraction; 7] = [
     Fraction(1, 1),
     Fraction(9, 8),
     Fraction(5, 4),
     Fraction(4, 3),
     Fraction(3, 2),
     Fraction(5, 3),
+    Fraction(15, 8),
+];
+
+pub const INDIA_SCALE_ALT: [Fraction; 7] = [
+    Fraction(1, 1),
+    Fraction(9, 8),
+    Fraction(5, 4),
+    Fraction(4, 3),
+    Fraction(3, 2),
     Fraction(27, 16),
     Fraction(15, 8),
 ];
 
-pub const INDIAN_SCALE_FULL: [Fraction; 22] = [
+pub const INDIAN_SCALE_22: [Fraction; 22] = [
     Fraction(1, 1),
     Fraction(256, 243),
     Fraction(16, 15),
