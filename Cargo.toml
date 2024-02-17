@@ -1,6 +1,6 @@
 [package]
 name = "tuning_systems"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["hill <hill@hilll.dev>"]
 edition = "2021"
 license = "AGPL-3.0"
@@ -14,7 +14,7 @@ keywords = ["music", "tuning"]
 lazy_static = "1.4.0"
 
 [profile.release]
-opt-level = "s"
+#opt-level = "s"
 
 [workspace]
 members = ["tuning_systems-wasm"]
