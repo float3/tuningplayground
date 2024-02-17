@@ -65,7 +65,7 @@ fn get_ratio_from_table(tuning_sytem: TuningSystem, index: usize) -> Fraction {
     };
     let len = lut.len();
 
-    let octaves = (index / len) as i32;
+    let octaves = (index / len) as u32;
     let mut ratio = lut[index % len];
     ratio.0 += ratio.1 * octaves;
     ratio

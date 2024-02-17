@@ -1,5 +1,5 @@
 #[allow(dead_code)]
-fn find_coprimes(num: i32) -> Vec<i32> {
+fn find_coprimes(num: u32) -> Vec<u32> {
     let mut coprimes = Vec::new();
 
     for i in 2..num {
@@ -11,7 +11,7 @@ fn find_coprimes(num: i32) -> Vec<i32> {
     coprimes
 }
 
-fn gcd(mut a: i32, mut b: i32) -> i32 {
+fn gcd(mut a: u32, mut b: u32) -> u32 {
     while b != 0 {
         let t = b;
         b = a % b;

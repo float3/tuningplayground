@@ -1,5 +1,5 @@
-use crate::OCTAVE_SIZE;
+use crate::{Fraction, OCTAVE_SIZE};
 
-pub fn equal_temperament(tone: u32) -> f64 {
-    2f64.powf(tone as f64 / OCTAVE_SIZE.clone() as f64)
+pub fn equal_temperament(tone: u32) -> Fraction {
+    Fraction::new_with_base(tone, *OCTAVE_SIZE, 2)
 }

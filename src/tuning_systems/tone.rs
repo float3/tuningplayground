@@ -3,13 +3,13 @@ use crate::Fraction;
 pub struct Tone {
     name: String,
     ratio: Fraction,
-    octave: i32,
+    octave: u32,
     cents: f64,
     frequency: f64,
 }
 
 impl Tone {
-    pub fn new(name: &str, ratio: Fraction, octave: i32, cents: f64, frequency: f64) -> Tone {
+    pub fn new(name: &str, ratio: Fraction, octave: u32, cents: f64, frequency: f64) -> Tone {
         Tone {
             name: name.to_string(),
             ratio,
@@ -27,7 +27,7 @@ impl Tone {
         self.ratio
     }
 
-    pub fn octave(&self) -> i32 {
+    pub fn octave(&self) -> u32 {
         self.octave
     }
 
