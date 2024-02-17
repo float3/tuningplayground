@@ -33,10 +33,10 @@ impl Fraction {
 
 impl From<Fraction> for f64 {
     fn from(num: Fraction) -> f64 {
-        if (num.base == 0) {
-            return num.denominator as f64 / num.numerator as f64;
+        if num.base == 0 {
+            num.denominator as f64 / num.numerator as f64
         } else {
-            return (num.base as f64).powf(num.denominator as f64 / num.numerator as f64);
+            (num.base as f64).powf(num.denominator as f64 / num.numerator as f64)
         }
     }
 }

@@ -1,21 +1,23 @@
 use crate::Fraction;
 
+use super::algorithms::equal_temperament;
+
 pub struct Tone {
     name: String,
     ratio: Fraction,
     octave: u32,
-    cents: f64,
-    frequency: f64,
+    octave_size: u32,
+    tone_index: u32,
 }
 
 impl Tone {
-    pub fn new(name: &str, ratio: Fraction, octave: u32, cents: f64, frequency: f64) -> Tone {
+    pub fn new(name: &str, ratio: Fraction, octave: u32, tone_index: u32) -> Tone {
         Tone {
             name: name.to_string(),
             ratio,
             octave,
-            cents,
-            frequency,
+            octave_size: 12,
+            tone_index,
         }
     }
 
@@ -31,11 +33,22 @@ impl Tone {
         self.octave
     }
 
+    pub fn octave_size(&self) -> u32 {
+        self.octave_size
+    }
+
+    pub fn tone_index(&self) -> u32 {
+        self.tone_index
+    }
+
     pub fn cents(&self) -> f64 {
-        self.cents
+        let reference_freq: f64 = equal_temperament(self.tone_index, self.octave_size).into();
+        let comparison_freq: f64 = self.frequency();
+        1200f64 * (comparison_freq / reference_freq).log2()
     }
 
     pub fn frequency(&self) -> f64 {
-        self.frequency
+        let ratio: f64 = self.ratio.into();
+        ratio + 2f64.powf(self.octave as f64)
     }
 }
