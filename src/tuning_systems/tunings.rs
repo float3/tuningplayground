@@ -38,7 +38,7 @@ impl FromStr for TuningSystem {
         }
     }
 }
-
+/*
 pub fn get_ratio(tuning_sytem: TuningSystem, index: usize, size: Option<u32>) -> f64 {
     match tuning_sytem {
         TuningSystem::StepMethod => todo!(),
@@ -50,8 +50,8 @@ pub fn get_ratio(tuning_sytem: TuningSystem, index: usize, size: Option<u32>) ->
     }
 }
 
-fn get_ratio_from_table(tuning_sytem: TuningSystem, index: usize) -> fraction::Fraction {
-    let lut: &[fraction::Fraction] = match tuning_sytem {
+fn get_ratio_from_table(tuning_sytem: TuningSystem, index: usize) -> Fraction {
+    let lut: &[Fraction] = match tuning_sytem {
         TuningSystem::JustIntonation => &luts::JUST_INTONATION,
         TuningSystem::JustIntonation24 => &luts::JUST_INTONATION_24,
         TuningSystem::PythogoreanTuning => &luts::PYTHOGREAN_TUNING,
@@ -70,3 +70,4 @@ fn get_ratio_from_table(tuning_sytem: TuningSystem, index: usize) -> fraction::F
     ratio.0 += ratio.1 * octaves;
     ratio
 }
+*/
