@@ -30,6 +30,5 @@ fn test_et() {
 
 fn construct_et_tone(index: u32) -> Tone {
     let frac: Fraction = equal_temperament_12(index);
-    let tone = Tone::new(frac, index);
-    tone
+    Tone::new(frac, index)
 }
