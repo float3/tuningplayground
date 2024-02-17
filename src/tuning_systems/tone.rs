@@ -1,6 +1,4 @@
-use crate::{Fraction, CN1, OCTAVE_SIZE};
-
-use super::{algorithms::equal_temperament, luts::TWELVE_TONE_NAMES};
+use crate::{equal_temperament, Fraction, CN1, OCTAVE_SIZE, TWELVE_TONE_NAMES};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Tone {

@@ -1,5 +1,10 @@
 use std::str::FromStr;
 
+use crate::{
+    equal_temperament, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
+    INDIAN_SCALE_22, JUST_INTONATION, JUST_INTONATION_24, PYTHOGREAN_TUNING,
+};
+
 pub enum TuningSystem {
     JustIntonation,
     JustIntonation24,
@@ -37,28 +42,29 @@ impl FromStr for TuningSystem {
         }
     }
 }
-/*
+
 pub fn get_ratio(tuning_sytem: TuningSystem, index: usize, size: Option<u32>) -> f64 {
     match tuning_sytem {
         TuningSystem::StepMethod => todo!(),
-        TuningSystem::EqualTemperament => algorithms::equal_temperament(
+        TuningSystem::EqualTemperament => equal_temperament(
             index as u32,
             size.expect("you have to provide a size when using this tuning system"),
-        ),
+        )
+        .into(),
         _ => get_ratio_from_table(tuning_sytem, index).into(),
     }
 }
 
 fn get_ratio_from_table(tuning_sytem: TuningSystem, index: usize) -> Fraction {
     let lut: &[Fraction] = match tuning_sytem {
-        TuningSystem::JustIntonation => &luts::JUST_INTONATION,
-        TuningSystem::JustIntonation24 => &luts::JUST_INTONATION_24,
-        TuningSystem::PythogoreanTuning => &luts::PYTHOGREAN_TUNING,
-        TuningSystem::FiveLimit => &luts::FIVE_LIMIT,
-        TuningSystem::ElevenLimit => &luts::ELEVEN_LIMIT,
-        TuningSystem::FortyThreeTone => &luts::FORTYTHREE_TONE,
-        TuningSystem::Indian => &luts::INDIAN_SCALE,
-        TuningSystem::IndianFull => &luts::INDIAN_SCALE_FULL,
+        TuningSystem::JustIntonation => &JUST_INTONATION,
+        TuningSystem::JustIntonation24 => &JUST_INTONATION_24,
+        TuningSystem::PythogoreanTuning => &PYTHOGREAN_TUNING,
+        TuningSystem::FiveLimit => &FIVE_LIMIT,
+        TuningSystem::ElevenLimit => &ELEVEN_LIMIT,
+        TuningSystem::FortyThreeTone => &FORTYTHREE_TONE,
+        TuningSystem::Indian => &INDIAN_SCALE,
+        TuningSystem::IndianFull => &INDIAN_SCALE_22,
 
         TuningSystem::StepMethod | TuningSystem::EqualTemperament => panic!(),
     };
@@ -66,7 +72,6 @@ fn get_ratio_from_table(tuning_sytem: TuningSystem, index: usize) -> Fraction {
 
     let octaves = (index / len) as u32;
     let mut ratio = lut[index % len];
-    ratio.0 += ratio.1 * octaves;
+    ratio.numerator += ratio.denominator * octaves;
     ratio
 }
-*/
