@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 cargo build --release
-cargo build --release --features wasm-bindgen
+#cargo build --release --features wasm-bindgen
 cd tuning_systems-wasm
 wasm-pack build --target web --release

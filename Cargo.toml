@@ -16,10 +16,10 @@ opt-level = "z"
 
 [features]
 default = []
-wasm-bindgen = ["dep:wasm-bindgen"]
+#wasm-bindgen = ["dep:wasm-bindgen"]
 
-[dependencies]
-wasm-bindgen = { version = "0.2.91", optional = true }
+#[dependencies]
+#wasm-bindgen = { version = "0.2.91", optional = true }
 
-[dev-dependencies]
-wasm-bindgen-test = "0.3.41"
+#[dev-dependencies]
+#wasm-bindgen-test = "0.3.41"
