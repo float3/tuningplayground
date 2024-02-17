@@ -1,8 +1,11 @@
 [package]
-name = "tuning_systems-wasm"
-version = "0.1.0"
 authors = ["hill <hill@hilll.dev>"]
+description = "expose tuning_systems to wasm"
 edition = "2021"
+license = "AGPL-3.0"
+name = "tuning_systems-wasm"
+repository = "https://github.com/float3/tuning_systems"
+version = "0.1.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
