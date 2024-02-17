@@ -1,22 +1,41 @@
-use crate::Fraction;
+use std::ops::Mul;
 
-use super::algorithms::equal_temperament;
+use crate::{Fraction, A0, OCTAVE_SIZE};
+
+use super::{algorithms::equal_temperament, fraction};
 
 pub struct Tone {
     name: String,
-    ratio: Fraction,
+    fraction: Fraction,
     octave: u32,
     octave_size: u32,
     tone_index: u32,
 }
 
 impl Tone {
-    pub fn new(name: &str, ratio: Fraction, octave: u32, tone_index: u32) -> Tone {
+    pub fn new(name: &str, mut fraction: Fraction, octave: u32, tone_index: u32) -> Tone {
+        fraction.numerator += 2u32.pow(octave) * fraction.denominator;
         Tone {
             name: name.to_string(),
-            ratio,
+            fraction: fraction,
             octave,
-            octave_size: 12,
+            octave_size: *OCTAVE_SIZE,
+            tone_index,
+        }
+    }
+
+    pub fn new_with_octave_size(
+        name: &str,
+        fraction: Fraction,
+        octave: u32,
+        octave_size: u32,
+        tone_index: u32,
+    ) -> Tone {
+        Tone {
+            name: name.to_string(),
+            fraction: fraction,
+            octave,
+            octave_size,
             tone_index,
         }
     }
@@ -25,8 +44,8 @@ impl Tone {
         &self.name
     }
 
-    pub fn ratio(&self) -> Fraction {
-        self.ratio
+    pub fn fraction(&self) -> Fraction {
+        self.fraction
     }
 
     pub fn octave(&self) -> u32 {
@@ -48,7 +67,7 @@ impl Tone {
     }
 
     pub fn frequency(&self) -> f64 {
-        let ratio: f64 = self.ratio.into();
-        ratio + 2f64.powf(self.octave as f64)
+        let mut ratio: Fraction = self.fraction;
+        A0.mul(ratio.into() as f64)
     }
 }

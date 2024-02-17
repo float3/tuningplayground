@@ -1,8 +1,8 @@
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Fraction {
-    numerator: u32,
-    denominator: u32,
-    base: u32,
+    pub numerator: u32,
+    pub denominator: u32,
+    pub base: u32,
 }
 
 impl Fraction {

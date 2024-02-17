@@ -1,11 +1,11 @@
 mod algorithms;
+mod config;
 mod fraction;
 mod helpers;
 mod luts;
-mod state;
 mod tone;
 mod tunings;
+pub use config::*;
 pub use fraction::*;
-pub use state::*;
 pub use tone::*;
 pub use tunings::*;
