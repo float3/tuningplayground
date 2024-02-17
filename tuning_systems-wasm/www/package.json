@@ -1,0 +1,41 @@
+{
+    "name": "tuning_systems-wasm",
+    "version": "0.1.0",
+    "description": "tuning_systems",
+    "main": "index.js",
+    "bin": {
+        "create-wasm-app": ".bin/create-wasm-app.js"
+    },
+    "scripts": {
+        "build": "webpack --config webpack.config.js",
+        "start": "webpack-dev-server"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rustwasm/create-wasm-app.git"
+    },
+    "keywords": [
+        "webassembly",
+        "wasm",
+        "rust",
+        "webpack"
+    ],
+    "author": "hill <hill@hilll.dev>",
+    "license": "",
+    "bugs": {
+        "url": "https://github.com/rustwasm/create-wasm-app/issues"
+    },
+    "homepage": "https://github.com/rustwasm/create-wasm-app#readme",
+    "dependencies": {
+        "@types/webmidi": "^2.0.10",
+        "tone": "^14.7.77",
+        "tuning_systems-wasm": "file:../pkg"
+    },
+    "devDependencies": {
+        "copy-webpack-plugin": "^12.0.2",
+        "hello-wasm-pack": "^0.1.0",
+        "webpack": "^5.90.2",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.2"
+    }
+}
