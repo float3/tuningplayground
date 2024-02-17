@@ -2,7 +2,7 @@ use std::ops::Mul;
 
 use crate::{Fraction, A0, OCTAVE_SIZE};
 
-use super::{algorithms::equal_temperament, fraction};
+use super::algorithms::equal_temperament;
 
 pub struct Tone {
     name: String,
@@ -17,7 +17,7 @@ impl Tone {
         fraction.numerator += 2u32.pow(octave) * fraction.denominator;
         Tone {
             name: name.to_string(),
-            fraction: fraction,
+            fraction,
             octave,
             octave_size: *OCTAVE_SIZE,
             tone_index,
@@ -33,7 +33,7 @@ impl Tone {
     ) -> Tone {
         Tone {
             name: name.to_string(),
-            fraction: fraction,
+            fraction,
             octave,
             octave_size,
             tone_index,
