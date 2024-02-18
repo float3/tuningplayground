@@ -4,6 +4,6 @@ cargo build --release
 cd tuning_systems-wasm
 wasm-pack build --target web --release
 cd www
-tsc
 npm install
+tsc
 npm run build
