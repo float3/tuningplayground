@@ -9,7 +9,7 @@
     "scripts": {
         "help": "webpack --help",
         "build": "webpack --config dist/webpack.config.js",
-        "bulildev": "webpack --config dist/webpack.config.js --mode development",
+        "builddev": "webpack --config dist/webpack.config.js --mode development",
         "serve": "webpack-dev-server --config dist/webpack.config.js --mode development"
     },
     "repository": {

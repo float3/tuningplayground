@@ -7,8 +7,10 @@ name = "tuning_systems-wasm"
 repository = "https://github.com/float3/tuning_systems"
 version = "0.1.0"
 
-[profile.release]
+[profile.wasm-release]
+inherits = "release"
 opt-level = "z"
+strip = true
 
 [lib]
 crate-type = ["cdylib", "rlib"]
