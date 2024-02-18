@@ -30,3 +30,13 @@ wee_alloc = { version = "0.4.5", optional = true, features = [
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.41"
+
+
+[package.metadata.wasm-pack.profile.dev]
+wasm-opt = ['-0s']
+
+[package.metadata.wasm-pack.profile.dev.wasm-bindgen]
+debug-js-glue = false
+demangle-name-section = false
+dwarf-debug-info = false
+omit-default-module-path = false
