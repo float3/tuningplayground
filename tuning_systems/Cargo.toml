@@ -8,8 +8,8 @@ name = "tuning_systems"
 repository = "https://github.com/float3/tuning_systems"
 version = "0.2.0"
 
-[workspace]
-members = ["tuning_systems-wasm"]
+#[workspace]
+#members = ["../tuning_systems-wasm"]
 
 [profile.release]
 opt-level = "z"

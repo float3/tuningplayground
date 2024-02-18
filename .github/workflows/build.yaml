@@ -31,7 +31,7 @@ jobs:
         run: |
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
           cd ./tuning_systems-wasm
-          wasm-pack build
+          wasm-pack build  --target web --release # --out-dir
           cd ../ts
           npm install
           npm install -g typescript
