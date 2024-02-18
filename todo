@@ -9,7 +9,7 @@
 // TODO: tell user about VPMK
 // TODO: add a record button to record and output midi
 // TODO: have tuning system with just_intonation but derrive half of the ratios from the reverse ratio of the first one so the perfect fifth also provides the perfect fourth and the major third also provides minor 6thi
-
+// TODO: turkish tuning
 
 
 // TODO: implement Midi player
