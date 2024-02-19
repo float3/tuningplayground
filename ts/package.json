@@ -8,7 +8,7 @@
     },
     "scripts": {
         "help": "webpack --help",
-        "build": "webpack --config dist/webpack.config.js",
+        "build": "webpack --config dist/webpack.config.js --mode production",
         "builddev": "webpack --config dist/webpack.config.js --mode development",
         "serve": "webpack-dev-server --config dist/webpack.config.js --mode development"
     },

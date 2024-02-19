@@ -8,7 +8,6 @@ module.exports = {
         filename: "bootstrap.js",
     },
     target: "web",
-    mode: "production",
     plugins: [
         new CopyPlugin({
             patterns: [
