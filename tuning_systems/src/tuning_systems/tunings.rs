@@ -2,16 +2,15 @@ use std::str::FromStr;
 
 use crate::{
     equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
-    INDIAN_SCALE_22, JUST_INTONATION, JUST_INTONATION_24, PYTHOGREAN_TUNING,
+    INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, PYTHOGREAN_TUNING,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
-    JustIntonation,
-    JustIntonation24,
-
     StepMethod,
     EqualTemperament,
 
+    JustIntonation,
+    JustIntonation24,
     PythogoreanTuning,
 
     FiveLimit,
@@ -21,7 +20,8 @@ pub enum TuningSystem {
 
     //ethnic scales
     Indian,
-    IndianFull,
+    IndianAlt,
+    Indian22,
 }
 
 impl FromStr for TuningSystem {
@@ -37,7 +37,7 @@ impl FromStr for TuningSystem {
             "ElevenLimit" => Ok(TuningSystem::ElevenLimit),
             "FortyThreeTone" => Ok(TuningSystem::FortyThreeTone),
             "Indian" => Ok(TuningSystem::Indian),
-            "IndianFull" => Ok(TuningSystem::IndianFull),
+            "IndianFull" => Ok(TuningSystem::Indian22),
             _ => Err(()),
         }
     }
@@ -60,7 +60,8 @@ fn get_fraction_from_table(tuning_sytem: TuningSystem, index: usize) -> Fraction
         TuningSystem::ElevenLimit => &ELEVEN_LIMIT,
         TuningSystem::FortyThreeTone => &FORTYTHREE_TONE,
         TuningSystem::Indian => &INDIAN_SCALE,
-        TuningSystem::IndianFull => &INDIAN_SCALE_22,
+        TuningSystem::IndianAlt => &INDIA_SCALE_ALT,
+        TuningSystem::Indian22 => &INDIAN_SCALE_22,
 
         TuningSystem::StepMethod | TuningSystem::EqualTemperament => panic!(),
     };

@@ -2,7 +2,8 @@
 // use wasm_bindgen::prelude::*;
 
 use crate::{
-    equal_temperament, get_fraction, Fraction, TuningSystem, CN1, OCTAVE_SIZE, TWELVE_TONE_NAMES,
+    equal_temperament, get_fraction, Fraction, TuningSystem, CN1, INDIAN_SCALE_NAMES, OCTAVE_SIZE,
+    TWELVE_TONE_NAMES,
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -29,7 +30,17 @@ impl Tone {
         octave_size: usize,
         tone_index: usize,
     ) -> Tone {
-        let name = TWELVE_TONE_NAMES[tone_index % octave_size]; // check what happens for negative tone_index
+        let name_index = tone_index % octave_size;
+
+        let name = match tuning_system {
+            TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
+            TuningSystem::JustIntonation
+            | TuningSystem::PythogoreanTuning
+            | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
+            TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[name_index],
+            _ => "TODO",
+        };
+
         let octave = tone_index / octave_size;
         let adjusted_octave: i32 = octave as i32 - 1;
         let name: String = if adjusted_octave < 0 {

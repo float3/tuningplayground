@@ -17,7 +17,6 @@ fn test_octave() {
 #[test]
 fn test_et() {
     let zero = construct_et_tone(0);
-
     assert_eq!(zero.name(), "CN1");
     assert_eq!(zero.octave(), 0);
     assert_eq!(zero.frequency(), 8.1758);
