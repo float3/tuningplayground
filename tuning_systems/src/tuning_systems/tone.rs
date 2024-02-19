@@ -2,7 +2,7 @@
 // use wasm_bindgen::prelude::*;
 
 use crate::{
-    equal_temperament, get_fraction, Fraction, TuningSystem, CN1, INDIAN_SCALE_NAMES, OCTAVE_SIZE,
+    equal_temperament, Fraction, TuningSystem, CN1, INDIAN_SCALE_NAMES, OCTAVE_SIZE,
     TWELVE_TONE_NAMES,
 };
 
@@ -48,7 +48,7 @@ impl Tone {
         } else {
             format!("{}{}", name, adjusted_octave)
         };
-        let mut fraction = get_fraction(tuning_system, tone_index);
+        let mut fraction = tuning_system.get_fraction(tone_index);
 
         if fraction.base == 0 {
             fraction.numerator += (2u32.pow(octave as u32) - 1) * fraction.denominator;

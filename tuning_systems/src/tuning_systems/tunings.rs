@@ -43,32 +43,39 @@ impl FromStr for TuningSystem {
     }
 }
 
-pub fn get_fraction(tuning_sytem: TuningSystem, index: usize) -> Fraction {
-    match tuning_sytem {
-        TuningSystem::StepMethod => todo!(),
-        TuningSystem::EqualTemperament => equal_temperament_default(index),
-        _ => get_fraction_from_table(tuning_sytem, index),
+impl TuningSystem {
+    pub fn get_fraction(&self, index: usize) -> Fraction {
+        match &self {
+            TuningSystem::StepMethod => todo!(),
+            TuningSystem::EqualTemperament => equal_temperament_default(index),
+            _ => self.get_fraction_from_table(index),
+        }
     }
-}
 
-fn get_fraction_from_table(tuning_sytem: TuningSystem, index: usize) -> Fraction {
-    let lut: &[Fraction] = match tuning_sytem {
-        TuningSystem::JustIntonation => &JUST_INTONATION,
-        TuningSystem::JustIntonation24 => &JUST_INTONATION_24,
-        TuningSystem::PythogoreanTuning => &PYTHOGREAN_TUNING,
-        TuningSystem::FiveLimit => &FIVE_LIMIT,
-        TuningSystem::ElevenLimit => &ELEVEN_LIMIT,
-        TuningSystem::FortyThreeTone => &FORTYTHREE_TONE,
-        TuningSystem::Indian => &INDIAN_SCALE,
-        TuningSystem::IndianAlt => &INDIA_SCALE_ALT,
-        TuningSystem::Indian22 => &INDIAN_SCALE_22,
+    fn get_fraction_from_table(&self, index: usize) -> Fraction {
+        let lut = self.get_lut_from_tuningsystem();
+        let len = lut.len();
 
-        TuningSystem::StepMethod | TuningSystem::EqualTemperament => panic!(),
-    };
-    let len = lut.len();
+        let octaves = (index / len) as u32;
+        let mut fration = lut[index % len];
+        fration.numerator += fration.denominator * octaves;
+        fration
+    }
 
-    let octaves = (index / len) as u32;
-    let mut fration = lut[index % len];
-    fration.numerator += fration.denominator * octaves;
-    fration
+    fn get_lut_from_tuningsystem(&self) -> &[Fraction] {
+        let lut: &[Fraction] = match self {
+            TuningSystem::JustIntonation => &JUST_INTONATION,
+            TuningSystem::JustIntonation24 => &JUST_INTONATION_24,
+            TuningSystem::PythogoreanTuning => &PYTHOGREAN_TUNING,
+            TuningSystem::FiveLimit => &FIVE_LIMIT,
+            TuningSystem::ElevenLimit => &ELEVEN_LIMIT,
+            TuningSystem::FortyThreeTone => &FORTYTHREE_TONE,
+            TuningSystem::Indian => &INDIAN_SCALE,
+            TuningSystem::IndianAlt => &INDIA_SCALE_ALT,
+            TuningSystem::Indian22 => &INDIAN_SCALE_22,
+
+            TuningSystem::StepMethod | TuningSystem::EqualTemperament => panic!(),
+        };
+        lut
+    }
 }

@@ -1,16 +1,16 @@
 extern crate tuning_systems;
 
-use tuning_systems::{get_fraction, Fraction, Tone, TuningSystem};
+use tuning_systems::{Fraction, Tone, TuningSystem};
 
 #[cfg(test)]
 #[test]
 fn test_octave() {
     let twoone: f64 = Fraction::new(2, 1).into();
-    let ratio: f64 = get_fraction(TuningSystem::JustIntonation, 12).into();
+    let ratio: f64 = TuningSystem::JustIntonation.get_fraction(12).into();
     assert_eq!(ratio, twoone);
-    let ratio: f64 = get_fraction(TuningSystem::JustIntonation24, 24).into();
+    let ratio: f64 = TuningSystem::JustIntonation24.get_fraction(24).into();
     assert_eq!(ratio, twoone);
-    let ratio: f64 = get_fraction(TuningSystem::EqualTemperament, 12).into();
+    let ratio: f64 = TuningSystem::EqualTemperament.get_fraction(12).into();
     assert_eq!(ratio, twoone);
 }
 
