@@ -3,7 +3,7 @@ authors = ["hill <hill@hilll.dev>"]
 description = "expose tuning_systems to wasm"
 edition = "2021"
 license = "AGPL-3.0"
-name = "tuning_systems-wasm"
+name = "playground"
 repository = "https://github.com/float3/tuning_systems"
 version = "0.1.0"
 
@@ -11,7 +11,7 @@ version = "0.1.0"
 crate-type = ["cdylib", "rlib"]
 
 [features]
-default = []
+default = ["mini-alloc"]
 console_error_panic_hook = ["dep:console_error_panic_hook"]
 mini-alloc = ["dep:mini-alloc"]
 

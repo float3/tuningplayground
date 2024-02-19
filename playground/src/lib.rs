@@ -15,6 +15,8 @@ pub fn set_panic_hook() {
 extern "C" {
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
+    #[wasm_bindgen(js_namespace = console)]
+    fn debug(s: &str);
 }
 
 #[wasm_bindgen]
@@ -28,5 +30,6 @@ pub fn get_frequency(tuning: &str, index: usize) -> f64 {
 
 #[wasm_bindgen]
 pub fn set_octave_size(size: usize) {
+    debug("set_octave_size");
     tuning_systems::set_octave_size(size)
 }

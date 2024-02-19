@@ -1,23 +1,28 @@
-import * as tuning_systems from "tuning_systems-wasm";
+console.debug("imports");
+import init, * as playground from "playground";
 import * as Tone from "tone";
 
+init(); //init wasm IMPORTANT
+
 var octave_size: HTMLInputElement;
+var tuning_select: HTMLSelectElement;
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (navigator.requestMIDIAccess) {
-        navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-    } else {
-        alert("Web MIDI is working.");
-    }
-    octave_size = document.getElementById("octave_size") as HTMLInputElement;
-    octave_size.onchange = () => {
-        tuning_systems.set_octave_size(parseInt(octave_size.value));
-    }
+console.debug("static");
+if (navigator.requestMIDIAccess) {
+    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+} else {
+    alert("Web MIDI is working.");
+}
 
-    console.log(keyboard[10]);
-});
+octave_size = document.getElementById("octave_size") as HTMLInputElement;
+tuning_select = document.getElementById("tuning_select") as HTMLSelectElement;
+
+octave_size.onchange = () => {
+    playground.set_octave_size(parseInt(octave_size.value));
+}
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess) {
+    console.debug("onMIDISuccess");
     const input = midiAccess.inputs.values().next().value;
 
     if (input) {
@@ -28,12 +33,14 @@ function onMIDISuccess(midiAccess: WebMidi.MIDIAccess) {
 }
 
 function onMIDIFailure(error: DOMException) {
+    console.debug("onMIDIFailure");
     console.error("MIDI Access failed:", error);
 }
 
 var recording: boolean;
 
 function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
+    console.debug("onMIDIMessage");
     const [status, note, velocity] = event.data;
     const isNoteOn = (status & 0xf0) === 0x90;
     const isNoteOff = (status & 0xf0) === 0x80;
@@ -41,11 +48,19 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
 }
 
 document.addEventListener("keydown", function (event) {
-    if (recording) { }
+    console.debug("keydown");
+    if (document.activeElement?.tagName === 'BODY') {
+        if (recording) { }
+        let tone_index: number = keyboard[event.code] + 24;
+        console.log(playground.get_frequency(tuning_select.value, tone_index));
+    }
 });
 
 document.addEventListener("keyup", function (event) {
-    if (recording) { }
+    console.debug("keyup");
+    if (document.activeElement?.tagName === 'BODY') {
+        if (recording) { }
+    }
 });
 
 const keyboard: Record<string, number> = {

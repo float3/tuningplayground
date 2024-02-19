@@ -10,7 +10,7 @@ cargo check
 
 cargo test
 
-cd tuning_systems-wasm
+cd playground
 cargo fmt --all
 
 cargo fix --allow-dirty --allow-staged
