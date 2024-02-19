@@ -1,5 +1,3 @@
-use tuning_systems::{equal_temperament_12, Fraction, Tone};
-
 fn main() {
     // construct_et_tone(0);
     // construct_et_tone(1);
@@ -25,7 +23,7 @@ fn main() {
     // println!("{}", CN1);
 }
 
-fn construct_et_tone(index: u32) {
+fn construct_et_tone(_index: u32) {
     // let frac: Fraction = equal_temperament_12(index);
     // let tone = Tone::new(frac, index);
     // println!("tone: {:?}", tone);

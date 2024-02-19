@@ -5,8 +5,6 @@ use crate::{
     equal_temperament, get_fraction, Fraction, TuningSystem, CN1, OCTAVE_SIZE, TWELVE_TONE_NAMES,
 };
 
-use super::tunings;
-
 #[derive(Clone, Debug, PartialEq)]
 // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
 pub struct Tone {
@@ -22,7 +20,7 @@ pub struct Tone {
 impl Tone {
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
     pub fn new(tuning_system: TuningSystem, tone_index: usize) -> Tone {
-        Tone::new_with_octave_size(tuning_system, OCTAVE_SIZE, tone_index)
+        Tone::new_with_octave_size(tuning_system, *OCTAVE_SIZE.lock().unwrap(), tone_index)
     }
 
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
@@ -31,7 +29,7 @@ impl Tone {
         octave_size: usize,
         tone_index: usize,
     ) -> Tone {
-        let name = TWELVE_TONE_NAMES[tone_index % OCTAVE_SIZE]; // check what happens for negative tone_index
+        let name = TWELVE_TONE_NAMES[tone_index % octave_size]; // check what happens for negative tone_index
         let octave = tone_index / octave_size;
         let adjusted_octave: i32 = octave as i32 - 1;
         let name: String = if adjusted_octave < 0 {

@@ -1,9 +1,8 @@
 use std::str::FromStr;
 
 use crate::{
-    equal_temperament, equal_temperament_default, Fraction, Tone, ELEVEN_LIMIT, FIVE_LIMIT,
-    FORTYTHREE_TONE, INDIAN_SCALE, INDIAN_SCALE_22, JUST_INTONATION, JUST_INTONATION_24,
-    PYTHOGREAN_TUNING,
+    equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
+    INDIAN_SCALE_22, JUST_INTONATION, JUST_INTONATION_24, PYTHOGREAN_TUNING,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
