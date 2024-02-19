@@ -1,6 +1,6 @@
 extern crate tuning_systems;
 
-use tuning_systems::{equal_temperament_12, get_fraction, Fraction, Tone, TuningSystem};
+use tuning_systems::{get_fraction, Fraction, Tone, TuningSystem};
 
 #[cfg(test)]
 #[test]
@@ -29,6 +29,5 @@ fn test_et() {
 }
 
 fn construct_et_tone(index: u32) -> Tone {
-    let frac: Fraction = equal_temperament_12(index);
-    Tone::new(frac, index)
+    Tone::new(TuningSystem::EqualTemperament, index as usize)
 }
