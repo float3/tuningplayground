@@ -30,17 +30,7 @@ impl Tone {
         octave_size: usize,
         tone_index: usize,
     ) -> Tone {
-        let name_index = tone_index % octave_size;
-
-        let name = match tuning_system {
-            TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
-            TuningSystem::JustIntonation
-            | TuningSystem::PythogoreanTuning
-            | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
-            TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[name_index],
-            _ => "TODO",
-        };
-
+        let name = tuning_system.get_tone_name(octave_size, tone_index);
         let octave = tone_index / octave_size;
         let adjusted_octave: i32 = octave as i32 - 1;
         let name: String = if adjusted_octave < 0 {

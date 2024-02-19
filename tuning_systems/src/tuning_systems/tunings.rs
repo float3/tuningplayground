@@ -2,7 +2,8 @@ use std::str::FromStr;
 
 use crate::{
     equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
-    INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, PYTHOGREAN_TUNING,
+    INDIAN_SCALE_22, INDIAN_SCALE_NAMES, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24,
+    PYTHOGREAN_TUNING, TWELVE_TONE_NAMES,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
@@ -77,5 +78,19 @@ impl TuningSystem {
             TuningSystem::StepMethod | TuningSystem::EqualTemperament => panic!(),
         };
         lut
+    }
+
+    pub fn get_tone_name(&self, octave_size: usize, tone_index: usize) -> &str {
+        let name_index = tone_index % octave_size;
+        match self {
+            TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
+            TuningSystem::EqualTemperament if octave_size == 6 => TWELVE_TONE_NAMES[name_index * 2],
+            TuningSystem::EqualTemperament if octave_size == 3 => TWELVE_TONE_NAMES[name_index * 4],
+            TuningSystem::JustIntonation
+            | TuningSystem::PythogoreanTuning
+            | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
+            TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[name_index],
+            _ => "TODO",
+        }
     }
 }
