@@ -30,13 +30,9 @@ jobs:
       - name: install wasm-pack
         run: |
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-          cd ./tuning_systems-wasm
-          wasm-pack build  --target web --release # --out-dir
-          cd ../ts
-          npm install
           npm install -g typescript
-          tsc
-          npm run build
+          sh ./build_release.sh
+          cd intentional_fail
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1

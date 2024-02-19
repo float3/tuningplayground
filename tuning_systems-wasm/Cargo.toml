@@ -7,11 +7,6 @@ name = "tuning_systems-wasm"
 repository = "https://github.com/float3/tuning_systems"
 version = "0.1.0"
 
-[profile.wasm-release]
-inherits = "release"
-opt-level = "z"
-strip = true
-
 [lib]
 crate-type = ["cdylib", "rlib"]
 
@@ -31,11 +26,23 @@ wee_alloc = { version = "0.4.5", optional = true, features = [
 [dev-dependencies]
 wasm-bindgen-test = "0.3.41"
 
+[profile.release]
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = true
+lto = true
+opt-level = "z"
+overflow-checks = false
+panic = "unwind"
+rpath = false
+split-debuginfo = "off"
+strip = "symbols"
 
-[package.metadata.wasm-pack.profile.dev]
-wasm-opt = ['-0s']
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-0z']
 
-[package.metadata.wasm-pack.profile.dev.wasm-bindgen]
+[package.metadata.wasm-pack.profile.release.wasm-bindgen]
 debug-js-glue = false
 demangle-name-section = false
 dwarf-debug-info = false
