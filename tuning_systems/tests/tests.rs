@@ -5,12 +5,12 @@ use tuning_systems::{get_fraction, Fraction, Tone, TuningSystem};
 #[cfg(test)]
 #[test]
 fn test_octave() {
-    let twoone = Fraction::new(2, 1).into();
-    let ratio = get_fraction(TuningSystem::JustIntonation, 12, None);
+    let twoone = Fraction::new(2, 1);
+    let ratio = get_fraction(TuningSystem::JustIntonation, 12);
     assert_eq!(ratio, twoone);
-    let ratio = get_fraction(TuningSystem::JustIntonation24, 24, None);
+    let ratio = get_fraction(TuningSystem::JustIntonation24, 24);
     assert_eq!(ratio, twoone);
-    let ratio = get_fraction(TuningSystem::EqualTemperament, 12, Some(12));
+    let ratio = get_fraction(TuningSystem::EqualTemperament, 12);
     assert_eq!(ratio, twoone);
 }
 

@@ -28,6 +28,5 @@ pub fn get_frequency(tuning: &str, index: usize) -> f64 {
 
 #[wasm_bindgen]
 pub fn set_octave_size(size: usize) {
-    let mut octave_size = tuning_systems::OCTAVE_SIZE.lock().unwrap();
-    *octave_size = size;
+    tuning_systems::set_octave_size(size)
 }

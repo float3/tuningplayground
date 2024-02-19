@@ -10,5 +10,7 @@ pub static A4: f64 = 440.0;
 pub static A0: f64 = A4 / 16.0;
 pub static AN1: f64 = A4 / 32.0;
 
-pub static TEST: u32 = 12;
-pub static TEST_LAZY: Mutex<u32> = Mutex::new(12);
+pub fn set_octave_size(size: usize) {
+    let mut octave_size = OCTAVE_SIZE.lock().unwrap();
+    *octave_size = size;
+}
