@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-pub static OCTAVE_SIZE: u32 = 12;
+pub static OCTAVE_SIZE: usize = 12;
 
 pub static C4: f64 = 261.6256;
 pub static C0: f64 = C4 / 16.0;

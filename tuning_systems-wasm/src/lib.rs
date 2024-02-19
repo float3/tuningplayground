@@ -1,4 +1,4 @@
-use tuning_systems::{self, TuningSystem};
+use tuning_systems::{self, Tone, TuningSystem};
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "mini-alloc")]
@@ -18,10 +18,15 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn get_ratio(tuning: &str, index: usize, size: u32) -> f64 {
+pub fn get_frequency(tuning: &str, index: usize) -> f64 {
     let tuning: Result<TuningSystem, _> = tuning.parse();
     match tuning {
-        Ok(tuning) => tuning_systems::get_ratio(tuning, index, Some(size)),
+        Ok(tuning) => Tone::new(tuning, index).frequency(),
         Err(_) => panic!("unknown tuning system"),
     }
+}
+
+#[wasm_bindgen]
+pub fn set_octave_size(size: usize) {
+    tuning_systems::C
 }
