@@ -32,7 +32,6 @@ jobs:
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
           npm install -g typescript
           sh ./build_release.sh
-          cd intentional_fail
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
