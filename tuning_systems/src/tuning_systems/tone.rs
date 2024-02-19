@@ -21,7 +21,7 @@ pub struct Tone {
 impl Tone {
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
     pub fn new(tuning_system: TuningSystem, tone_index: usize) -> Tone {
-        Tone::new_with_octave_size(tuning_system, *OCTAVE_SIZE.lock().unwrap(), tone_index)
+        Tone::new_with_octave_size(tuning_system, *OCTAVE_SIZE.read().unwrap(), tone_index)
     }
 
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
