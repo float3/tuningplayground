@@ -13,15 +13,14 @@ crate-type = ["cdylib", "rlib"]
 [features]
 default = []
 console_error_panic_hook = ["dep:console_error_panic_hook"]
-wee_alloc = ["dep:wee_alloc"]
+mini-alloc = ["dep:mini-alloc"]
 
 [dependencies]
 console_error_panic_hook = { version = "0.1.6", optional = true } # greater code size but forward panics to console
+mini-alloc = { version = "0.4.2", optional = true }
 tuning_systems = { path = "../tuning_systems" }
 wasm-bindgen = "0.2.91"
-wee_alloc = { version = "0.4.5", optional = true, features = [
-    "nightly",
-] } # smaller code size but slower
+#wee_alloc = { version = "0.4.5", optional = true, features = ["nightly",] } # smaller code size but slower
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.41"

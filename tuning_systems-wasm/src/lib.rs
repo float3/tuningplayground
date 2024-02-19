@@ -1,9 +1,9 @@
 use tuning_systems::{self, TuningSystem};
 use wasm_bindgen::prelude::*;
 
-#[cfg(feature = "wee_alloc")]
+#[cfg(feature = "mini-alloc")]
 #[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
 
 #[allow(dead_code)]
 pub fn set_panic_hook() {
