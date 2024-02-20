@@ -30,13 +30,17 @@
     "homepage": "https://github.com/float3/playground#readme",
     "dependencies": {
         "@types/webmidi": "^2.0.10",
-        "tone": "^14.7.77",
-        "playground": "file:../playground/pkg"
+        "playground": "file:../playground/pkg",
+        "tone": "^14.7.77"
     },
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^7.0.2",
+        "@typescript-eslint/parser": "^7.0.2",
         "copy-webpack-plugin": "^12.0.2",
+        "eslint": "^8.56.0",
         "hello-wasm-pack": "^0.1.0",
-        "webpack": "^5.90.2",
+        "typescript": "^5.3.3",
+        "webpack": "^5.90.3",
         "webpack-cli": "^5.1.4",
         "webpack-dev-server": "^5.0.2"
     }

@@ -10,7 +10,7 @@ cargo check
 
 cargo test
 
-cd playground
+cd ../playground
 cargo fmt --all
 
 cargo fix --allow-dirty --allow-staged
@@ -20,3 +20,7 @@ cargo check --release
 cargo check
 
 cargo test
+
+cd ../ts
+
+npx eslint . --ext .ts,.tsx --fix

@@ -30,7 +30,6 @@ jobs:
       - name: install wasm-pack
         run: |
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-          npm install -g typescript
           sh ./build_release.sh
 
       - name: Upload artifact
