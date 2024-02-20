@@ -1,5 +1,5 @@
-import CopyPlugin from 'copy-webpack-plugin';
-import path from 'path';
+const CopyPlugin = require('copy-webpack-plugin');
+const path = require('path');
 
 module.exports = {
 	entry: './dist/bootstrap.js',
