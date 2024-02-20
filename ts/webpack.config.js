@@ -29,6 +29,7 @@ module.exports = (env, argv) => {
 							drop_console: true,
 							pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.error', 'console.warn'],
 						},
+						mangle: true,
 					},
 				}),
 			],
