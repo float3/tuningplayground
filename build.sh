@@ -3,5 +3,5 @@ cd ./playground
 wasm-pack build --target web --dev
 cd ../ts
 npm install
-tsc
+npx tsc
 npm run builddev

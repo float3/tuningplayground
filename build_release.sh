@@ -3,5 +3,5 @@ cd ./playground
 wasm-pack build --target web --release # try --out-dir
 cd ../ts
 npm install
-tsc
+npx tsc
 npm run build
