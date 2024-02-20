@@ -1,9 +1,8 @@
 use std::str::FromStr;
 
 use crate::{
-    equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
-    INDIAN_SCALE_22, INDIAN_SCALE_NAMES, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24,
-    PYTHOGREAN_TUNING, TWELVE_TONE_NAMES,
+    equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE, INDIAN_SCALE_22, INDIAN_SCALE_NAMES,
+    INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHOGREAN_TUNING, TWELVE_TONE_NAMES,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
@@ -47,9 +46,31 @@ impl FromStr for TuningSystem {
 impl TuningSystem {
     pub fn get_fraction(&self, index: usize) -> Fraction {
         match &self {
-            TuningSystem::StepMethod => todo!(),
-            TuningSystem::EqualTemperament => equal_temperament_default(index),
-            _ => self.get_fraction_from_table(index),
+            TuningSystem::StepMethod | TuningSystem::EqualTemperament => equal_temperament_default(index),
+            TuningSystem::JustIntonation
+            | TuningSystem::JustIntonation24
+            | TuningSystem::PythogoreanTuning
+            | TuningSystem::FiveLimit
+            | TuningSystem::ElevenLimit
+            | TuningSystem::FortyThreeTone
+            | TuningSystem::Indian
+            | TuningSystem::IndianAlt
+            | TuningSystem::Indian22 => self.get_fraction_from_table(index),
+        }
+    }
+
+    pub fn size(&self) -> usize {
+        match &self {
+            TuningSystem::JustIntonation
+            | TuningSystem::JustIntonation24
+            | TuningSystem::PythogoreanTuning
+            | TuningSystem::FiveLimit
+            | TuningSystem::ElevenLimit
+            | TuningSystem::FortyThreeTone
+            | TuningSystem::Indian
+            | TuningSystem::IndianAlt
+            | TuningSystem::Indian22 => self.get_lut_from_tuningsystem().len(),
+            TuningSystem::StepMethod | TuningSystem::EqualTemperament => *OCTAVE_SIZE.read().unwrap(),
         }
     }
 
@@ -57,10 +78,11 @@ impl TuningSystem {
         let lut = self.get_lut_from_tuningsystem();
         let len = lut.len();
 
-        let octaves = (index / len) as u32;
-        let mut fration = lut[index % len];
-        fration.numerator += fration.denominator * octaves;
-        fration
+        let octave = index / len;
+        let mut fraction = lut[index % len];
+
+        fraction.numerator += (2u32.pow(octave as u32) - 1) * fraction.denominator;
+        fraction
     }
 
     fn get_lut_from_tuningsystem(&self) -> &[Fraction] {
@@ -80,17 +102,27 @@ impl TuningSystem {
         lut
     }
 
-    pub fn get_tone_name(&self, octave_size: usize, tone_index: usize) -> &str {
+    pub fn get_tone_name(&self, tone_index: usize) -> String {
+        let octave_size = *OCTAVE_SIZE.read().unwrap();
         let name_index = tone_index % octave_size;
-        match self {
+        let name = match self {
             TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
             TuningSystem::EqualTemperament if octave_size == 6 => TWELVE_TONE_NAMES[name_index * 2],
+            TuningSystem::EqualTemperament if octave_size == 4 => TWELVE_TONE_NAMES[name_index * 3],
             TuningSystem::EqualTemperament if octave_size == 3 => TWELVE_TONE_NAMES[name_index * 4],
-            TuningSystem::JustIntonation
-            | TuningSystem::PythogoreanTuning
-            | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
+            TuningSystem::EqualTemperament if octave_size == 2 => TWELVE_TONE_NAMES[name_index * 6],
+            TuningSystem::EqualTemperament if octave_size == 1 => TWELVE_TONE_NAMES[name_index * 12],
+            TuningSystem::JustIntonation | TuningSystem::PythogoreanTuning | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
             TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[name_index],
             _ => "TODO",
+        };
+
+        let octave = tone_index / octave_size;
+        let adjusted_octave: i32 = octave as i32 - 1;
+        if adjusted_octave < 0 {
+            format!("{}N{}", name, -adjusted_octave)
+        } else {
+            format!("{}{}", name, adjusted_octave)
         }
     }
 }

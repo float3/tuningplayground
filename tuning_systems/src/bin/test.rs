@@ -22,7 +22,7 @@ fn main() {
     // construct_et_tone(72);
     // println!("{}", CN1);
 }
-
+#[allow(dead_code)]
 fn construct_et_tone(_index: u32) {
     // let frac: Fraction = equal_temperament_12(index);
     // let tone = Tone::new(frac, index);

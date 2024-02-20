@@ -16,3 +16,8 @@
 
 
 // TODO: use piano sample instead of synth
+
+
+
+// TODO: usize vs u32
+// TODO: no global state

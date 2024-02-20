@@ -1,10 +1,7 @@
 // #[cfg(feature = "wasm-bindgen")]
 // use wasm_bindgen::prelude::*;
 
-use crate::{
-    equal_temperament, Fraction, TuningSystem, CN1, INDIAN_SCALE_NAMES, OCTAVE_SIZE,
-    TWELVE_TONE_NAMES,
-};
+use crate::{equal_temperament, Fraction, TuningSystem, CN1};
 
 #[derive(Clone, Debug, PartialEq)]
 // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
@@ -12,8 +9,6 @@ pub struct Tone {
     name: String,
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(skip))]
     fraction: Fraction,
-    octave: usize,
-    octave_size: usize,
     tone_index: usize,
     tuning_system: TuningSystem,
 }
@@ -21,33 +16,17 @@ pub struct Tone {
 impl Tone {
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
     pub fn new(tuning_system: TuningSystem, tone_index: usize) -> Tone {
-        Tone::new_with_octave_size(tuning_system, *OCTAVE_SIZE.read().unwrap(), tone_index)
+        Tone::new_with_octave_size(tuning_system, tone_index)
     }
 
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
-    pub fn new_with_octave_size(
-        tuning_system: TuningSystem,
-        octave_size: usize,
-        tone_index: usize,
-    ) -> Tone {
-        let name = tuning_system.get_tone_name(octave_size, tone_index);
-        let octave = tone_index / octave_size;
-        let adjusted_octave: i32 = octave as i32 - 1;
-        let name: String = if adjusted_octave < 0 {
-            format!("{}N{}", name, -adjusted_octave)
-        } else {
-            format!("{}{}", name, adjusted_octave)
-        };
-        let mut fraction = tuning_system.get_fraction(tone_index);
+    pub fn new_with_octave_size(tuning_system: TuningSystem, tone_index: usize) -> Tone {
+        let name = tuning_system.get_tone_name(tone_index);
+        let fraction = tuning_system.get_fraction(tone_index);
 
-        if fraction.base == 0 {
-            fraction.numerator += (2u32.pow(octave as u32) - 1) * fraction.denominator;
-        }
         Tone {
             name: name.to_string(),
             fraction,
-            octave,
-            octave_size,
             tone_index,
             tuning_system,
         }
@@ -58,11 +37,7 @@ impl Tone {
     }
 
     pub fn octave(&self) -> usize {
-        self.octave
-    }
-
-    pub fn octave_size(&self) -> usize {
-        self.octave_size
+        self.tone_index() / self.tuning_system.size()
     }
 
     pub fn tone_index(&self) -> usize {
@@ -70,7 +45,7 @@ impl Tone {
     }
 
     pub fn cents(&self) -> f64 {
-        let reference_freq: f64 = equal_temperament(self.tone_index, self.octave_size).into();
+        let reference_freq: f64 = equal_temperament(self.tone_index, self.tuning_system.size()).into();
         let comparison_freq: f64 = self.frequency();
         1200f64 * (comparison_freq / reference_freq).log2()
     }

@@ -1,8 +1,6 @@
 use crate::Fraction;
 
-pub const TWELVE_TONE_NAMES: [&str; 12] = [
-    "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B",
-];
+pub const TWELVE_TONE_NAMES: [&str; 12] = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 
 pub const JUST_INTONATION: [Fraction; 12] = [
     Fraction::new(1, 1),
