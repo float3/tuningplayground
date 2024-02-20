@@ -6,11 +6,11 @@ use crate::{equal_temperament, Fraction, TuningSystem, CN1};
 #[derive(Clone, Debug, PartialEq)]
 // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
 pub struct Tone {
-    name: String,
+    pub name: String,
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(skip))]
-    fraction: Fraction,
-    tone_index: usize,
-    tuning_system: TuningSystem,
+    pub fraction: Fraction,
+    pub tone_index: usize,
+    pub tuning_system: TuningSystem,
 }
 
 impl Tone {
@@ -32,16 +32,8 @@ impl Tone {
         }
     }
 
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
     pub fn octave(&self) -> usize {
-        self.tone_index() / self.tuning_system.size()
-    }
-
-    pub fn tone_index(&self) -> usize {
-        self.tone_index
+        self.tone_index / self.tuning_system.size()
     }
 
     pub fn cents(&self) -> f64 {

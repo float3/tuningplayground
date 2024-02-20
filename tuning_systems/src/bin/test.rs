@@ -1,3 +1,5 @@
+use tuning_systems::{Tone, TuningSystem};
+
 fn main() {
     // construct_et_tone(0);
     // construct_et_tone(1);
@@ -21,11 +23,27 @@ fn main() {
     // construct_et_tone(69);
     // construct_et_tone(72);
     // println!("{}", CN1);
+
+    let sixty_nine = construct_et_tone(69);
+    assert_eq!(sixty_nine.name, "A4");
+    assert_eq!(sixty_nine.octave(), 5);
+    assert!((sixty_nine.frequency() - 440.0).abs() < 0.0001);
+
+    let zero = construct_just_intonation_tone(0);
+    assert_eq!(zero.name, "CN1");
+    assert_eq!(zero.octave(), 0);
+    assert_eq!(zero.frequency(), 8.1758);
+
+    let sixty_nine = construct_just_intonation_tone(69);
+    assert_eq!(sixty_nine.name, "A4");
+    assert_eq!(sixty_nine.octave(), 5);
+    assert!((sixty_nine.frequency() - 440.0).abs() < 1.5);
 }
-#[allow(dead_code)]
-fn construct_et_tone(_index: u32) {
-    // let frac: Fraction = equal_temperament_12(index);
-    // let tone = Tone::new(frac, index);
-    // println!("tone: {:?}", tone);
-    // println!("freq: {:?}", tone.frequency());
+
+fn construct_just_intonation_tone(arg: i32) -> Tone {
+    Tone::new(TuningSystem::JustIntonation, arg as usize)
+}
+
+fn construct_et_tone(arg: u32) -> Tone {
+    Tone::new(TuningSystem::EqualTemperament, arg as usize)
 }

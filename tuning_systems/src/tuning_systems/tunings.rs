@@ -28,15 +28,16 @@ impl FromStr for TuningSystem {
     type Err = ();
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "JustIntonation" => Ok(TuningSystem::JustIntonation),
-            "JustIntonation24" => Ok(TuningSystem::JustIntonation24),
             "StepMethod" => Ok(TuningSystem::StepMethod),
             "EqualTemperament" => Ok(TuningSystem::EqualTemperament),
+            "JustIntonation" => Ok(TuningSystem::JustIntonation),
+            "JustIntonation24" => Ok(TuningSystem::JustIntonation24),
             "PythogoreanTuning" => Ok(TuningSystem::PythogoreanTuning),
             "FiveLimit" => Ok(TuningSystem::FiveLimit),
             "ElevenLimit" => Ok(TuningSystem::ElevenLimit),
             "FortyThreeTone" => Ok(TuningSystem::FortyThreeTone),
             "Indian" => Ok(TuningSystem::Indian),
+            "IndianAlt" => Ok(TuningSystem::IndianAlt),
             "IndianFull" => Ok(TuningSystem::Indian22),
             _ => Err(()),
         }
@@ -77,11 +78,11 @@ impl TuningSystem {
     fn get_fraction_from_table(&self, index: usize) -> Fraction {
         let lut = self.get_lut_from_tuningsystem();
         let len = lut.len();
-
         let octave = index / len;
-        let mut fraction = lut[index % len];
-
-        fraction.numerator += (2u32.pow(octave as u32) - 1) * fraction.denominator;
+        let index_mod = index % len;
+        let mut fraction = lut[index_mod];
+        // fraction.numerator += (2u32.pow(octave as u32) - 1) * fraction.denominator;
+        fraction.numerator *= 2u32.pow(octave as u32);
         fraction
     }
 

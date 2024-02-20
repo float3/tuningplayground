@@ -17,16 +17,33 @@ fn test_octave() {
 #[test]
 fn test_et() {
     let zero = construct_et_tone(0);
-    assert_eq!(zero.name(), "CN1");
+    assert_eq!(zero.name, "CN1");
     assert_eq!(zero.octave(), 0);
     assert_eq!(zero.frequency(), 8.1758);
 
     let sixty_nine = construct_et_tone(69);
-    assert_eq!(sixty_nine.name(), "A4");
+    assert_eq!(sixty_nine.name, "A4");
     assert_eq!(sixty_nine.octave(), 5);
     assert!((sixty_nine.frequency() - 440.0).abs() < 0.0001);
 }
 
 fn construct_et_tone(index: u32) -> Tone {
     Tone::new(TuningSystem::EqualTemperament, index as usize)
+}
+
+#[test]
+fn test_just_intonation() {
+    let zero = construct_just_intonation_tone(0);
+    assert_eq!(zero.name, "CN1");
+    assert_eq!(zero.octave(), 0);
+    assert_eq!(zero.frequency(), 8.1758);
+
+    let sixty_nine = construct_just_intonation_tone(69);
+    assert_eq!(sixty_nine.name, "A4");
+    assert_eq!(sixty_nine.octave(), 5);
+    assert!((sixty_nine.frequency() - 440.0).abs() < 1.5);
+}
+
+fn construct_just_intonation_tone(arg: i32) -> Tone {
+    Tone::new(TuningSystem::JustIntonation, arg as usize)
 }
