@@ -8,9 +8,9 @@
     },
     "scripts": {
         "help": "webpack --help",
-        "build": "webpack --config dist/webpack.config.js --mode production",
-        "builddev": "webpack --config dist/webpack.config.js --mode development",
-        "serve": "webpack-dev-server --config dist/webpack.config.js --mode development"
+        "build": "tsc && webpack --config dist/webpack.config.js --mode production",
+        "builddev": "tsc && webpack --mode development",
+        "serve": "webpack-dev-server --mode development"
     },
     "repository": {
         "type": "git",
