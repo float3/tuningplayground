@@ -67,11 +67,9 @@ document.addEventListener('keyup', function (event) {
 	console.debug('keyup');
 	if (!(event.code in keyboard)) return;
 
-	if (document.activeElement?.tagName === 'BODY') {
-		// if (recording) { }
-		const tone_index: number = keyboard[event.code] + 24 + 24;
-		note_off(tone_index);
-	}
+	// if (recording) { }
+	const tone_index: number = keyboard[event.code] + 24 + 24;
+	note_off(tone_index);
 });
 
 const playing_tones: Record<number, OscillatorNode> = [];
