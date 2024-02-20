@@ -7,10 +7,10 @@
         "create-wasm-app": ".bin/create-wasm-app.js"
     },
     "scripts": {
-        "help": "webpack --help",
-        "build": "tsc && webpack --config dist/webpack.config.js --mode production",
+        "build": "tsc && webpack --mode production",
         "builddev": "tsc && webpack --mode development",
-        "serve": "webpack-dev-server --mode development"
+        "serve": "webpack-dev-server --mode production",
+        "servedev": "webpack-dev-server --mode development"
     },
     "repository": {
         "type": "git",
