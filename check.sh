@@ -23,8 +23,8 @@ cargo test
 
 cd ../ts
 
+npm update
 npm install
 npm audit fix
-npm update
 npx tsc
 npx eslint . --ext .ts,.tsx --fix
