@@ -27,6 +27,7 @@ extern "C" {
 #[wasm_bindgen]
 pub fn get_frequency(tuning: &str, index: usize) -> f64 {
     let tuning: Result<TuningSystem, _> = tuning.parse();
+    log("get_frequency");
     match tuning {
         Ok(tuning) => Tone::new(tuning, index).frequency(),
         Err(_) => panic!("unknown tuning system"),

@@ -27,18 +27,18 @@ pub enum TuningSystem {
 impl FromStr for TuningSystem {
     type Err = ();
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "StepMethod" => Ok(TuningSystem::StepMethod),
-            "EqualTemperament" => Ok(TuningSystem::EqualTemperament),
-            "JustIntonation" => Ok(TuningSystem::JustIntonation),
-            "JustIntonation24" => Ok(TuningSystem::JustIntonation24),
-            "PythagoreanTuning" => Ok(TuningSystem::PythagoreanTuning),
-            "FiveLimit" => Ok(TuningSystem::FiveLimit),
-            "ElevenLimit" => Ok(TuningSystem::ElevenLimit),
-            "FortyThreeTone" => Ok(TuningSystem::FortyThreeTone),
-            "Indian" => Ok(TuningSystem::Indian),
-            "IndianAlt" => Ok(TuningSystem::IndianAlt),
-            "IndianFull" => Ok(TuningSystem::Indian22),
+        match s.to_lowercase().as_str() {
+            "stepmethod" => Ok(TuningSystem::StepMethod),
+            "equaltemperament" => Ok(TuningSystem::EqualTemperament),
+            "justintonation" => Ok(TuningSystem::JustIntonation),
+            "justintonation24" => Ok(TuningSystem::JustIntonation24),
+            "pythagoreantuning" => Ok(TuningSystem::PythagoreanTuning),
+            "fivelimit" => Ok(TuningSystem::FiveLimit),
+            "elevenlimit" => Ok(TuningSystem::ElevenLimit),
+            "fortythreetone" => Ok(TuningSystem::FortyThreeTone),
+            "indian" => Ok(TuningSystem::Indian),
+            "indianalt" => Ok(TuningSystem::IndianAlt),
+            "indianfull" => Ok(TuningSystem::Indian22),
             _ => Err(()),
         }
     }
@@ -99,13 +99,16 @@ impl TuningSystem {
             TuningSystem::IndianAlt => &INDIA_SCALE_ALT,
             TuningSystem::Indian22 => &INDIAN_SCALE_22,
 
-            TuningSystem::StepMethod | TuningSystem::EqualTemperament => unreachable!(),
+            TuningSystem::StepMethod | TuningSystem::EqualTemperament => {
+                unreachable!("StepMethod and EqualTemperament don't have LUTs. Use get_fraction instead.")
+            }
         };
         lut
     }
 
     pub fn get_tone_name(&self, tone_index: usize) -> String {
         let octave_size = *OCTAVE_SIZE.read().expect("couldn't read octave size");
+        // if indian or indianalt we want to use 7
         let name_index = tone_index % octave_size;
         let name = match self {
             TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
@@ -115,7 +118,7 @@ impl TuningSystem {
             TuningSystem::EqualTemperament if octave_size == 2 => TWELVE_TONE_NAMES[name_index * 6],
             TuningSystem::EqualTemperament if octave_size == 1 => TWELVE_TONE_NAMES[name_index * 12],
             TuningSystem::JustIntonation | TuningSystem::PythagoreanTuning | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
-            TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[name_index],
+            TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[tone_index % 7],
             _ => "TODO",
         };
 

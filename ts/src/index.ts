@@ -13,6 +13,7 @@ if (navigator.requestMIDIAccess) {
 const octave_size = document.getElementById('octave_size') as HTMLInputElement;
 const tuning_select = document.getElementById('tuning_select') as HTMLSelectElement;
 const volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement;
+const transpose = document.getElementById('transpose') as HTMLInputElement;
 
 octave_size.onchange = () => {
 	playground.set_octave_size(parseInt(octave_size.value));
@@ -58,7 +59,7 @@ document.addEventListener('keydown', function (event) {
 
 	if (document.activeElement?.tagName === 'BODY') {
 		// if (recording) { }
-		const tone_index: number = keyboard[event.code] + 24 + 24;
+		const tone_index: number = keyboard[event.code] + parseInt(transpose.value);
 		note_on(tone_index);
 	}
 });
@@ -68,7 +69,7 @@ document.addEventListener('keyup', function (event) {
 	if (!(event.code in keyboard)) return;
 
 	// if (recording) { }
-	const tone_index: number = keyboard[event.code] + 24 + 24;
+	const tone_index: number = keyboard[event.code] + parseInt(transpose.value);
 	note_off(tone_index);
 });
 
@@ -84,6 +85,7 @@ function note_on(tone_index: number) {
 
 function note_off(tone_index: number) {
 	console.debug('note_off');
+	if (!(tone_index in playing_tones)) return;
 	playing_tones[tone_index].stop();
 }
 
