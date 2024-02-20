@@ -1,7 +1,7 @@
 console.debug('imports');
-import init, * as playground from 'playground';
+import * as playground from 'playground';
 
-init(); //init wasm IMPORTANT
+playground.default(); //init playground
 
 console.debug('static');
 if (navigator.requestMIDIAccess) {
@@ -97,7 +97,7 @@ function playFrequencyNative(
 	audioContext = new window.AudioContext();
 	const oscillator = audioContext.createOscillator();
 	const gainNode = audioContext.createGain();
-	gainNode.gain.value = volume;
+	gainNode.gain.value = Math.pow(volume, 2);
 	gainNode.connect(audioContext.destination);
 	oscillator.type = 'square'; // TODO: make this configurable
 	oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);

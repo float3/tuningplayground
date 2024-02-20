@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use crate::{
     equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE, INDIAN_SCALE_22, INDIAN_SCALE_NAMES,
-    INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHOGREAN_TUNING, TWELVE_TONE_NAMES,
+    INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, TWELVE_TONE_NAMES,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
@@ -11,7 +11,7 @@ pub enum TuningSystem {
 
     JustIntonation,
     JustIntonation24,
-    PythogoreanTuning,
+    PythagoreanTuning,
 
     FiveLimit,
     ElevenLimit,
@@ -32,7 +32,7 @@ impl FromStr for TuningSystem {
             "EqualTemperament" => Ok(TuningSystem::EqualTemperament),
             "JustIntonation" => Ok(TuningSystem::JustIntonation),
             "JustIntonation24" => Ok(TuningSystem::JustIntonation24),
-            "PythogoreanTuning" => Ok(TuningSystem::PythogoreanTuning),
+            "PythagoreanTuning" => Ok(TuningSystem::PythagoreanTuning),
             "FiveLimit" => Ok(TuningSystem::FiveLimit),
             "ElevenLimit" => Ok(TuningSystem::ElevenLimit),
             "FortyThreeTone" => Ok(TuningSystem::FortyThreeTone),
@@ -47,10 +47,11 @@ impl FromStr for TuningSystem {
 impl TuningSystem {
     pub fn get_fraction(&self, index: usize) -> Fraction {
         match &self {
-            TuningSystem::StepMethod | TuningSystem::EqualTemperament => equal_temperament_default(index),
+            TuningSystem::StepMethod => todo!("StepMethod"),
+            TuningSystem::EqualTemperament => equal_temperament_default(index),
             TuningSystem::JustIntonation
             | TuningSystem::JustIntonation24
-            | TuningSystem::PythogoreanTuning
+            | TuningSystem::PythagoreanTuning
             | TuningSystem::FiveLimit
             | TuningSystem::ElevenLimit
             | TuningSystem::FortyThreeTone
@@ -64,14 +65,14 @@ impl TuningSystem {
         match &self {
             TuningSystem::JustIntonation
             | TuningSystem::JustIntonation24
-            | TuningSystem::PythogoreanTuning
+            | TuningSystem::PythagoreanTuning
             | TuningSystem::FiveLimit
             | TuningSystem::ElevenLimit
             | TuningSystem::FortyThreeTone
             | TuningSystem::Indian
             | TuningSystem::IndianAlt
             | TuningSystem::Indian22 => self.get_lut_from_tuningsystem().len(),
-            TuningSystem::StepMethod | TuningSystem::EqualTemperament => *OCTAVE_SIZE.read().unwrap(),
+            TuningSystem::StepMethod | TuningSystem::EqualTemperament => *OCTAVE_SIZE.read().expect("couldn't read octave size"),
         }
     }
 
@@ -90,7 +91,7 @@ impl TuningSystem {
         let lut: &[Fraction] = match self {
             TuningSystem::JustIntonation => &JUST_INTONATION,
             TuningSystem::JustIntonation24 => &JUST_INTONATION_24,
-            TuningSystem::PythogoreanTuning => &PYTHOGREAN_TUNING,
+            TuningSystem::PythagoreanTuning => &PYTHAGOREAN_TUNING,
             TuningSystem::FiveLimit => &FIVE_LIMIT,
             TuningSystem::ElevenLimit => &ELEVEN_LIMIT,
             TuningSystem::FortyThreeTone => &FORTYTHREE_TONE,
@@ -98,13 +99,13 @@ impl TuningSystem {
             TuningSystem::IndianAlt => &INDIA_SCALE_ALT,
             TuningSystem::Indian22 => &INDIAN_SCALE_22,
 
-            TuningSystem::StepMethod | TuningSystem::EqualTemperament => panic!(),
+            TuningSystem::StepMethod | TuningSystem::EqualTemperament => unreachable!(),
         };
         lut
     }
 
     pub fn get_tone_name(&self, tone_index: usize) -> String {
-        let octave_size = *OCTAVE_SIZE.read().unwrap();
+        let octave_size = *OCTAVE_SIZE.read().expect("couldn't read octave size");
         let name_index = tone_index % octave_size;
         let name = match self {
             TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
@@ -113,7 +114,7 @@ impl TuningSystem {
             TuningSystem::EqualTemperament if octave_size == 3 => TWELVE_TONE_NAMES[name_index * 4],
             TuningSystem::EqualTemperament if octave_size == 2 => TWELVE_TONE_NAMES[name_index * 6],
             TuningSystem::EqualTemperament if octave_size == 1 => TWELVE_TONE_NAMES[name_index * 12],
-            TuningSystem::JustIntonation | TuningSystem::PythogoreanTuning | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
+            TuningSystem::JustIntonation | TuningSystem::PythagoreanTuning | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
             TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[name_index],
             _ => "TODO",
         };

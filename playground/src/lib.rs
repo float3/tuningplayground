@@ -5,10 +5,15 @@ use wasm_bindgen::prelude::*;
 #[global_allocator]
 static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
 
-#[allow(dead_code)]
+#[cfg(feature = "console_error_panic_hook")]
 pub fn set_panic_hook() {
-    #[cfg(feature = "console_error_panic_hook")]
     console_error_panic_hook::set_once();
+}
+
+#[wasm_bindgen(start)]
+pub fn main() {
+    #[cfg(feature = "console_error_panic_hook")]
+    set_panic_hook();
 }
 
 #[wasm_bindgen]

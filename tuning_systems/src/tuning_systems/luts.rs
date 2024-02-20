@@ -44,7 +44,7 @@ pub const JUST_INTONATION_24: [Fraction; 24] = [
     Fraction::new(31, 16),
 ];
 
-pub const PYTHOGREAN_TUNING: [Fraction; 12] = [
+pub const PYTHAGOREAN_TUNING: [Fraction; 12] = [
     Fraction::new(1, 1),
     Fraction::new(256, 243),
     Fraction::new(9, 8),
