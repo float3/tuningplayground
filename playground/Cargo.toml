@@ -1,6 +1,6 @@
 [package]
 authors = ["hill <hill@hilll.dev>"]
-description = "expose tuning_systems to wasm"
+description = "expose my rust libraries to wasm"
 edition = "2021"
 license = "AGPL-3.0"
 name = "playground"
