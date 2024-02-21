@@ -1,4 +1,4 @@
-use std::{hash::SipHasher, str::FromStr};
+use std::str::FromStr;
 
 use crate::{
     equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE, INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION,
