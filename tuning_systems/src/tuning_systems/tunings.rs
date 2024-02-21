@@ -1,8 +1,8 @@
-use std::str::FromStr;
+use std::{hash::SipHasher, str::FromStr};
 
 use crate::{
-    equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE, INDIAN_SCALE_22, INDIAN_SCALE_NAMES,
-    INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, TWELVE_TONE_NAMES,
+    equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE, INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION,
+    JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS, TWELVE_TONE_NAMES,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
@@ -118,7 +118,8 @@ impl TuningSystem {
             TuningSystem::EqualTemperament if octave_size == 2 => TWELVE_TONE_NAMES[name_index * 6],
             TuningSystem::EqualTemperament if octave_size == 1 => TWELVE_TONE_NAMES[name_index * 12],
             TuningSystem::JustIntonation | TuningSystem::PythagoreanTuning | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
-            TuningSystem::Indian | TuningSystem::IndianAlt => INDIAN_SCALE_NAMES[tone_index % 7],
+            TuningSystem::Indian | TuningSystem::IndianAlt => SWARAS[tone_index % 7],
+            TuningSystem::Indian22 => SHRUTIS[tone_index % 22],
             _ => "TODO",
         };
 

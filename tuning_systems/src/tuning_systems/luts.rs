@@ -153,8 +153,9 @@ pub const FORTYTHREE_TONE: [Fraction; 43] = [
 ];
 
 // an array of strings same length as INDIA_SCALE
-pub const INDIAN_SCALE_NAMES: [&str; 7] = ["Sa", "Re", "Ga", "Ma", "Pa", "Dha", "Ni"];
+pub const SWARAS: [&str; 7] = ["Sa", "Re", "Ga", "Ma", "Pa", "Dha", "Ni"];
 
+// swaras
 pub const INDIAN_SCALE: [Fraction; 7] = [
     Fraction::new(1, 1),
     Fraction::new(9, 8),
@@ -173,6 +174,10 @@ pub const INDIA_SCALE_ALT: [Fraction; 7] = [
     Fraction::new(3, 2),
     Fraction::new(27, 16),
     Fraction::new(15, 8),
+];
+
+pub const SHRUTIS: [&str; 22] = [
+    "C", "D♭↓", "D♭", "D↓", "D", "E♭↓", "E♭", "E", "E↑", "F", "F↑", "F♯", "F♯↑", "G", "A♭↓", "A♭", "A", "A↑", "B♭↓", "B♭", "B", "B↑",
 ];
 
 pub const INDIAN_SCALE_22: [Fraction; 22] = [
