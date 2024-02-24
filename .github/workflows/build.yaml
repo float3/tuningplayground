@@ -30,6 +30,7 @@ jobs:
       - name: install wasm-pack
         run: |
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+          rustup default nightly
           sh ./build_release.sh
 
       - name: Upload artifact

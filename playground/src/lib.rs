@@ -1,4 +1,4 @@
-use tuning_systems::{self, Tone, TuningSystem};
+use tuning_systems::{Tone, TuningSystem};
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "mini-alloc")]
