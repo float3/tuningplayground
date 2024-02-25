@@ -1,7 +1,4 @@
 ts/node_modules/
 ts/dist/
 ts/tsconfig.tsbuildinfo
-
-www/*.js
-www/*.wasm
-
+www/

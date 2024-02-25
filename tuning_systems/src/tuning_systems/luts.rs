@@ -177,7 +177,8 @@ pub const INDIA_SCALE_ALT: [Fraction; 7] = [
 ];
 
 pub const SHRUTIS: [&str; 22] = [
-    "C", "D♭↓", "D♭", "D↓", "D", "E♭↓", "E♭", "E", "E↑", "F", "F↑", "F♯", "F♯↑", "G", "A♭↓", "A♭", "A", "A↑", "B♭↓", "B♭", "B", "B↑",
+    "C", "D♭↓", "D♭", "D↓", "D", "E♭↓", "E♭", "E", "E↑", "F", "F↑", "F♯", "F♯↑", "G", "A♭↓", "A♭", "A", "A↑", "B♭↓", "B♭", "B",
+    "B↑",
 ];
 
 pub const INDIAN_SCALE_22: [Fraction; 22] = [

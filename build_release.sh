@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+rm -rf www
 cd ./playground
 wasm-pack build --target web --release # try --out-dir
 cd ../ts
