@@ -1,8 +1,9 @@
 use std::str::FromStr;
 
 use crate::{
-    equal_temperament, equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE, INDIAN_SCALE_22,
-    INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS, TWELVE_TONE_NAMES,
+    equal_temperament, equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
+    INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS,
+    TWELVE_TONE_NAMES,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
@@ -133,6 +134,7 @@ impl TuningSystem {
         // if indian or indianalt we want to use 7
         let name_index = tone_index % octave_size;
         let name = match self {
+            TuningSystem::EqualTemperament if octave_size == 24 => TWELVE_TONE_NAMES[name_index / 2],
             TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
             TuningSystem::EqualTemperament if octave_size == 6 => TWELVE_TONE_NAMES[name_index * 2],
             TuningSystem::WholeTone => TWELVE_TONE_NAMES[(tone_index % 6) * 2],
@@ -140,11 +142,16 @@ impl TuningSystem {
             TuningSystem::EqualTemperament if octave_size == 3 => TWELVE_TONE_NAMES[name_index * 4],
             TuningSystem::EqualTemperament if octave_size == 2 => TWELVE_TONE_NAMES[name_index * 6],
             TuningSystem::EqualTemperament if octave_size == 1 => TWELVE_TONE_NAMES[name_index * 12],
-            TuningSystem::JustIntonation | TuningSystem::PythagoreanTuning | TuningSystem::FiveLimit => TWELVE_TONE_NAMES[name_index],
+            TuningSystem::EqualTemperament => TWELVE_TONE_NAMES[name_index * (octave_size / 12)],
+
+            TuningSystem::JustIntonation
+            | TuningSystem::PythagoreanTuning
+            | TuningSystem::FiveLimit
+            | TuningSystem::StepMethod => TWELVE_TONE_NAMES[name_index],
+
             TuningSystem::Indian | TuningSystem::IndianAlt => SWARAS[tone_index % 7],
             TuningSystem::Indian22 => SHRUTIS[tone_index % 22],
-            TuningSystem::EqualTemperament => todo!(),
-            TuningSystem::StepMethod => todo!(),
+
             TuningSystem::Javanese => todo!(),
             TuningSystem::Siamese => todo!(),
             TuningSystem::QuarterTone => todo!(),
