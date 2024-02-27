@@ -1,5 +1,6 @@
 console.debug('imports');
 import * as playground from 'playground';
+import * as Vex from 'vexflow';
 
 playground.default(); //init playground
 
@@ -7,7 +8,7 @@ console.debug('static');
 if (navigator.requestMIDIAccess) {
 	navigator.requestMIDIAccess().then(on_midi_success, onMIDIFailure);
 } else {
-	alert('Web MIDI is working.');
+	alert('WebMIDI is not supported in this browser.');
 }
 
 const octave_size = document.getElementById('octave_size') as HTMLInputElement;
@@ -16,7 +17,22 @@ const volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement
 const transpose = document.getElementById('transpose') as HTMLInputElement;
 
 octave_size.onchange = () => {
+	console.debug('octave_size.onchange');
 	playground.set_octave_size(parseInt(octave_size.value));
+};
+
+tuning_select.onchange = () => {
+	console.debug('tuning_select.onchange');
+	switch (tuning_select.value) {
+		case 'StepMethod':
+		case 'EqualTemperament':
+			octave_size.readOnly = false;
+			break;
+		default:
+			octave_size.value = sizes[tuning_select.value].toString();
+			octave_size.readOnly = true;
+			break;
+	}
 };
 
 function on_midi_success(midiAccess: WebMidi.MIDIAccess) {
@@ -87,6 +103,8 @@ function note_off(tone_index: number) {
 	console.debug('note_off');
 	if (!(tone_index in playing_tones)) return;
 	playing_tones[tone_index].stop();
+	delete playing_tones[tone_index];
+	playingTonesChanged();
 }
 
 let audioContext: AudioContext;
@@ -106,7 +124,41 @@ function playFrequencyNative(
 	oscillator.connect(gainNode);
 	oscillator.start();
 	playing_tones[tone_index] = oscillator;
+	playingTonesChanged();
 }
+
+function playingTonesChanged() {
+	console.debug('playingTonesChanged');
+
+}
+
+
+const { Factory, EasyScore, System } = Vex.Flow;
+
+const vf = new Factory({
+	renderer: { elementId: 'output', width: 500, height: 200 },
+});
+
+const score = vf.EasyScore();
+const system = vf.System();
+
+
+
+const sizes: Record<string, number> = {
+	Javanese: 5,
+	WholeTone: 6,
+	Indian: 7,
+	IndianAlt: 7,
+	Siamese: 9,
+	FiveLimit: 12,
+	JustIntonation: 12,
+	PythagoreanTuning: 12,
+	IndianFull: 22,
+	QuarterTone: 24,
+	JustIntonation24: 24,
+	ElevenLimit: 29,
+	FortythreeTone: 43,
+};
 
 
 const keyboard: Record<string, number> = {
