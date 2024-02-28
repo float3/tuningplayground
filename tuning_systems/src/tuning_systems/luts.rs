@@ -205,3 +205,5 @@ pub const INDIAN_SCALE_22: [Fraction; 22] = [
     Fraction::new(15, 8),
     Fraction::new(243, 128),
 ];
+
+pub const SLENDRO: [&str; 5] = ["siji", "loro", "telu", "lima", "enam"];

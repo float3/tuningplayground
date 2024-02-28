@@ -2,8 +2,8 @@ use std::str::FromStr;
 
 use crate::{
     equal_temperament, equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
-    INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS,
-    TWELVE_TONE_NAMES,
+    INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, SHRUTIS, SLENDRO,
+    SWARAS, TWELVE_TONE_NAMES,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
@@ -149,15 +149,15 @@ impl TuningSystem {
             | TuningSystem::FiveLimit
             | TuningSystem::StepMethod => TWELVE_TONE_NAMES[name_index],
 
-            TuningSystem::Indian | TuningSystem::IndianAlt => SWARAS[tone_index % 7],
-            TuningSystem::Indian22 => SHRUTIS[tone_index % 22],
+            TuningSystem::Indian | TuningSystem::IndianAlt => SWARAS[tone_index % SWARAS.len()],
+            TuningSystem::Indian22 => SHRUTIS[tone_index % SHRUTIS.len()],
 
-            TuningSystem::Javanese => todo!(),
-            TuningSystem::Siamese => todo!(),
-            TuningSystem::QuarterTone => todo!(),
-            TuningSystem::JustIntonation24 => todo!(),
-            TuningSystem::ElevenLimit => todo!(),
-            TuningSystem::FortyThreeTone => todo!(),
+            TuningSystem::Javanese => SLENDRO[tone_index % SLENDRO.len()],
+            TuningSystem::Siamese => "todo",
+            TuningSystem::QuarterTone => "todo",
+            TuningSystem::JustIntonation24 => "todo",
+            TuningSystem::ElevenLimit => "todo",
+            TuningSystem::FortyThreeTone => "todo",
         };
 
         let octave = tone_index / octave_size;
