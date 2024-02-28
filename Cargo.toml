@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 
 [workspace]
-members = ["tuning_systems", "playground", "chord21-rs"]
+members = ["tuning_systems", "tuningplayground", "chord21-rs"]

@@ -1,10 +1,10 @@
 console.debug('imports');
-import * as playground from 'playground';
-import * as Vex from 'vexflow';
-
-playground.default(); //init playground
+import * as tuningplayground from 'tuningplayground';
+import * as abcjs from 'abcjs';
 
 console.debug('static');
+tuningplayground.default();
+
 if (navigator.requestMIDIAccess) {
 	navigator.requestMIDIAccess().then(on_midi_success, onMIDIFailure);
 } else {
@@ -16,23 +16,58 @@ const tuning_select = document.getElementById('tuning_select') as HTMLSelectElem
 const volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement;
 const transpose = document.getElementById('transpose') as HTMLInputElement;
 
+class Tone {
+	index: number;
+	freq: number;
+	cents: number;
+	name: string;
+	Oscillator: OscillatorNode;
+	constructor(index: number, freq: number, cents: number, name: string, node: OscillatorNode) {
+		this.index = index;
+		this.freq = freq;
+		this.cents = cents;
+		this.name = name;
+		this.Oscillator = node;
+	}
+}
+
+declare global {
+	interface Window {
+		createTone: (index: number, freq: number, cents: number, name: string, oscillator: OscillatorNode) => Tone;
+	}
+}
+
+window.createTone = function (index: number, freq: number, cents: number, name: string, oscillator: OscillatorNode) {
+	return new Tone(index, freq, cents, name, oscillator);
+};
+
+const playing_tones: Record<number, Tone> = [];
+let audioContext: AudioContext;
+//let recording: boolean;
+
 octave_size.onchange = () => {
 	console.debug('octave_size.onchange');
-	playground.set_octave_size(parseInt(octave_size.value));
+	tuningplayground.set_octave_size(parseInt(octave_size.value));
 };
 
 tuning_select.onchange = () => {
 	console.debug('tuning_select.onchange');
 	switch (tuning_select.value) {
-	case 'StepMethod':
-	case 'EqualTemperament':
-		octave_size.readOnly = false;
-		break;
-	default:
-		octave_size.value = sizes[tuning_select.value].toString();
-		octave_size.readOnly = true;
-		break;
+		case 'StepMethod':
+		case 'EqualTemperament':
+			octave_size.readOnly = false;
+			break;
+		default:
+			octave_size.value = sizes[tuning_select.value].toString();
+			octave_size.readOnly = true;
+			break;
 	}
+
+	for (const key in playing_tones) {
+		playing_tones[key].Oscillator.stop();
+		delete playing_tones[key];
+	}
+	playingTonesChanged();
 };
 
 function on_midi_success(midiAccess: WebMidi.MIDIAccess) {
@@ -50,8 +85,6 @@ function onMIDIFailure(error: DOMException) {
 	console.debug('onMIDIFailure');
 	console.error('MIDI Access failed:', error);
 }
-
-//let recording: boolean;
 
 function on_midi_message(event: WebMidi.MIDIMessageEvent) {
 	console.debug('onMIDIMessage');
@@ -89,60 +122,83 @@ document.addEventListener('keyup', function (event) {
 	note_off(tone_index);
 });
 
-const playing_tones: Record<number, OscillatorNode> = [];
-
 function note_on(tone_index: number) {
 	console.debug('note_on');
-	const freq = playground.get_frequency(tuning_select.value, tone_index);
-	console.debug('tone_index', tone_index);
-	console.debug('freq', freq);
-	playFrequencyNative(freq, parseFloat(volumeSlider.value), tone_index);
+	const tone: Tone = tuningplayground.get_tone(tuning_select.value, tone_index);
+	playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
 }
 
 function note_off(tone_index: number) {
 	console.debug('note_off');
 	if (!(tone_index in playing_tones)) return;
-	playing_tones[tone_index].stop();
+	playing_tones[tone_index].Oscillator.stop();
 	delete playing_tones[tone_index];
 	playingTonesChanged();
 }
 
-let audioContext: AudioContext;
-
 function playFrequencyNative(
-	frequency: number,
+	tone: Tone,
 	volume: number,
 	tone_index: number
 ): void {
+	console.debug('playFrequencyNative');
 	audioContext = new window.AudioContext();
 	const oscillator = audioContext.createOscillator();
 	const gainNode = audioContext.createGain();
 	gainNode.gain.value = Math.pow(volume, 2);
 	gainNode.connect(audioContext.destination);
 	oscillator.type = 'square'; // TODO: make this configurable
-	oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+	oscillator.frequency.setValueAtTime(tone.freq, audioContext.currentTime);
 	oscillator.connect(gainNode);
 	oscillator.start();
-	playing_tones[tone_index] = oscillator;
+	tone.Oscillator = oscillator;
+	playing_tones[tone_index] = tone;
 	playingTonesChanged();
 }
+
+const output = document.getElementById('output') as HTMLDivElement;
+const width = 150;
+const height = 150;
+
+output.style.width = width + 'px';
+output.style.height = height + 'px';
+output.style.backgroundColor = 'white';
+output.style.color = 'black';
 
 function playingTonesChanged() {
 	console.debug('playingTonesChanged');
 
+	if (octave_size.value === '12' && Object.keys(playing_tones).length > 0) {
+
+		const notes = Object.values(playing_tones).map((tone) => {
+			return tone.name;
+		});
+
+		const abcnotes = `L: 1/1 \n[${convertNotes(notes)}]`;
+		abcjs.renderAbc('output', abcnotes);
+	}
 }
 
-
-const { Factory, EasyScore, System } = Vex.Flow;
-
-const vf = new Factory({
-	renderer: { elementId: 'output', width: 500, height: 200 },
-});
-
-const score = vf.EasyScore();
-const system = vf.System();
-
-
+function convertNotes(notes: string[]): string {
+	return notes.map(note => {
+		const match = note.match(/([A-G])([#b]*)(N1|\d+)/);
+		if (!match) return note;
+		const [, pitch, accidental, octaveStr] = match;
+		const formattedAccidental = accidental.replace(/#/g, '^').replace(/b/g, '_');
+		let formattedOctave = '';
+		const octaveNumber = parseInt(octaveStr, 10);
+		if (octaveNumber === 4) {
+			formattedOctave = '';
+		} else if (octaveNumber < 4) {
+			formattedOctave = ','.repeat(4 - octaveNumber);
+		} else if (octaveNumber > 4) {
+			formattedOctave = '\''.repeat(octaveNumber - 4);
+		} else if (octaveStr === 'N1') {
+			formattedOctave = ',,,,,';
+		}
+		return `${formattedAccidental}${pitch}${formattedOctave}`;
+	}).join('');
+}
 
 const sizes: Record<string, number> = {
 	Javanese: 5,
@@ -159,7 +215,6 @@ const sizes: Record<string, number> = {
 	ElevenLimit: 29,
 	FortythreeTone: 43,
 };
-
 
 const keyboard: Record<string, number> = {
 	//TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts

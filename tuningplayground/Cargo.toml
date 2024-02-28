@@ -3,8 +3,8 @@ authors = ["hill <hill@hilll.dev>"]
 description = "expose my rust libraries to wasm"
 edition = "2021"
 license = "AGPL-3.0"
-name = "playground"
-repository = "https://github.com/float3/tuning_systems"
+name = "tuningplayground"
+repository = "https://github.com/float3/tuningplayground"
 version = "0.1.0"
 
 [lib]

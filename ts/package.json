@@ -1,5 +1,5 @@
 {
-    "name": "playground",
+    "name": "tuningplayground",
     "version": "0.1.0",
     "description": "tuning_systems",
     "main": "index.js",
@@ -14,7 +14,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/float3/playground.git"
+        "url": "git+https://github.com/float3/tuningplayground.git"
     },
     "keywords": [
         "webassembly",
@@ -25,12 +25,13 @@
     "author": "hill <hill@hilll.dev>",
     "license": "AGPL-3.0-only",
     "bugs": {
-        "url": "https://github.com/float3/playground/issues"
+        "url": "https://github.com/float3/tuningplayground/issues"
     },
-    "homepage": "https://github.com/float3/playground#readme",
+    "homepage": "https://github.com/float3/tuningplayground#readme",
     "dependencies": {
         "@types/webmidi": "^2.0.10",
-        "playground": "file:../playground/pkg",
+        "abcjs": "^6.3.0",
+        "tuningplayground": "file:../tuningplayground/pkg",
         "tone": "^14.7.77",
         "vexflow": "^4.2.3"
     },

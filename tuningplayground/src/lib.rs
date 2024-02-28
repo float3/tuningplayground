@@ -12,6 +12,8 @@ pub fn set_panic_hook() {
 
 #[wasm_bindgen(start)]
 pub fn main() {
+    #[cfg(debug_assertions)]
+    debug("main");
     #[cfg(feature = "console_error_panic_hook")]
     set_panic_hook();
 }
@@ -22,16 +24,31 @@ extern "C" {
     fn log(s: &str);
     #[wasm_bindgen(js_namespace = console)]
     fn debug(s: &str);
+    fn createTone(
+        index: usize,
+        frequency: f64,
+        cents: f64,
+        name: String,
+        tuning_system: JsValue,
+    ) -> JsValue;
 }
 
 #[wasm_bindgen]
-pub fn get_frequency(tuning: &str, index: usize) -> f64 {
+pub fn get_tone(tuning: &str, index: usize) -> JsValue {
+    debug("get_tone");
     let tuning: Result<TuningSystem, _> = tuning.parse();
-    log("get_frequency");
-    match tuning {
-        Ok(tuning) => Tone::new(tuning, index).frequency(),
+    let tone: Tone = match tuning {
+        Ok(tuning) => Tone::new(tuning, index),
         Err(_) => panic!("unknown tuning system"),
-    }
+    };
+
+    createTone(
+        index,
+        tone.frequency(),
+        tone.cents(),
+        tone.name,
+        JsValue::NULL,
+    )
 }
 
 #[wasm_bindgen]

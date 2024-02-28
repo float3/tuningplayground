@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 rm -rf www
-cd ./playground
+cd ./tuningplayground
 wasm-pack build --target web --dev --features console_error_panic_hook
 cd ../ts
 npm install

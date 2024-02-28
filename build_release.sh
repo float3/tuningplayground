@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 rm -rf www
-cd ./playground
+cd ./tuningplayground
 wasm-pack build --target web --release # try --out-dir
 cd ../ts
 npm install

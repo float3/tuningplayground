@@ -10,7 +10,7 @@ cargo check
 
 cargo test
 
-cd ../playground
+cd ../tuningplayground
 cargo fmt --all
 
 cargo fix --allow-dirty --allow-staged
