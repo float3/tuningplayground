@@ -53,14 +53,14 @@ octave_size.onchange = () => {
 tuning_select.onchange = () => {
 	console.debug('tuning_select.onchange');
 	switch (tuning_select.value) {
-	case 'StepMethod':
-	case 'EqualTemperament':
-		octave_size.readOnly = false;
-		break;
-	default:
-		octave_size.value = sizes[tuning_select.value].toString();
-		octave_size.readOnly = true;
-		break;
+		case 'StepMethod':
+		case 'EqualTemperament':
+			octave_size.readOnly = false;
+			break;
+		default:
+			octave_size.value = tuningplayground.get_tuning_size(tuning_select.value).toString();
+			octave_size.readOnly = true;
+			break;
 	}
 
 	for (const key in playing_tones) {
@@ -199,22 +199,6 @@ function convertNotes(notes: string[]): string {
 		return `${formattedAccidental}${pitch}${formattedOctave}`;
 	}).join('');
 }
-
-const sizes: Record<string, number> = {
-	Javanese: 5,
-	WholeTone: 6,
-	Indian: 7,
-	IndianAlt: 7,
-	thai: 9,
-	FiveLimit: 12,
-	JustIntonation: 12,
-	PythagoreanTuning: 12,
-	IndianFull: 22,
-	QuarterTone: 24,
-	JustIntonation24: 24,
-	ElevenLimit: 29,
-	FortythreeTone: 43,
-};
 
 const keyboard: Record<string, number> = {
 	//TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts

@@ -56,3 +56,13 @@ pub fn set_octave_size(size: usize) {
     debug("set_octave_size");
     tuning_systems::set_octave_size(size)
 }
+
+#[wasm_bindgen]
+pub fn get_tuning_size(tuning: &str) -> usize {
+    debug("get_tuning_size");
+    let tuning: Result<TuningSystem, _> = tuning.parse();
+    match tuning {
+        Ok(tuning) => tuning.size(),
+        Err(_) => panic!("unknown tuning system"),
+    }
+}
