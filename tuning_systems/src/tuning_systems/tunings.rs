@@ -10,8 +10,8 @@ pub enum TuningSystem {
     StepMethod,
     EqualTemperament,
 
-    Javanese,
-    Siamese,
+    //Javanese,
+    Thai,
     WholeTone,
     QuarterTone,
 
@@ -45,8 +45,8 @@ impl FromStr for TuningSystem {
             "indian" => Ok(TuningSystem::Indian),
             "indianalt" => Ok(TuningSystem::IndianAlt),
             "indianfull" => Ok(TuningSystem::Indian22),
-            "siamese" => Ok(TuningSystem::Siamese),
-            "javanese" => Ok(TuningSystem::Javanese),
+            "thai" => Ok(TuningSystem::Thai),
+            //"javanese" => Ok(TuningSystem::Javanese),
             "wholetone" => Ok(TuningSystem::WholeTone),
             "quartertone" => Ok(TuningSystem::QuarterTone),
             _ => Err(()),
@@ -59,8 +59,8 @@ impl TuningSystem {
         match &self {
             TuningSystem::StepMethod => todo!("StepMethod"),
             TuningSystem::EqualTemperament => equal_temperament_default(index),
-            TuningSystem::Javanese => equal_temperament(index, 5),
-            TuningSystem::Siamese => equal_temperament(index, 9),
+            //TuningSystem::Javanese => todo!(), // equal_temperament(index, 5), implement slendro and or pelog maybe
+            TuningSystem::Thai => equal_temperament(index, 9),
             TuningSystem::WholeTone => equal_temperament(index, 6),
             TuningSystem::QuarterTone => equal_temperament(index, 24),
             TuningSystem::JustIntonation
@@ -87,8 +87,8 @@ impl TuningSystem {
             | TuningSystem::IndianAlt
             | TuningSystem::Indian22 => self.get_lut_from_tuningsystem().len(),
             TuningSystem::StepMethod | TuningSystem::EqualTemperament => *OCTAVE_SIZE.read().expect("couldn't read octave size"),
-            TuningSystem::Siamese => 9,
-            TuningSystem::Javanese => 5,
+            TuningSystem::Thai => 9,
+            //TuningSystem::Javanese => 5,
             TuningSystem::WholeTone => 6,
             TuningSystem::QuarterTone => 24,
         }
@@ -119,8 +119,8 @@ impl TuningSystem {
 
             TuningSystem::StepMethod
             | TuningSystem::EqualTemperament
-            | TuningSystem::Siamese
-            | TuningSystem::Javanese
+            | TuningSystem::Thai
+            //| TuningSystem::Javanese
             | TuningSystem::QuarterTone
             | TuningSystem::WholeTone => {
                 unreachable!("these tuning methods don't have LUTs. Use get_fraction instead.")
@@ -152,8 +152,8 @@ impl TuningSystem {
             TuningSystem::Indian | TuningSystem::IndianAlt => SWARAS[tone_index % SWARAS.len()],
             TuningSystem::Indian22 => SHRUTIS[tone_index % SHRUTIS.len()],
 
-            TuningSystem::Javanese => SLENDRO[tone_index % SLENDRO.len()],
-            TuningSystem::Siamese => "todo",
+            //TuningSystem::Javanese => SLENDRO[tone_index % SLENDRO.len()],
+            TuningSystem::Thai => "todo",
             TuningSystem::QuarterTone => "todo",
             TuningSystem::JustIntonation24 => "todo",
             TuningSystem::ElevenLimit => "todo",

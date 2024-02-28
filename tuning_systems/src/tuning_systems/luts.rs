@@ -207,3 +207,5 @@ pub const INDIAN_SCALE_22: [Fraction; 22] = [
 ];
 
 pub const SLENDRO: [&str; 5] = ["siji", "loro", "telu", "lima", "enam"];
+pub const SLENDRO_SHORT: [&str; 5] = ["ji", "ro", "lu", "ma", "nam"];
+pub const SLENDRO_TRAD: [&str; 5] = ["panunggal", "gulu", "dhadha", "lima", "nem"];

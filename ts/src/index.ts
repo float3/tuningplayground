@@ -53,14 +53,14 @@ octave_size.onchange = () => {
 tuning_select.onchange = () => {
 	console.debug('tuning_select.onchange');
 	switch (tuning_select.value) {
-	case 'StepMethod':
-	case 'EqualTemperament':
-		octave_size.readOnly = false;
-		break;
-	default:
-		octave_size.value = sizes[tuning_select.value].toString();
-		octave_size.readOnly = true;
-		break;
+		case 'StepMethod':
+		case 'EqualTemperament':
+			octave_size.readOnly = false;
+			break;
+		default:
+			octave_size.value = sizes[tuning_select.value].toString();
+			octave_size.readOnly = true;
+			break;
 	}
 
 	for (const key in playing_tones) {
@@ -205,7 +205,7 @@ const sizes: Record<string, number> = {
 	WholeTone: 6,
 	Indian: 7,
 	IndianAlt: 7,
-	Siamese: 9,
+	thai: 9,
 	FiveLimit: 12,
 	JustIntonation: 12,
 	PythagoreanTuning: 12,
