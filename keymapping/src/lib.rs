@@ -1,14 +1,64 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+use lazy_static::lazy_static;
+use std::collections::HashMap;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+lazy_static! {
+    static ref GERMAN_KEYMAP: HashMap<&'static str, i32> = {
+        let mut m = HashMap::new();
+        m.insert("+", 50);
+        m.insert("1", 30);
+        m.insert("2", 32);
+        m.insert("3", 34);
+        m.insert("5", 37);
+        m.insert("6", 39);
+        m.insert("8", 42);
+        m.insert("9", 44);
+        m.insert("0", 46);
+        m.insert("&lt;", 19);
+        m.insert("A", 20);
+        m.insert("B", 28);
+        m.insert("C", 24);
+        m.insert("E", 35);
+        m.insert("F", 25);
+        m.insert("G", 27);
+        m.insert("I", 43);
+        m.insert("J", 30);
+        m.insert("K", 32);
+        m.insert(",", 33);
+        m.insert("L", 34);
+        m.insert(".", 35);
+        m.insert("-", 36);
+        m.insert("Ä", 37);
+        m.insert("#", 38);
+        m.insert("M", 31);
+        m.insert("N", 29);
+        m.insert("O", 45);
+        m.insert("P", 47);
+        m.insert("Ü", 48);
+        m.insert("Q", 31);
+        m.insert("R", 36);
+        m.insert("S", 22);
+        m.insert("T", 38);
+        m.insert("U", 41);
+        m.insert("V", 26);
+        m.insert("W", 33);
+        m.insert("X", 23);
+        m.insert("Y", 21);
+        m.insert("Z", 40);
+        m.insert("Ins", 3);
+        m.insert("Del", 1);
+        m.insert("Home", 8);
+        m.insert("End", 6);
+        m.insert("PgUp", 13);
+        m.insert("PgDown", 10);
+        m.insert("F1", 0);
+        m.insert("F2", 2);
+        m.insert("F3", 4);
+        m.insert("F4", 5);
+        m.insert("F5", 7);
+        m.insert("F6", 9);
+        m.insert("F7", 11);
+        m.insert("F8", 12);
+        m.insert("F9", 14);
+        m
+    };
 }

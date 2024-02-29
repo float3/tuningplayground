@@ -10,6 +10,9 @@ version = "1.0.0"
 
 [features]
 default = []
+
+[dependencies]
+lazy_static = "1.4.0"
 #wasm-bindgen = ["dep:wasm-bindgen"]
 
 #[dependencies]
