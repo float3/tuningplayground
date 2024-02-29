@@ -1,10 +1,10 @@
 [package]
 authors = ["hill <hill@hilll.dev>"]
-description = "a crate that provides ratios for different musical tuning systems"
+description = "a crate that provides DAW like keyboard maps for different keybaords"
 edition = "2021"
-keywords = ["music", "tuning"]
+keywords = ["VMPK", "keyboard"]
 license = "AGPL-3.0"
-name = "tuning_systems"
+name = "keymapping"
 repository = "https://github.com/float3/tuningplayground"
 version = "1.0.0"
 

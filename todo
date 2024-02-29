@@ -21,3 +21,5 @@
 
 // TODO: usize vs u32
 // TODO: no global state
+// TODO: check why musical notation is wrong
+// TODO: add bass clef

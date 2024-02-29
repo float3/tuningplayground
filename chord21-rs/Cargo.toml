@@ -1,8 +1,19 @@
 [package]
-name = "chord21-rs"
-version = "0.1.0"
+authors = ["hill <hill@hilll.dev>"]
+description = "a rust port of the music21 chord naming algorithm"
 edition = "2021"
+keywords = ["music", "chords"]
+license = "AGPL-3.0"
+name = "chord21-rs"
+repository = "https://github.com/float3/tuningplayground"
+version = "1.0.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+default = []
+#wasm-bindgen = ["dep:wasm-bindgen"]
 
-[dependencies]
+#[dependencies]
+#wasm-bindgen = { version = "0.2.91", optional = true }
+
+#[dev-dependencies]
+#wasm-bindgen-test = "0.3.41"
