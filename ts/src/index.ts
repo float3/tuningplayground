@@ -97,13 +97,11 @@ function on_midi_message(event: WebMidi.MIDIMessageEvent) {
 	}
 	if (is_note_on) {
 		note_on(tone_index);
-		//console.log(tone_index + ");");
 	}
 }
 
 document.addEventListener('keydown', function (event) {
 	console.debug('keydown');
-	//console.log("m.insert(\"" + event.code + "\", ");
 	if (!document.hasFocus()) return;
 	if (!(event.code in keyboard)) return;
 	if (event.repeat) return;

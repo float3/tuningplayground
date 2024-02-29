@@ -10,6 +10,7 @@ cargo check
 cargo test
 cargo test --release
 
+./build.sh
 cd ./ts
 
 npm update
