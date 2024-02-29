@@ -13,6 +13,8 @@ cargo test --release
 ./build.sh
 cd ./ts
 
+curl https://raw.githubusercontent.com/float3/float3.github.io/master/static/styles.css -o ./src/styles.css
+
 npm update
 npm install
 npm audit fix
