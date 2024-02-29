@@ -100,16 +100,20 @@ function on_midi_message(event: WebMidi.MIDIMessageEvent) {
 	}
 }
 
+let heldKeys: Record<string, boolean> = {};
+
 document.addEventListener('keydown', function (event) {
 	console.debug('keydown');
 	if (!document.hasFocus()) return;
 	if (!(event.code in keyboard)) return;
 	if (event.repeat) return;
+	if (event.code in heldKeys) return;
 
 	if (document.activeElement?.tagName === 'BODY') {
 		// if (recording) { }
 		const tone_index: number = keyboard[event.code] + parseInt(transpose.value);
 		note_on(tone_index);
+		heldKeys[event.code] = true;
 	}
 });
 
@@ -120,16 +124,19 @@ document.addEventListener('keyup', function (event) {
 	// if (recording) { }
 	const tone_index: number = keyboard[event.code] + parseInt(transpose.value);
 	note_off(tone_index);
+	delete heldKeys[event.code];
 });
 
 function note_on(tone_index: number) {
 	console.debug('note_on');
+	tone_index += 1;
 	const tone: Tone = tuningplayground.get_tone(tuning_select.value, tone_index);
 	playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
 }
 
 function note_off(tone_index: number) {
 	console.debug('note_off');
+	tone_index += 1;
 	if (!(tone_index in playing_tones)) return;
 	playing_tones[tone_index].Oscillator.stop();
 	delete playing_tones[tone_index];
@@ -152,6 +159,7 @@ function playFrequencyNative(
 	oscillator.connect(gainNode);
 	oscillator.start();
 	tone.Oscillator = oscillator;
+	if (tone_index in playing_tones) playing_tones[tone_index].Oscillator.stop();
 	playing_tones[tone_index] = tone;
 	playingTonesChanged();
 }
@@ -173,7 +181,7 @@ function playingTonesChanged() {
 		const notes = Object.values(playing_tones).map((tone) => {
 			return tone.name;
 		});
-
+		console.log(notes);
 		const abcnotes = `L: 1/1 \n[${convertNotes(notes)}]`;
 		abcjs.renderAbc('output', abcnotes);
 	}
