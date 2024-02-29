@@ -53,14 +53,14 @@ octave_size.onchange = () => {
 tuning_select.onchange = () => {
 	console.debug('tuning_select.onchange');
 	switch (tuning_select.value) {
-	case 'StepMethod':
-	case 'EqualTemperament':
-		octave_size.readOnly = false;
-		break;
-	default:
-		octave_size.value = tuningplayground.get_tuning_size(tuning_select.value).toString();
-		octave_size.readOnly = true;
-		break;
+		case 'StepMethod':
+		case 'EqualTemperament':
+			octave_size.readOnly = false;
+			break;
+		default:
+			octave_size.value = tuningplayground.get_tuning_size(tuning_select.value).toString();
+			octave_size.readOnly = true;
+			break;
 	}
 
 	for (const key in playing_tones) {
@@ -88,20 +88,22 @@ function onMIDIFailure(error: DOMException) {
 
 function on_midi_message(event: WebMidi.MIDIMessageEvent) {
 	console.debug('onMIDIMessage');
-	const [status, note, velocity] = event.data;
+	const [status, tone_index, velocity] = event.data;
 	const is_note_on = (status & 0xf0) === 0x90;
 	const is_note_off = (status & 0xf0) === 0x80;
 
 	if (is_note_off) {
-		note_off(note);
+		note_off(tone_index);
 	}
 	if (is_note_on) {
-		note_on(note);
+		note_on(tone_index);
+		//console.log(tone_index + ");");
 	}
 }
 
 document.addEventListener('keydown', function (event) {
 	console.debug('keydown');
+	//console.log("m.insert(\"" + event.code + "\", ");
 	if (!document.hasFocus()) return;
 	if (!(event.code in keyboard)) return;
 	if (event.repeat) return;
@@ -201,7 +203,7 @@ function convertNotes(notes: string[]): string {
 }
 
 const keyboard: Record<string, number> = {
-	//TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
+	// TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
 	IntlBackslash: -2,
 	KeyA: -1,
 	KeyZ: 0, // 24

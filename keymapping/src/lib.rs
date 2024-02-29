@@ -61,4 +61,101 @@ lazy_static! {
         m.insert("F9", 14);
         m
     };
+    // {a 8}
+    // {z 9}
+    // {s 10}
+    // {x 11}
+    // {c 12}
+    // {f 13}
+    // {v 14}
+    // {g 15}
+    // {b 16}
+    // {n 17}
+    // {j 18}
+    // {m 19}
+    // {k 20}
+    // {comma 21}
+    // {l 22}
+    // {period 23}
+    // {slash 24}
+    // {apostrophe 25}
+    // {backslash 26}
+    // {grave 27}
+
+// m.insert("KeyY", 45);
+// m.insert("KeyS", 25);
+// m.insert("KeyD", 27);
+// m.insert("KeyC", 28);
+// m.insert("KeyV", 29);
+// m.insert("KeyG", 30);
+// m.insert("KeyB", 31);
+// m.insert("KeyH", 32);
+// m.insert("KeyN", 33);
+// m.insert("KeyJ", 34);
+// m.insert("KeyM", index.js:80:13
+// 35); index.js:76:17
+// 36); index.js:76:17
+// m.insert("KeyW", index.js:80:13
+// 38); index.js:76:17
+// m.insert("KeyE", index.js:80:13
+// 40); index.js:76:17
+// m.insert("KeyR", index.js:80:13
+// 41); index.js:76:17
+// m.insert("KeyT", index.js:80:13
+// 43); index.js:76:17
+// m.insert("KeyZ", index.js:80:13
+// 24); index.js:76:17
+// m.insert("KeyU", index.js:80:13
+// 47); index.js:76:17
+// m.insert("KeyI", index.js:80:13
+// 48); index.js:76:17
+// m.insert("KeyO", index.js:80:13
+// 50); index.js:76:17
+// m.insert("KeyP", index.js:80:13
+// 52); index.js:76:17
+// m.insert("", index.js:80:13
+// m.insert("Equal", index.js:80:13
+// m.insert("Digit3", index.js:80:13
+// m.insert("Digit1", index.js:80:13
+// m.insert("Digit2", index.js:80:13
+// 37); index.js:76:17
+// m.insert("Digit3", index.js:80:13
+// 39); index.js:76:17
+// m.insert("Digit4", index.js:80:13
+// m.insert("Digit5", index.js:80:13
+// 42); index.js:76:17
+// m.insert("Digit6", index.js:80:13
+// 44); index.js:76:17
+// m.insert("Digit7", index.js:80:13
+// 46); index.js:76:17
+// m.insert("Digit8", index.js:80:13
+// m.insert("Digit9", index.js:80:13
+// 49); index.js:76:17
+// m.insert("Digit0", index.js:80:13
+// 51);
+    static ref ENGLISH_KEYMAP: HashMap<&'static str, i32> = {
+        let mut m = HashMap::new();
+        m.insert("a", 8);
+        m.insert("z", 9);
+        m.insert("s", 10);
+        m.insert("x", 11);
+        m.insert("c", 12);
+        m.insert("f", 13);
+        m.insert("v", 14);
+        m.insert("g", 15);
+        m.insert("b", 16);
+        m.insert("n", 17);
+        m.insert("j", 18);
+        m.insert("m", 19);
+        m.insert("k", 20);
+        m.insert(",", 21);
+        m.insert("l", 22);
+        m.insert(".", 23);
+        m.insert("/", 24);
+        m.insert("'", 25);
+        m.insert("\\", 26);
+        m.insert("`", 27);
+        m
+    };
+
 }
