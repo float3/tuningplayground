@@ -10,17 +10,11 @@
 // TODO: add a record button to record and output midi
 // TODO: have tuning system with just_intonation but derrive half of the ratios from the reverse ratio of the first one so the perfect fifth also provides the perfect fourth and the major third also provides minor 6thi
 // TODO: turkish tuning
-
-
 // TODO: implement Midi player
-
-
 // TODO: use piano sample instead of synth
-
-
-
 // TODO: usize vs u32
 // TODO: no global state
 // TODO: check why musical notation is wrong
 // TODO: add bass clef
 // TODO: Fix visibility pub(crate) and fix tests maybe inline them per file
+// TODO: check why everything is flat
