@@ -1,4 +1,4 @@
-use keymapping::GERMAN_KEYMAP;
+use keymapping::{GERMAN_KEYMAP, US_KEYMAP};
 use tuning_systems::{Tone, TuningSystem};
 use wasm_bindgen::prelude::*;
 
@@ -85,5 +85,5 @@ pub fn get_tuning_size(tuning: &str) -> usize {
 pub fn from_keymap(key: &str) -> i32 {
     #[cfg(debug_assertions)]
     debug("from_keymap");
-    GERMAN_KEYMAP.get(key).unwrap_or(&-1).clone()
+    US_KEYMAP.get(key).unwrap_or(&-1).clone()
 }
