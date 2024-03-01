@@ -22,6 +22,7 @@ tuning_systems = { path = "../tuning_systems" }
 keymapping = { path = "../keymapping" }
 chord21-rs = { path = "../chord21-rs" }
 wasm-bindgen = "0.2.91"
+regex = "1.10.3"
 #wee_alloc = { version = "0.4.5", optional = true, features = ["nightly",] } # smaller code size but slower
 
 [dev-dependencies]

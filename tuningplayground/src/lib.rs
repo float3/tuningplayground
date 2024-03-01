@@ -1,4 +1,5 @@
 use keymapping::{GERMAN_KEYMAP, US_KEYMAP};
+use regex::Regex;
 use tuning_systems::{Tone, TuningSystem};
 use wasm_bindgen::prelude::*;
 
@@ -86,4 +87,40 @@ pub fn from_keymap(key: &str) -> i32 {
     #[cfg(debug_assertions)]
     debug("from_keymap");
     US_KEYMAP.get(key).unwrap_or(&-1).clone()
+}
+
+#[wasm_bindgen]
+pub fn convert_notes(notes: Vec<JsValue>) -> String {
+    format!(
+        "L: 1/1 \n[{}]",
+        notes
+            .iter()
+            .map(|note| {
+                let note = note.as_string().unwrap();
+                let re = Regex::new(r"([A-G])([#b]*)(N1|\d+)").unwrap();
+                if let Some(cap) = re.captures(&note) {
+                    let pitch = &cap[1];
+                    let mut accidental = cap[2].to_string();
+                    let octave_str = &cap[3];
+                    accidental = accidental.replace("#", "^").replace("b", "_");
+                    let mut formatted_octave = String::new();
+                    if octave_str != "N1" {
+                        let octave_number = octave_str.parse::<i32>().unwrap();
+                        if octave_number == 4 {
+                            formatted_octave = "".to_string();
+                        } else if octave_number < 4 {
+                            formatted_octave = ",".repeat((4 - octave_number) as usize);
+                        } else if octave_number > 4 {
+                            formatted_octave = "'".repeat((octave_number - 4) as usize);
+                        }
+                    } else {
+                        formatted_octave = ",,,,,,".to_string();
+                    }
+                    return format!("{}{}{}", accidental, pitch, formatted_octave);
+                }
+                note
+            })
+            .collect::<Vec<String>>()
+            .join("")
+    )
 }
