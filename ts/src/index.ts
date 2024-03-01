@@ -105,13 +105,12 @@ const heldKeys: Record<string, boolean> = {};
 document.addEventListener('keydown', function (event) {
 	console.debug('keydown');
 	if (!document.hasFocus()) return;
-	if (!(event.code in keyboard)) return;
 	if (event.repeat) return;
 	if (event.code in heldKeys) return;
 
 	if (document.activeElement?.tagName === 'BODY') {
 		// if (recording) { }
-		const tone_index: number = keyboard[event.code] + parseInt(transpose.value);
+		const tone_index: number = tuningplayground.from_keymap(event.code);
 		note_on(tone_index);
 		heldKeys[event.code] = true;
 	}
@@ -119,8 +118,6 @@ document.addEventListener('keydown', function (event) {
 
 document.addEventListener('keyup', function (event) {
 	console.debug('keyup');
-	if (!(event.code in keyboard)) return;
-
 	// if (recording) { }
 	const tone_index: number = tuningplayground.from_keymap(event.code);
 	note_off(tone_index);
@@ -136,7 +133,7 @@ function note_on(tone_index: number) {
 
 function note_off(tone_index: number) {
 	console.debug('note_off');
-	tone_index += 1;
+	tone_index += parseInt(transpose.value);
 	if (!(tone_index in playing_tones)) return;
 	playing_tones[tone_index].Oscillator.stop();
 	delete playing_tones[tone_index];
@@ -211,48 +208,3 @@ function convertNotes(notes: string[]): string {
 function logToDiv(message: string): void {
 	logContainer.innerHTML = '<p>' + message + '</p>' + logContainer.innerHTML;
 }
-
-const keyboard: Record<string, number> = {
-	// TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
-	IntlBackslash: -2,
-	KeyA: -1,
-	KeyZ: 0, // 24
-	KeyS: 1,
-	KeyX: 2,
-	KeyC: 3,
-	KeyF: 4,
-	KeyV: 5,
-	KeyG: 6,
-	KeyB: 7,
-	KeyN: 8,
-	KeyJ: 9,
-	KeyM: 10,
-	KeyK: 11,
-	Comma: 12,
-	KeyL: 13,
-	Period: 14,
-	Slash: 15,
-	Quote: 16,
-	Digit1: 16,
-	BackSlash: 17,
-	KeyQ: 17, // 36
-	Digit2: 18,
-	KeyW: 19,
-	KeyE: 20,
-	Digit4: 21,
-	KeyR: 22,
-	Digit5: 23,
-	KeyT: 24,
-	Digit6: 25,
-	KeyY: 26,
-	KeyU: 27,
-	Digit8: 28,
-	KeyI: 29,
-	Digit9: 30,
-	KeyO: 31,
-	KeyP: 32,
-	Minus: 33,
-	BracketLeft: 34,
-	Equal: 35,
-	BracketRight: 36,
-};
