@@ -15,7 +15,7 @@ const octave_size = document.getElementById('octave_size') as HTMLInputElement;
 const tuning_select = document.getElementById('tuning_select') as HTMLSelectElement;
 const volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement;
 const transpose = document.getElementById('transpose') as HTMLInputElement;
-
+const logContainer = document.getElementById('logContainer') as HTMLDivElement;
 class Tone {
 	index: number;
 	freq: number;
@@ -206,6 +206,10 @@ function convertNotes(notes: string[]): string {
 		}
 		return `${formattedAccidental}${pitch}${formattedOctave}`;
 	}).join('');
+}
+
+function logToDiv(message: string): void {
+	logContainer.innerHTML = '<p>' + message + '</p>' + logContainer.innerHTML;
 }
 
 const keyboard: Record<string, number> = {

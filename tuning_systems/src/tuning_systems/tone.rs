@@ -8,9 +8,9 @@ use crate::{equal_temperament, Fraction, TuningSystem, CN1};
 pub struct Tone {
     pub name: String,
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(skip))]
-    pub fraction: Fraction,
-    pub tone_index: usize,
-    pub tuning_system: TuningSystem,
+    pub(crate) fraction: Fraction,
+    pub(crate) tone_index: usize,
+    pub(crate) tuning_system: TuningSystem,
 }
 
 impl Tone {
@@ -20,7 +20,7 @@ impl Tone {
     }
 
     // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
-    pub fn new_with_octave_size(tuning_system: TuningSystem, tone_index: usize) -> Tone {
+    pub(crate) fn new_with_octave_size(tuning_system: TuningSystem, tone_index: usize) -> Tone {
         let name = tuning_system.get_tone_name(tone_index);
         let fraction = tuning_system.get_fraction(tone_index);
 
@@ -32,7 +32,7 @@ impl Tone {
         }
     }
 
-    pub fn octave(&self) -> usize {
+    pub(crate) fn octave(&self) -> usize {
         self.tone_index / self.tuning_system.size()
     }
 
@@ -43,7 +43,6 @@ impl Tone {
     }
 
     pub fn frequency(&self) -> f64 {
-        let ratio: f64 = self.fraction.into();
-        ratio * CN1
+        self.fraction.f64() * CN1
     }
 }

@@ -1,10 +1,9 @@
-#[allow(dead_code)]
-fn find_coprimes(num: u32) -> Vec<u32> {
+pub(crate) fn find_coprimes(num: usize) -> Vec<usize> {
     let mut coprimes = Vec::new();
 
     for i in 2..num {
-        if gcd(num, i) == 1 {
-            coprimes.push(i);
+        if gcd(num as u32, i as u32) == 1 {
+            coprimes.push(i as usize);
         }
     }
 

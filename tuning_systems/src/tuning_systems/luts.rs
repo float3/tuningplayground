@@ -1,8 +1,8 @@
 use crate::Fraction;
 
-pub const TWELVE_TONE_NAMES: [&str; 12] = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
+pub(crate) const TWELVE_TONE_NAMES: [&str; 12] = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
 
-pub const JUST_INTONATION: [Fraction; 12] = [
+pub(crate) const JUST_INTONATION: [Fraction; 12] = [
     Fraction::new(1, 1),
     Fraction::new(17, 16),
     Fraction::new(9, 8),
@@ -17,7 +17,7 @@ pub const JUST_INTONATION: [Fraction; 12] = [
     Fraction::new(15, 8),
 ];
 
-pub const JUST_INTONATION_24: [Fraction; 24] = [
+pub(crate) const JUST_INTONATION_24: [Fraction; 24] = [
     Fraction::new(1, 1),
     Fraction::new(33, 32),
     Fraction::new(17, 16),
@@ -44,7 +44,7 @@ pub const JUST_INTONATION_24: [Fraction; 24] = [
     Fraction::new(31, 16),
 ];
 
-pub const PYTHAGOREAN_TUNING: [Fraction; 12] = [
+pub(crate) const PYTHAGOREAN_TUNING: [Fraction; 12] = [
     Fraction::new(1, 1),
     Fraction::new(256, 243),
     Fraction::new(9, 8),
@@ -59,7 +59,7 @@ pub const PYTHAGOREAN_TUNING: [Fraction; 12] = [
     Fraction::new(15, 8),
 ];
 
-pub const FIVE_LIMIT: [Fraction; 12] = [
+pub(crate) const FIVE_LIMIT: [Fraction; 12] = [
     Fraction::new(1, 1),
     Fraction::new(16, 15),
     Fraction::new(9, 8),
@@ -74,7 +74,7 @@ pub const FIVE_LIMIT: [Fraction; 12] = [
     Fraction::new(15, 8),
 ];
 
-pub const ELEVEN_LIMIT: [Fraction; 29] = [
+pub(crate) const ELEVEN_LIMIT: [Fraction; 29] = [
     Fraction::new(1, 1),
     Fraction::new(12, 11),
     Fraction::new(11, 10),
@@ -106,7 +106,7 @@ pub const ELEVEN_LIMIT: [Fraction; 29] = [
     Fraction::new(11, 6),
 ];
 
-pub const FORTYTHREE_TONE: [Fraction; 43] = [
+pub(crate) const FORTYTHREE_TONE: [Fraction; 43] = [
     Fraction::new(1, 1),
     Fraction::new(81, 80),
     Fraction::new(33, 32),
@@ -153,10 +153,10 @@ pub const FORTYTHREE_TONE: [Fraction; 43] = [
 ];
 
 // an array of strings same length as INDIA_SCALE
-pub const SWARAS: [&str; 7] = ["Sa", "Re", "Ga", "Ma", "Pa", "Dha", "Ni"];
+pub(crate) const SWARAS: [&str; 7] = ["Sa", "Re", "Ga", "Ma", "Pa", "Dha", "Ni"];
 
 // swaras
-pub const INDIAN_SCALE: [Fraction; 7] = [
+pub(crate) const INDIAN_SCALE: [Fraction; 7] = [
     Fraction::new(1, 1),
     Fraction::new(9, 8),
     Fraction::new(5, 4),
@@ -166,7 +166,7 @@ pub const INDIAN_SCALE: [Fraction; 7] = [
     Fraction::new(15, 8),
 ];
 
-pub const INDIA_SCALE_ALT: [Fraction; 7] = [
+pub(crate) const INDIA_SCALE_ALT: [Fraction; 7] = [
     Fraction::new(1, 1),
     Fraction::new(9, 8),
     Fraction::new(5, 4),
@@ -176,12 +176,12 @@ pub const INDIA_SCALE_ALT: [Fraction; 7] = [
     Fraction::new(15, 8),
 ];
 
-pub const SHRUTIS: [&str; 22] = [
+pub(crate) const SHRUTIS: [&str; 22] = [
     "C", "D♭↓", "D♭", "D↓", "D", "E♭↓", "E♭", "E", "E↑", "F", "F↑", "F♯", "F♯↑", "G", "A♭↓", "A♭", "A", "A↑", "B♭↓", "B♭", "B",
     "B↑",
 ];
 
-pub const INDIAN_SCALE_22: [Fraction; 22] = [
+pub(crate) const INDIAN_SCALE_22: [Fraction; 22] = [
     Fraction::new(1, 1),
     Fraction::new(256, 243),
     Fraction::new(16, 15),
@@ -206,6 +206,6 @@ pub const INDIAN_SCALE_22: [Fraction; 22] = [
     Fraction::new(243, 128),
 ];
 
-pub const SLENDRO: [&str; 5] = ["siji", "loro", "telu", "lima", "enam"];
-pub const SLENDRO_SHORT: [&str; 5] = ["ji", "ro", "lu", "ma", "nam"];
-pub const SLENDRO_TRAD: [&str; 5] = ["panunggal", "gulu", "dhadha", "lima", "nem"];
+pub(crate) const SLENDRO: [&str; 5] = ["siji", "loro", "telu", "lima", "enam"];
+pub(crate) const SLENDRO_SHORT: [&str; 5] = ["ji", "ro", "lu", "ma", "nam"];
+pub(crate) const SLENDRO_TRAD: [&str; 5] = ["panunggal", "gulu", "dhadha", "lima", "nem"];

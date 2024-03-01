@@ -1,21 +1,23 @@
+use std::cmp::Ordering;
+use std::ops::{Div, DivAssign, Mul, MulAssign};
 // use wasm_bindgen::convert::{FromWasmAbi, WasmAbi};
 // #[cfg(feature = "wasm-bindgen")]
 // use wasm_bindgen::prelude::*;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug)]
 // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
-pub struct Fraction {
-    pub numerator: u32,
-    pub denominator: u32,
-    pub base: u32,
+pub(crate) struct Fraction {
+    pub(crate) numerator: u32,
+    pub(crate) denominator: u32,
+    pub(crate) base: u32,
 }
 
 impl Fraction {
-    pub const fn new(numerator: u32, denominator: u32) -> Fraction {
+    pub(crate) const fn new(numerator: u32, denominator: u32) -> Fraction {
         Fraction::new_with_base(numerator, denominator, 0)
     }
 
-    pub const fn new_with_base(numerator: u32, denominator: u32, base: u32) -> Fraction {
+    pub(crate) const fn new_with_base(numerator: u32, denominator: u32, base: u32) -> Fraction {
         Fraction {
             numerator,
             denominator,
@@ -23,12 +25,8 @@ impl Fraction {
         }
     }
 
-    pub fn numerator(&self) -> u32 {
-        self.numerator
-    }
-
-    pub fn denominator(&self) -> u32 {
-        self.denominator
+    pub(crate) fn f64(&self) -> f64 {
+        f64::from(*self)
     }
 }
 
@@ -51,6 +49,92 @@ impl From<(u32, u32)> for Fraction {
 impl From<(u32, u32, u32)> for Fraction {
     fn from(frac: (u32, u32, u32)) -> Fraction {
         Fraction::new_with_base(frac.0, frac.1, frac.2)
+    }
+}
+
+impl Mul for Fraction {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        if self.base != rhs.base {
+            panic!("Fractions have different bases");
+        }
+
+        if self.base == 0 {
+            Self {
+                numerator: self.numerator * rhs.numerator,
+                denominator: self.denominator * rhs.denominator,
+                base: self.base,
+            }
+        } else {
+            Self {
+                numerator: self.numerator * rhs.denominator + rhs.numerator * self.denominator,
+                denominator: self.denominator * rhs.denominator,
+                base: self.base,
+            }
+        }
+    }
+}
+
+impl MulAssign for Fraction {
+    fn mul_assign(&mut self, rhs: Self) {
+        let result = self.mul(rhs);
+        self.numerator = result.numerator;
+        self.denominator = result.denominator;
+        // self.base = result.base;
+    }
+}
+
+impl Div for Fraction {
+    type Output = Self;
+
+    fn div(self, rhs: Self) -> Self::Output {
+        if self.base != rhs.base {
+            panic!("Fractions have different bases");
+        }
+
+        if self.base == 0 {
+            Self {
+                numerator: self.numerator * rhs.denominator,
+                denominator: self.denominator * rhs.numerator,
+                base: self.base,
+            }
+        } else {
+            Self {
+                numerator: self.numerator * rhs.denominator - rhs.numerator * self.denominator,
+                denominator: self.denominator * rhs.denominator,
+                base: self.base,
+            }
+        }
+    }
+}
+
+impl DivAssign for Fraction {
+    fn div_assign(&mut self, rhs: Self) {
+        let result = self.div(rhs);
+        self.numerator = result.numerator;
+        self.denominator = result.denominator;
+    }
+}
+
+impl PartialEq for Fraction {
+    fn eq(&self, other: &Self) -> bool {
+        self.f64() == other.f64()
+    }
+}
+
+impl PartialOrd for Fraction {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        let left = self.f64();
+        let right = other.f64();
+
+        if left == right {
+            Some(Ordering::Equal)
+        } else if left < right {
+            Some(Ordering::Less)
+        } else {
+            Some(Ordering::Greater)
+        }
     }
 }
 

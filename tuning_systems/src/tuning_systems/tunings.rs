@@ -55,7 +55,7 @@ impl FromStr for TuningSystem {
 }
 
 impl TuningSystem {
-    pub fn get_fraction(&self, index: usize) -> Fraction {
+    pub(crate) fn get_fraction(&self, index: usize) -> Fraction {
         match &self {
             TuningSystem::StepMethod => todo!("StepMethod"),
             TuningSystem::EqualTemperament => equal_temperament_default(index),
@@ -94,7 +94,7 @@ impl TuningSystem {
         }
     }
 
-    fn get_fraction_from_table(&self, index: usize) -> Fraction {
+    pub(crate) fn get_fraction_from_table(&self, index: usize) -> Fraction {
         let lut = self.get_lut_from_tuningsystem();
         let len = lut.len();
         let octave = index / len;
@@ -129,7 +129,7 @@ impl TuningSystem {
         lut
     }
 
-    pub fn get_tone_name(&self, tone_index: usize) -> String {
+    pub(crate) fn get_tone_name(&self, tone_index: usize) -> String {
         let octave_size = *OCTAVE_SIZE.read().expect("couldn't read octave size");
         // if indian or indianalt we want to use 7
         let name_index = tone_index % octave_size;

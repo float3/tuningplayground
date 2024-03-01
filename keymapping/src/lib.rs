@@ -2,7 +2,7 @@ use lazy_static::lazy_static;
 use std::collections::HashMap;
 
 lazy_static! {
-    static ref GERMAN_KEYMAP: HashMap<&'static str, i32> = {
+    pub static ref GERMAN_KEYMAP: HashMap<&'static str, i32> = {
         let mut m = HashMap::new();
         m.insert("KeyF1", 0);
         m.insert("KeyDel", 1);
@@ -86,7 +86,7 @@ lazy_static! {
     // {backslash 26}
     // {grave 27}
 
-    static ref US_KEYMAP: HashMap<&'static str, i32> = {
+    pub static ref US_KEYMAP: HashMap<&'static str, i32> = {
         let mut m = HashMap::new();
         m.insert("KeyZ", 24); // index.js:86:21
         m.insert("KeyS", 25); // index.js:86:21
