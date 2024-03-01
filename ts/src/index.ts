@@ -53,14 +53,14 @@ octave_size.onchange = () => {
 tuning_select.onchange = () => {
 	console.debug('tuning_select.onchange');
 	switch (tuning_select.value) {
-	case 'StepMethod':
-	case 'EqualTemperament':
-		octave_size.readOnly = false;
-		break;
-	default:
-		octave_size.value = tuningplayground.get_tuning_size(tuning_select.value).toString();
-		octave_size.readOnly = true;
-		break;
+		case 'StepMethod':
+		case 'EqualTemperament':
+			octave_size.readOnly = false;
+			break;
+		default:
+			octave_size.value = tuningplayground.get_tuning_size(tuning_select.value).toString();
+			octave_size.readOnly = true;
+			break;
 	}
 
 	for (const key in playing_tones) {
@@ -122,14 +122,14 @@ document.addEventListener('keyup', function (event) {
 	if (!(event.code in keyboard)) return;
 
 	// if (recording) { }
-	const tone_index: number = keyboard[event.code] + parseInt(transpose.value);
+	const tone_index: number = tuningplayground.from_keymap(event.code);
 	note_off(tone_index);
 	delete heldKeys[event.code];
 });
 
 function note_on(tone_index: number) {
 	console.debug('note_on');
-	tone_index += 1;
+	tone_index += parseInt(transpose.value);
 	const tone: Tone = tuningplayground.get_tone(tuning_select.value, tone_index);
 	playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
 }

@@ -23,6 +23,7 @@ lazy_static! {
         m.insert("KeyF11", 16);
         m.insert("KeyF12", 17);
         m.insert("&lt;", 19);
+
         m.insert("KeyA", 20);
         m.insert("KeyY", 21);
         m.insert("KeyS", 22);
@@ -33,33 +34,34 @@ lazy_static! {
         m.insert("KeyG", 27);
         m.insert("KeyB", 28);
         m.insert("KeyN", 29);
-        m.insert("Key1", 30);
+        m.insert("Digit1", 30);
         m.insert("KeyJ", 30);
         m.insert("KeyM", 31);
         m.insert("KeyQ", 31);
         m.insert("KeyK", 32);
-        m.insert("Key2", 32);
+        m.insert("Digit2", 32);
         m.insert("KeyW", 33);
         m.insert("Key,", 33);
         m.insert("KeyL", 34);
-        m.insert("Key3", 34);
+        m.insert("Digit3", 34);
         m.insert("KeyE", 35);
         m.insert("Key.", 35);
         m.insert("Key-", 36);
         m.insert("KeyR", 36);
-        m.insert("Key5", 37);
+        m.insert("Digit5", 37);
         m.insert("KeyÄ", 37);
         m.insert("KeyT", 38);
         m.insert("Key#", 38);
-        m.insert("Key6", 39);
+        m.insert("Digit6", 39);
         m.insert("KeyZ", 40);
         m.insert("KeyU", 41);
-        m.insert("Key8", 42);
+        m.insert("Digit8", 42);
         m.insert("KeyI", 43);
-        m.insert("Key9", 44);
+        m.insert("Digit9", 44);
         m.insert("KeyO", 45);
-        m.insert("Key0", 46);
+        m.insert("Digit0", 46);
         m.insert("KeyP", 47);
+
         m.insert("KeyÜ", 48);
         m.insert("Minus", 50);
 
