@@ -43,7 +43,7 @@ window.createTone = function (index: number, freq: number, cents: number, name: 
 	return new Tone(index, freq, cents, name, oscillator);
 };
 
-const playing_tones: Record<number, Tone> = [];
+const playingTones: Record<number, Tone> = [];
 let audioContext: AudioContext;
 // let recording: boolean;
 
@@ -55,22 +55,39 @@ octaveSize.onchange = () => {
 tuningSelect.onchange = () => {
 	console.debug('tuningSelect.onchange');
 	switch (tuningSelect.value) {
-	case 'StepMethod':
-	case 'EqualTemperament':
-		octaveSize.readOnly = false;
-		break;
-	default:
-		octaveSize.value = tuningplayground.get_tuning_size(tuningSelect.value).toString();
-		octaveSize.readOnly = true;
-		break;
+		case 'StepMethod':
+		case 'EqualTemperament':
+			octaveSize.readOnly = false;
+			break;
+		default:
+			octaveSize.value = tuningplayground.get_tuning_size(tuningSelect.value).toString();
+			octaveSize.readOnly = true;
+			break;
 	}
 
-	for (const key in playing_tones) {
-		playing_tones[key].Oscillator.stop();
-		delete playing_tones[key];
+	stopAllTones();
+};
+
+window.addEventListener('blur', function () {
+	console.debug('window.blur');
+	stopAllTones();
+});
+
+document.addEventListener('visibilitychange', function () {
+	console.debug('document.visibilitychange');
+	if (document.hidden) {
+		stopAllTones();
+	}
+});
+
+function stopAllTones() {
+	console.debug('stopAllTones');
+	for (const key in playingTones) {
+		playingTones[key].Oscillator.stop();
+		delete playingTones[key];
 	}
 	playingTonesChanged();
-};
+}
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess) {
 	console.debug('onMIDISuccess');
@@ -137,9 +154,9 @@ function noteOn(tone_index: number) {
 function noteOff(tone_index: number) {
 	console.debug('noteOff');
 	tone_index += parseInt(transpose.value);
-	if (!(tone_index in playing_tones)) return;
-	playing_tones[tone_index].Oscillator.stop();
-	delete playing_tones[tone_index];
+	if (!(tone_index in playingTones)) return;
+	playingTones[tone_index].Oscillator.stop();
+	delete playingTones[tone_index];
 	playingTonesChanged();
 }
 
@@ -159,8 +176,8 @@ function playFrequencyNative(
 	oscillator.connect(gainNode);
 	oscillator.start();
 	tone.Oscillator = oscillator;
-	if (tone_index in playing_tones) playing_tones[tone_index].Oscillator.stop();
-	playing_tones[tone_index] = tone;
+	if (tone_index in playingTones) playingTones[tone_index].Oscillator.stop();
+	playingTones[tone_index] = tone;
 	playingTonesChanged();
 }
 
@@ -175,8 +192,8 @@ output.style.color = 'black';
 
 function playingTonesChanged() {
 	console.debug('playingTonesChanged');
-	if (octaveSize.value === '12' && Object.keys(playing_tones).length > 0) {
-		const notes = Object.values(playing_tones).map((tone) => {
+	if (octaveSize.value === '12' && Object.keys(playingTones).length > 0) {
+		const notes = Object.values(playingTones).map((tone) => {
 			return tone.name;
 		});
 		abcjs.renderAbc('output', tuningplayground.convert_notes(notes));
