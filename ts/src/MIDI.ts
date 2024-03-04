@@ -1,8 +1,6 @@
 import { noteOn, noteOff } from '.';
 
-requestMIDI();
-
-function requestMIDI(): void {
+export function requestMIDI(): void {
 	if (navigator.requestMIDIAccess) {
 		navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
 	} else {

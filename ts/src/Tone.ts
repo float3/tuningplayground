@@ -19,9 +19,7 @@ declare global {
 	}
 }
 
-window.createTone = createTone;
-
-function createTone(index: number, freq: number, cents: number, name: string, oscillator: OscillatorNode): Tone {
+export function createTone(index: number, freq: number, cents: number, name: string, oscillator: OscillatorNode): Tone {
 	console.debug('window.createTone');
 	return new Tone(index, freq, cents, name, oscillator);
 }

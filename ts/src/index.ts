@@ -1,10 +1,22 @@
 console.debug('imports');
-import * as tuningplayground from 'tuningplayground';
+import * as wasm from 'tuningplayground';
 import { playingTonesChanged, logToDiv, transpose, tuningSelect, volumeSlider } from './UI';
-import { Tone } from './Tone';
+import { Tone, createTone } from './Tone';
+import { requestMIDI } from './MIDI';
+import { keydown, keyup, visibilityChange } from './events';
 
 console.debug('static');
-tuningplayground.default();
+
+requestMIDI();
+
+document.addEventListener('keydown', keydown);
+document.addEventListener('keyup', keyup);
+document.addEventListener('visibilitychange', visibilityChange);
+
+window.addEventListener('blur', stopAllTones);
+window.createTone = createTone;
+
+wasm.default();
 
 export const playingTones: Record<number, Tone> = [];
 let audioContext: AudioContext;
@@ -24,7 +36,7 @@ export const heldKeys: Record<string, boolean> = {};
 export function noteOn(tone_index: number, velocity?: number): void {
 	console.debug('noteOn');
 	tone_index += parseInt(transpose.value);
-	const tone: Tone = tuningplayground.get_tone(tuningSelect.value, tone_index);
+	const tone: Tone = wasm.get_tone(tuningSelect.value, tone_index);
 	playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
 	logToDiv(tone.name);
 }
