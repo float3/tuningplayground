@@ -96,6 +96,7 @@ pub fn convert_notes(notes: Vec<JsValue>) -> String {
         notes
             .iter()
             .map(|note| {
+                // TODO: use music21 pitch struct here instead of regex
                 let note = note.as_string().unwrap();
                 let re = Regex::new(r"([A-G])([#b]*)(N1|\d+)").unwrap();
                 if let Some(cap) = re.captures(&note) {
