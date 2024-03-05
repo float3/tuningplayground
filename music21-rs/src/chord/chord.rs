@@ -49,11 +49,7 @@ impl Chord {
     }
 
     pub fn pitches(&self) -> Vec<Pitch> {
-        self.notes
-            .iter()
-            .map(|note| note.pitches())
-            .flatten()
-            .collect()
+        self.notes.iter().map(|note| note.pitch.clone()).collect()
     }
 
     fn common_name(&self) -> String {
