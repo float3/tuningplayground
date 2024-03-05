@@ -1,15 +1,13 @@
-use crate::{Fraction, TuningSystem, OCTAVE_SIZE, STEP_SIZE};
+use crate::{Fraction, TuningSystem};
 
-pub(crate) fn equal_temperament(tone: usize, octave_size: usize) -> Fraction {
-    Fraction::new_with_base(tone as u32, octave_size as u32, 2)
+type Tone = u32;
+
+pub(crate) fn equal_temperament(tone: u32, octave_size: u32) -> Fraction {
+    Fraction::new_with_base(tone, octave_size, 2)
 }
 
-pub(crate) fn equal_temperament_12(tone: usize) -> Fraction {
+pub(crate) fn equal_temperament_12(tone: u32) -> Fraction {
     equal_temperament(tone, 12)
-}
-
-pub(crate) fn equal_temperament_default(tone: usize) -> Fraction {
-    equal_temperament(tone, *OCTAVE_SIZE.read().expect("couldn't read octave size"))
 }
 
 fn get_ratio_from_step_algorithm(n: i32, max: i32) -> Fraction {

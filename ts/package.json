@@ -31,9 +31,7 @@
     "dependencies": {
         "@types/webmidi": "^2.0.10",
         "abcjs": "^6.3.0",
-        "tuningplayground": "file:../tuningplayground/pkg",
-        "tone": "^14.7.77",
-        "vexflow": "^4.2.3"
+        "tuningplayground": "file:../tuningplayground/pkg"
     },
     "devDependencies": {
         "@types/node": "^20.11.19",

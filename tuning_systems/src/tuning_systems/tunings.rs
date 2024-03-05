@@ -7,8 +7,8 @@ use crate::{
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
-    StepMethod,
-    EqualTemperament,
+    StepMethod{ size: u32},
+    EqualTemperament{ size: u32},
 
     // Javanese,
     // Thai,
@@ -55,7 +55,7 @@ impl FromStr for TuningSystem {
 }
 
 impl TuningSystem {
-    pub(crate) fn get_fraction(&self, index: usize) -> Fraction {
+    pub(crate) fn get_fraction(&self, index: u32) -> Fraction {
         match &self {
             TuningSystem::StepMethod => todo!("StepMethod"),
             TuningSystem::EqualTemperament => equal_temperament_default(index),
@@ -94,11 +94,11 @@ impl TuningSystem {
         }
     }
 
-    pub(crate) fn get_fraction_from_table(&self, index: usize) -> Fraction {
+    pub(crate) fn get_fraction_from_table(&self, index: u32) -> Fraction {
         let lut = self.get_lut_from_tuningsystem();
-        let len = lut.len();
+        let len = lut.len() as u32;
         let octave = index / len;
-        let index_mod = index % len;
+        let index_mod: usize = (index % len) as usize;
         let mut fraction = lut[index_mod];
         // fraction.numerator += (2u32.pow(octave as u32) - 1) * fraction.denominator;
         fraction.numerator *= 2u32.pow(octave as u32);
@@ -129,7 +129,7 @@ impl TuningSystem {
         lut
     }
 
-    pub(crate) fn get_tone_name(&self, tone_index: usize) -> String {
+    pub(crate) fn get_tone_name(&self, tone_index: u32, octave_size: ) -> String {
         let octave_size = *OCTAVE_SIZE.read().expect("couldn't read octave size");
         // if indian or indianalt we want to use 7
         let name_index = tone_index % octave_size;

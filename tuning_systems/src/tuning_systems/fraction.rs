@@ -6,7 +6,7 @@ use std::ops::{Div, DivAssign, Mul, MulAssign};
 
 #[derive(Clone, Copy, Debug)]
 // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
-pub(crate) struct Fraction {
+pub struct Fraction {
     pub(crate) numerator: u32,
     pub(crate) denominator: u32,
     pub(crate) base: u32,

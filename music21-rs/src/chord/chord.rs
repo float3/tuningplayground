@@ -1,4 +1,7 @@
-use crate::{note::Note, pitch::Pitch};
+use crate::{
+    note::Note,
+    pitch::{self, Pitch},
+};
 
 pub struct Chord {
     notes: Vec<Note>,
@@ -42,7 +45,7 @@ impl Chord {
             pitched_common_name: String::new(),
         };
 
-        chord.common_name = chord.pitched_common_name();
+        chord.common_name = chord.common_name();
         chord.pitched_common_name = chord.pitched_common_name();
 
         Ok(chord)
@@ -59,7 +62,11 @@ impl Chord {
     fn pitched_common_name(&self) -> String {
         todo!()
     }
-    fn simplify_enharmonics_in_place(&self) -> Chord {
-        todo!()
+
+    fn simplify_enharmonics_in_place(&mut self) -> () {
+        let pitches = pitch::simplify_multiple_enharmonics(self.pitches());
+        for (i, pitch) in pitches.iter().enumerate() {
+            self.notes[i].pitch = pitch.clone();
+        }
     }
 }

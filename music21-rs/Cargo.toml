@@ -12,7 +12,8 @@ version = "0.0.1"
 default = []
 #wasm-bindgen = ["dep:wasm-bindgen"]
 
-#[dependencies]
+[dependencies]
+tuning_systems = { path = "../tuning_systems" }
 #wasm-bindgen = { version = "0.2.91", optional = true }
 
 #[dev-dependencies]
