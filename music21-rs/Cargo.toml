@@ -1,12 +1,12 @@
 [package]
 authors = ["hill <hill@hilll.dev>"]
-description = "a rust port of the music21 chord naming algorithm"
+description = "a rust port of music21 (for now just the chord naming algorithm)"
 edition = "2021"
-keywords = ["music", "chords"]
-license = "AGPL-3.0"
-name = "chord21-rs"
+keywords = ["music", "chords", "music21"]
+license = "LICENSE"
+name = "music21-rs"
 repository = "https://github.com/float3/tuningplayground"
-version = "1.0.0"
+version = "0.0.1"
 
 [features]
 default = []
