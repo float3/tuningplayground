@@ -43,7 +43,8 @@ jobs:
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-master
-          git checkout -t origin/dev
+          git fetch
+          git checkout dev
           ./build.sh
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
