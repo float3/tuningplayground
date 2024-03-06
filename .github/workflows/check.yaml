@@ -35,7 +35,9 @@ jobs:
 
       - name: check.sh
         run: |
-          ./check.sh
+          npm install
+          npm audit fix
+          npx eslint . --ext .ts,.tsx --fix
 
       - name: Check for changes
         id: git-check

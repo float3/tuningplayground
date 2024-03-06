@@ -26,23 +26,23 @@ stepSize.onchange = handleTuningSelectChange;
 export function handleTuningSelectChange(): void {
 	console.debug('handleTuningSelectChange');
 	switch (tuningSelect.value) {
-		case 'StepMethod':
-			stepSize.hidden = false;
-			stepSize.readOnly = false;
-			octaveSize.readOnly = false;
-			break;
-		case 'EqualTemperament':
-			stepSize.hidden = true;
-			stepSize.readOnly = true;
-			octaveSize.readOnly = false;
-			break;
-		default:
-			wasm.set_tuning_system(tuningSelect.value, parseInt(octaveSize.value), parseInt(stepSize.value));
-			octaveSize.value = wasm.get_tuning_size().toString();
-			octaveSize.readOnly = true;
-			stepSize.hidden = true;
-			stepSize.readOnly = true;
-			break;
+	case 'StepMethod':
+		stepSize.hidden = false;
+		stepSize.readOnly = false;
+		octaveSize.readOnly = false;
+		break;
+	case 'EqualTemperament':
+		stepSize.hidden = true;
+		stepSize.readOnly = true;
+		octaveSize.readOnly = false;
+		break;
+	default:
+		wasm.set_tuning_system(tuningSelect.value, parseInt(octaveSize.value), parseInt(stepSize.value));
+		octaveSize.value = wasm.get_tuning_size().toString();
+		octaveSize.readOnly = true;
+		stepSize.hidden = true;
+		stepSize.readOnly = true;
+		break;
 	}
 	stopAllTones();
 }
