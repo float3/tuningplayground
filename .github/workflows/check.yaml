@@ -1,0 +1,47 @@
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: setup node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 21
+
+          # install rust
+      - name: install rust
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: nightly
+          components: rustfmt, clippy
+          override: true
+
+      - name: rust check
+        run: |
+          cargo fmt --all -- --check
+          cargo fix --all-targets --all-features --allow-dirty
+          cargo clippy --fix --all-targets --all-features --allow-dirty -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+
+      - name: check.sh
+        run: |
+          ./check.sh
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff
+          echo ::set-output name=status::$(if [ -z "$(git status --porcelain)" ]; then echo "no changes"; else echo "changes detected"; fi)
+
+      - name: Get status
+        run: echo "The status is ${{ steps.git-check.outputs.status }}"

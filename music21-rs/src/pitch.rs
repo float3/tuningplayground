@@ -1,18 +1,18 @@
+use tuning_systems::Fraction;
+
 use super::interval::Interval;
 
 #[derive(Clone)]
 pub struct Pitch {
     pub name: String,
     pub alter: f64,
-    accidental: String,
-    pub octave: i32,
-    // pub octave: i32,
-    // pub accidental: String,
+    pub accidental: String,
+    pub octave: Option<i32>,
     // pub frequency: f64,
 }
 
 impl Pitch {
-    pub(crate) fn new(string: String) -> Pitch {
+    pub fn new(string: String) -> Pitch {
         let mut tokens = string.chars().peekable();
 
         let name = tokens.next().expect("no name");
@@ -47,10 +47,27 @@ impl Pitch {
                 accidental = "".to_string();
             }
         }
+
+        let octave: Option<i32>;
+        match !tokens.peek().is_none() {
+            true => {
+                octave = None;
+            }
+            false => {
+                octave = Some(
+                    tokens
+                        .collect::<String>()
+                        .parse::<i32>()
+                        .expect("Invalid octave"),
+                );
+            }
+        }
+
         Pitch {
             name: name.to_string(),
             alter,
             accidental,
+            octave,
         }
     }
 
@@ -59,7 +76,7 @@ impl Pitch {
     }
 }
 
-pub(crate) fn simplify_multiple_enharmonics(pitches: Vec<Pitch>) -> _ {
+pub(crate) fn simplify_multiple_enharmonics(pitches: Vec<Pitch>) -> Vec<Pitch> {
     let old_pitches: Vec<Pitch> = pitches.clone();
     let criterion = dissonance_score(&pitches, true, true, true);
     if old_pitches.len() < 5 {
@@ -119,7 +136,8 @@ fn dissonance_score(
             // score_ratio /= len(pitches)
             for interval in intervals {
                 let ratio = interval.interval_to_pythagorean_ratio();
-                let penalty = (ratio.numerator * ratio.denominator / ratio).log() * 0.03792663444;
+                let penalty = ((ratio.numerator * ratio.denominator) as f64 / ratio.f64()).ln()
+                    * 0.03792663444;
                 score_ratio += penalty;
             }
         }

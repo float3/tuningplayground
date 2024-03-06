@@ -31,7 +31,6 @@ function onMIDIFailure(error: DOMException): void {
 function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
 	console.debug('onMIDIMessage');
 	const [status, tone_index, velocity] = event.data;
-	console.log(velocity);
 	const is_note_on = (status & 240) === 144;
 	const is_note_off = (status & 240) === 128;
 

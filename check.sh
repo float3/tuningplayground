@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
-cargo fmt --all
+cargo fmt --all -- --check
 
-cargo fix --allow-dirty --allow-staged
+cargo fix --allow-dirty --allow-staged --all-targets --all-features
 cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
-
-cargo check --release
-cargo check
-
-cargo test
-cargo test --release
+cargo check --all-targets --all-features
+cargo test --all-targets --all-features
 
 ./build.sh
 cd ./ts

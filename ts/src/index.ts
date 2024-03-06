@@ -1,6 +1,6 @@
 console.debug('imports');
 import * as wasm from 'tuningplayground';
-import { playingTonesChanged, logToDiv, transpose, tuningSelect, volumeSlider } from './UI';
+import { playingTonesChanged, logToDiv, transpose, volumeSlider } from './UI';
 import { Tone, createTone } from './Tone';
 import { requestMIDI } from './MIDI';
 import { keydown, keyup, visibilityChange } from './events';
@@ -35,8 +35,9 @@ export const heldKeys: Record<string, boolean> = {};
 
 export function noteOn(tone_index: number, velocity?: number): void {
 	console.debug('noteOn');
+	console.log('velocity: ', velocity);
 	tone_index += parseInt(transpose.value);
-	const tone: Tone = wasm.get_tone(tuningSelect.value, tone_index);
+	const tone: Tone = wasm.get_tone(tone_index);
 	playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
 	logToDiv(tone.name);
 }

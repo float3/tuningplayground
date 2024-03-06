@@ -13,8 +13,8 @@
 // TODO: implement Midi player
 // TODO: use piano sample instead of synth
 // TODO: usize vs u32
-// TODO: no global state
-// TODO: check why musical notation is wrong
 // TODO: add bass clef
 // TODO: Fix visibility pub(crate) and fix tests maybe inline them per file
 // TODO: check why everything is flat
+// TODO: make better tests
+// TODO: tuning system better contstructors
