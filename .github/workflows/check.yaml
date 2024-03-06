@@ -3,10 +3,14 @@ name: the automater
 on:
   push:
     branches: ["*"]
+  workflow_dispatch:
 
 jobs:
   fix:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [music21-rs, tuning_systems, keymapping, tuningplayground]
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
@@ -23,51 +27,26 @@ jobs:
         with:
           node-version: "21"
 
-      - name: cd to src
-        run: cd ./ts
-
       - name: Install Dependencies
-        run: npm install
-
-      - name: Run ESLint
-        run: npx eslint . --ext .ts,.tsx
-
-      - name: Format TypeScript code
-        run: npx prettier --write .
-
-      - name: Update Dependencies
-        run: npm update
-
-      - name: Audit Fix
-        run: npm audit fix
-
-      - name: Format, Fix, and Clippy (Sub-project music21-rs)
         run: |
-          cd ./music21-rs
+          cd ./ts
+          npm install
+          npx eslint . --ext .ts,.tsx
+          npx prettier --write .
+          npm update
+          npm audit fix
+
+      - name: Format, Fix, and Clippy (Sub-project ${{ matrix.project }})
+        run: |
+          cd ${{ matrix.project }}
           cargo fmt --all
           cargo fix --allow-dirty --allow-staged --all-targets --all-features
           cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
-          cargo check --all-targets --all-features
-          cargo test --all-targets --all-features
           cd ..
-          cd ./tuning_systems
-          cargo fmt --all
-          cargo fix --allow-dirty --allow-staged --all-targets --all-features
-          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
-          cargo check --all-targets --all-features
-          cargo test --all-targets --all-features
-          cd ..
-          cd ./keymapping
-          cargo fmt --all
-          cargo fix --allow-dirty --allow-staged --all-targets --all-features
-          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
-          cargo check --all-targets --all-features
-          cargo test --all-targets --all-features
-          cd ..
-          cd ./tuningplayground
-          cargo fmt --all
-          cargo fix --allow-dirty --allow-staged --all-targets --all-features
-          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+
+      - name: Check and Test (Sub-project ${{ matrix.project }})
+        run: |
+          cd ${{ matrix.project }}
           cargo check --all-targets --all-features
           cargo test --all-targets --all-features
           cd ..
