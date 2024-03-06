@@ -1,6 +1,8 @@
 on:
   push:
-    branches: ["master"]
+    branches:
+      - master
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -16,9 +18,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
-
       - name: setup node
         uses: actions/setup-node@v4.0.2
         with:
@@ -33,11 +32,32 @@ jobs:
       - name: install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
-      - name: Build
+      - name: checkout master
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: "master"
+
+      - name: build master
         run: |
           ./build_release.sh
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
+          mv ./www ./www-master
+
+      - name: checkout dev
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: "dev"
+
+      - name: build dev
+        run: |
+          ./build.sh
+          rm ./www/*LICENSE.txt
+          rm ./www/styles.css
+          mv ./www ./www-dev
+          mv ./www-master/ ./www/
+          mkdir -p ./www/dev
+          mv ./www-dev/ ./www/dev/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
