@@ -49,7 +49,6 @@ jobs:
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-dev
-          ls
           mv ./www-master ./www/
           mkdir -p ./www/dev
           mv ./www-dev/* ./www/dev/
