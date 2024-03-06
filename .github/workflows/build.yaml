@@ -37,24 +37,18 @@ jobs:
         with:
           ref: "master"
 
-      - name: build master
+      - name: build
         run: |
           ./build_release.sh
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-master
-
-      - name: checkout dev
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: "dev"
-
-      - name: build dev
-        run: |
+          git checkout dev
           ./build.sh
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-dev
+          ls
           mv ./www-master ./www/
           mkdir -p ./www/dev
           mv ./www-dev ./www/dev/
