@@ -3,16 +3,10 @@ name: the automater
 on:
   push:
     branches: ["*"]
-  pull_request:
-    branches: ["*"]
-  workflow_dispatch:
 
 jobs:
   fix:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [music21-rs, tuning_systems, keymapping, tuningplayground]
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
@@ -47,20 +41,33 @@ jobs:
       - name: Audit Fix
         run: npm audit fix
 
-      - name: Format code
-        run: cargo fmt --all
-
-      - name: Format, Fix, and Clippy (Sub-project ${{ matrix.project }})
+      - name: Format, Fix, and Clippy (Sub-project music21-rs)
         run: |
-          cd ${{ matrix.project }}
+          cd ./music21-rs
           cargo fmt --all
           cargo fix --allow-dirty --allow-staged --all-targets --all-features
           cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
           cd ..
-
-      - name: Check and Test (Sub-project ${{ matrix.project }})
-        run: |
-          cd ${{ matrix.project }}
+          cd ./tuning_systems
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+          cd ..
+          cd ./keymapping
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+          cd ..
+          cd ./tuningplayground
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
           cargo check --all-targets --all-features
           cargo test --all-targets --all-features
           cd ..
