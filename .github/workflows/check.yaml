@@ -1,3 +1,5 @@
+name: the automater
+
 on:
   push:
     branches: ["*"]
@@ -6,33 +8,69 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  fix:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [music21-rs, tuning_systems, keymapping, tuningplayground]
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
-      - name: setup node
-        uses: actions/setup-node@v4.0.2
-        with:
-          node-version: 21
-
-      - name: install rust
+      - name: Install Rust
         uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: nightly
           components: rustfmt, clippy
           override: true
 
-      - name: check.sh
-        run: 
-          ./check.sh
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "21"
 
-      - name: Check for changes
-        id: git-check
+      - name: cd to src
+        run: cd ./ts
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npx eslint . --ext .ts,.tsx
+
+      - name: Format TypeScript code
+        run: npx prettier --write .
+
+      - name: Update Dependencies
+        run: npm update
+
+      - name: Audit Fix
+        run: npm audit fix
+
+      - name: Format code
+        run: cargo fmt --all
+
+      - name: Format, Fix, and Clippy (Sub-project ${{ matrix.project }})
         run: |
-          git diff
-          echo "status=$(if [ -z "$(git status --porcelain)" ]; then echo "no changes"; else echo "changes detected"; fi)" >> $GITHUB_OUTPUT
+          cd ${{ matrix.project }}
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cd ..
 
-      - name: Get status
-        run: echo "The status is ${{ steps.git-check.outputs.status }}"
+      - name: Check and Test (Sub-project ${{ matrix.project }})
+        run: |
+          cd ${{ matrix.project }}
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+          cd ..
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.1
+        with:
+          commit_message: "actions"
