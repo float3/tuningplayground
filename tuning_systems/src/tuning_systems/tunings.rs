@@ -28,56 +28,7 @@ pub enum TuningSystem {
     Indian22,
 }
 
-// impl FromStr for TuningSystem {
-//     type Err = ();
-//     fn from_str(s: &str) -> Result<Self, Self::Err> {
-//         match s.to_lowercase().as_str() {
-//             "stepmethod" => Ok(TuningSystem::StepMethod {
-//                 octave_size: 0,
-//                 step_size: 0,
-//             }),
-//             "equaltemperament" => Ok(TuningSystem::EqualTemperament { octave_size: 0 }),
-//             "justintonation" => Ok(TuningSystem::JustIntonation),
-//             "justintonation24" => Ok(TuningSystem::JustIntonation24),
-//             "pythagoreantuning" => Ok(TuningSystem::PythagoreanTuning),
-//             "fivelimit" => Ok(TuningSystem::FiveLimit),
-//             "elevenlimit" => Ok(TuningSystem::ElevenLimit),
-//             "fortythreetone" => Ok(TuningSystem::FortyThreeTone),
-//             "indian" => Ok(TuningSystem::Indian),
-//             "indianalt" => Ok(TuningSystem::IndianAlt),
-//             "indianfull" => Ok(TuningSystem::Indian22),
-//             // "thai" => Ok(TuningSystem::Thai),
-//             // "javanese" => Ok(TuningSystem::Javanese),
-//             "wholetone" => Ok(TuningSystem::WholeTone),
-//             "quartertone" => Ok(TuningSystem::QuarterTone),
-//             _ => Err(()),
-//         }
-//     }
-// }
-
 impl TuningSystem {
-    pub fn new(s: &str, octave_size: TypeAlias, step_size: TypeAlias) -> Option<Self> {
-        let this = &s;
-        match this.to_lowercase().as_str() {
-            "stepmethod" => Some(TuningSystem::StepMethod { octave_size, step_size }),
-            "equaltemperament" => Some(TuningSystem::EqualTemperament { octave_size }),
-            "justintonation" => Some(TuningSystem::JustIntonation),
-            "justintonation24" => Some(TuningSystem::JustIntonation24),
-            "pythagoreantuning" => Some(TuningSystem::PythagoreanTuning),
-            "fivelimit" => Some(TuningSystem::FiveLimit),
-            "elevenlimit" => Some(TuningSystem::ElevenLimit),
-            "fortythreetone" => Some(TuningSystem::FortyThreeTone),
-            "indian" => Some(TuningSystem::Indian),
-            "indianalt" => Some(TuningSystem::IndianAlt),
-            "indianfull" => Some(TuningSystem::Indian22),
-            // "thai" => Some(TuningSystem::Thai),
-            // "javanese" => Some(TuningSystem::Javanese),
-            "wholetone" => Some(TuningSystem::WholeTone),
-            "quartertone" => Some(TuningSystem::QuarterTone),
-            _ => None,
-        }
-    }
-
     pub fn get_fraction(&self, index: TypeAlias) -> Fraction {
         match &self {
             TuningSystem::StepMethod { octave_size, step_size } => get_ratio_from_step_algorithm(index, *octave_size, *step_size),

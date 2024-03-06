@@ -3,14 +3,14 @@ import { heldKeys, noteOn, noteOff } from ".";
 import { stopAllTones } from ".";
 
 export function visibilityChange(): void {
-  console.debug("visibilityChange");
+  console.log("visibilityChange");
   if (document.hidden) {
     stopAllTones();
   }
 }
 
 export function keydown(event: KeyboardEvent): void {
-  console.debug("keydown");
+  console.log("keydown");
   if (!document.hasFocus()) return;
   if (event.repeat) return;
   if (event.code in heldKeys) return;
@@ -24,7 +24,7 @@ export function keydown(event: KeyboardEvent): void {
 }
 
 export function keyup(event: KeyboardEvent): void {
-  console.debug("keyup");
+  console.log("keyup");
   // if (recording) { }
   const tone_index: number = wasm.from_keymap(event.code);
   noteOff(tone_index);

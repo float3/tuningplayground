@@ -14,7 +14,7 @@ export function requestMIDI(): void {
 }
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
-  console.debug("onMIDISuccess");
+  console.log("onMIDISuccess");
   const input = midiAccess.inputs.values().next().value;
 
   if (input) {
@@ -25,12 +25,12 @@ function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
 }
 
 function onMIDIFailure(error: DOMException): void {
-  console.debug("onMIDIFailure");
+  console.log("onMIDIFailure");
   console.error("MIDI Access failed:", error);
 }
 
 function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
-  console.debug("onMIDIMessage");
+  console.log("onMIDIMessage");
   const [status, tone_index, velocity] = event.data;
   const is_note_on = (status & 240) === 144;
   const is_note_off = (status & 240) === 128;

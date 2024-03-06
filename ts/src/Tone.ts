@@ -11,6 +11,7 @@ export class Tone {
     name: string,
     node: OscillatorNode,
   ) {
+    console.log("Tone");
     this.index = index;
     this.freq = freq;
     this.cents = cents;
@@ -38,6 +39,6 @@ export function createTone(
   name: string,
   oscillator: OscillatorNode,
 ): Tone {
-  console.debug("window.createTone");
+  console.log("createTone");
   return new Tone(index, freq, cents, name, oscillator);
 }

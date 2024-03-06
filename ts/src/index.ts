@@ -1,11 +1,11 @@
-console.debug("imports");
+console.log("imports");
 import * as wasm from "wasm";
 import { playingTonesChanged, logToDiv, transpose, volumeSlider } from "./UI";
 import { Tone, createTone } from "./Tone";
 import { requestMIDI } from "./MIDI";
 import { keydown, keyup, visibilityChange } from "./events";
 
-console.debug("static");
+console.log("static");
 
 requestMIDI();
 
@@ -23,7 +23,7 @@ let audioContext: AudioContext;
 // let recording: boolean;
 
 export function stopAllTones(): void {
-  console.debug("stopAllTones");
+  console.log("stopAllTones");
   for (const key in playingTones) {
     playingTones[key].Oscillator.stop();
     delete playingTones[key];
@@ -34,7 +34,7 @@ export function stopAllTones(): void {
 export const heldKeys: Record<string, boolean> = {};
 
 export function noteOn(tone_index: number, velocity?: number): void {
-  console.debug("noteOn");
+  console.log("noteOn");
   console.log("velocity: ", velocity);
   tone_index += parseInt(transpose.value);
   const tone: Tone = wasm.get_tone(tone_index);
@@ -43,7 +43,7 @@ export function noteOn(tone_index: number, velocity?: number): void {
 }
 
 export function noteOff(tone_index: number): void {
-  console.debug("noteOff");
+  console.log("noteOff");
   tone_index += parseInt(transpose.value);
   if (!(tone_index in playingTones)) return;
   playingTones[tone_index].Oscillator.stop();
@@ -56,7 +56,7 @@ function playFrequencyNative(
   volume: number,
   tone_index: number,
 ): void {
-  console.debug("playFrequencyNative");
+  console.log("playFrequencyNative");
   audioContext = new window.AudioContext();
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();

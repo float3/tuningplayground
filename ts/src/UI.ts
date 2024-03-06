@@ -30,7 +30,7 @@ tuningSelect.onchange = handleTuningSelectChange;
 stepSize.onchange = handleTuningSelectChange;
 
 export function handleTuningSelectChange(): void {
-  console.debug("handleTuningSelectChange");
+  console.log("handleTuningSelectChange");
   switch (tuningSelect.value) {
     case "StepMethod":
       stepSize.hidden = false;
@@ -58,7 +58,7 @@ export function handleTuningSelectChange(): void {
 }
 
 export function playingTonesChanged(): void {
-  console.debug("playingTonesChanged");
+  console.log("playingTonesChanged");
 
   if (octaveSize.value === "12" && Object.keys(playingTones).length > 0) {
     const notes = Object.values(playingTones).map((tone) => {

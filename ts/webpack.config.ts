@@ -29,6 +29,7 @@ module.exports = {
               "console.debug",
               "console.error",
               "console.warn",
+              "console.assert",
             ],
           },
           mangle: true,
