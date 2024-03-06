@@ -44,5 +44,5 @@ fn construct_just_intonation_tone(arg: i32) -> Tone {
 }
 
 fn construct_et_tone(arg: u32) -> Tone {
-    Tone::new(TuningSystem::EqualTemperament, arg as usize)
+    Tone::new(TuningSystem::EqualTemperament { octave_size: 12 }, arg as usize)
 }

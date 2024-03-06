@@ -2,6 +2,8 @@ extern crate tuning_systems;
 
 use tuning_systems::{Fraction, Tone, TuningSystem};
 
+const EQ: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
+
 #[cfg(test)]
 #[test]
 fn test_octave() {
@@ -10,7 +12,7 @@ fn test_octave() {
     assert_eq!(ratio, twoone);
     let ratio: f64 = TuningSystem::JustIntonation24.get_fraction(24).into();
     assert_eq!(ratio, twoone);
-    let ratio: f64 = TuningSystem::EqualTemperament.get_fraction(12).into();
+    let ratio: f64 = EQ.get_fraction(12).into();
     assert_eq!(ratio, twoone);
 }
 
@@ -29,7 +31,7 @@ fn test_et() {
 }
 
 fn construct_et_tone(index: u32) -> Tone {
-    Tone::new(TuningSystem::EqualTemperament, index as usize)
+    Tone::new(EQ, index as usize)
 }
 
 #[test]

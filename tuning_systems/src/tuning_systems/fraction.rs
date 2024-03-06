@@ -13,7 +13,7 @@ pub struct Fraction {
 }
 
 impl Fraction {
-    pub(crate) const fn new(numerator: u32, denominator: u32) -> Fraction {
+    pub const fn new(numerator: u32, denominator: u32) -> Fraction {
         Fraction::new_with_base(numerator, denominator, 0)
     }
 
