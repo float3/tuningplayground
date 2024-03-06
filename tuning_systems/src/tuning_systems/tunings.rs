@@ -59,10 +59,7 @@ impl TuningSystem {
     pub fn new(s: &str, octave_size: TypeAlias, step_size: TypeAlias) -> Option<Self> {
         let this = &s;
         match this.to_lowercase().as_str() {
-            "stepmethod" => Some(TuningSystem::StepMethod {
-                octave_size,
-                step_size: step_size,
-            }),
+            "stepmethod" => Some(TuningSystem::StepMethod { octave_size, step_size }),
             "equaltemperament" => Some(TuningSystem::EqualTemperament { octave_size }),
             "justintonation" => Some(TuningSystem::JustIntonation),
             "justintonation24" => Some(TuningSystem::JustIntonation24),

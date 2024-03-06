@@ -26,5 +26,5 @@ pub(crate) fn get_ratio_from_step_algorithm(n: TypeAlias, octave_size: TypeAlias
     }
     let octaves = (n / octave_size) as f64;
     current_ratio *= Fraction::new(2u32.pow(octaves as u32), 1);
-    return current_ratio;
+    current_ratio
 }

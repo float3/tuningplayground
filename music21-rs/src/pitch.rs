@@ -1,5 +1,3 @@
-use tuning_systems::Fraction;
-
 use super::interval::Interval;
 
 #[derive(Clone)]
@@ -16,7 +14,7 @@ impl Pitch {
         let mut tokens = string.chars().peekable();
 
         let name = tokens.next().expect("no name");
-        if name > 'G' || name < 'A' {
+        if !('A'..='G').contains(&name) {
             panic!("Invalid note name");
         }
         let alter;
@@ -49,7 +47,7 @@ impl Pitch {
         }
 
         let octave: Option<i32>;
-        match !tokens.peek().is_none() {
+        match tokens.peek().is_some() {
             true => {
                 octave = None;
             }
@@ -94,7 +92,7 @@ fn dissonance_score(
 ) -> f64 {
     let mut score_accidentals = 0.0;
     let mut score_ratio = 0.0;
-    let mut score_triad = 0.0;
+    let score_triad = 0.0;
 
     if pitches.is_empty() {
         return 0.0;
@@ -147,7 +145,7 @@ fn dissonance_score(
         // }
     }
 
-    return 0.0;
+    0.0
 }
 
 fn greedy_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pitch> {

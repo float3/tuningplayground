@@ -40,6 +40,8 @@ jobs:
       - name: Build
         run: |
           sh ./build_release.sh
+          rm ./www/*LICENSE.txt
+          rm ./www/styles.css
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
