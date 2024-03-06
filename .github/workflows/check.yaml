@@ -1,5 +1,3 @@
-name: the automater
-
 on:
   push:
     branches: ["*"]
@@ -7,7 +5,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   fix:
@@ -18,27 +15,14 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
 
-      - name: Install Rust
+      - name: install rust
         uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: nightly
           components: rustfmt, clippy
           override: true
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "21"
-
-      - name: Install Dependencies
-        run: |
-          cd ./ts
-          npm install
-          npx prettier --write .
-          npm update
-          npm audit fix
-
-      - name: Format, Fix, and Clippy (Sub-project music21-rs)
+      - name: rust checks
         run: |
           cd ./music21-rs
           cargo fmt --all
@@ -69,13 +53,25 @@ jobs:
           cargo test --all-targets --all-features
           cd ..
 
-      - name: Configure Git
+      - name: build wasm
         run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+          ./build.sh
 
-      # don't commit if it's a pull request
-      - name: Commit and Push Changes
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "21"
+
+      - name: node checks
+        run: |
+          cd ./ts
+          npm install
+          npx prettier --write .
+          npm update
+          npm audit fix
+
+      - name: push
         uses: stefanzweifel/git-auto-commit-action@v4.1.1
         with:
           commit_message: "actions"

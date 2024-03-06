@@ -14,9 +14,6 @@ concurrency:
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,11 +31,11 @@ jobs:
           override: true
 
       - name: install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
       - name: Build
         run: |
-          sh ./build_release.sh
+          ./build_release.sh
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
 
