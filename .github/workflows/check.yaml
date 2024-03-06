@@ -35,6 +35,7 @@ jobs:
 
       - name: check.sh
         run: |
+          cd ts
           npm install
           npm audit fix
           npx eslint . --ext .ts,.tsx --fix
