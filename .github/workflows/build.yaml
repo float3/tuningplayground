@@ -55,9 +55,9 @@ jobs:
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-dev
-          mv ./www-master/ ./www/
+          mv ./www-master ./www/
           mkdir -p ./www/dev
-          mv ./www-dev/ ./www/dev/
+          mv ./www-dev ./www/dev/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
