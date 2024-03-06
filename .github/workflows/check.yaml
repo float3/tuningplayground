@@ -44,7 +44,7 @@ jobs:
         id: git-check
         run: |
           git diff
-          echo ::set-output name=status::$(if [ -z "$(git status --porcelain)" ]; then echo "no changes"; else echo "changes detected"; fi)
+          echo "status=$(if [ -z "$(git status --porcelain)" ]; then echo "no changes"; else echo "changes detected"; fi)" >> $GITHUB_OUTPUT
 
       - name: Get status
         run: echo "The status is ${{ steps.git-check.outputs.status }}"
