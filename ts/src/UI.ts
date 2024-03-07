@@ -60,7 +60,7 @@ export function handleTuningSelectChange(): void {
 export function playingTonesChanged(): void {
   console.log("playingTonesChanged");
 
-  if (octaveSize.value === "12" && Object.keys(playingTones).length > 0) {
+  if (octaveSize.value === "12") {
     const notes = Object.values(playingTones).map((tone) => {
       return tone.name;
     });
