@@ -1,3 +1,5 @@
+use crate::{interval::PitchOrNote, note::Note};
+
 use super::interval::Interval;
 
 #[derive(Clone)]
@@ -7,6 +9,39 @@ pub struct Pitch {
     pub accidental: String,
     pub octave: Option<i32>,
     // pub frequency: f64,
+}
+
+#[derive(Clone)]
+pub enum PitchOrNote {
+    Pitch(Pitch),
+    Note(Note),
+}
+
+impl From<Pitch> for PitchOrNote {
+    fn from(p: Pitch) -> Self {
+        PitchOrNote::Pitch(p)
+    }
+}
+
+impl From<Note> for PitchOrNote {
+    fn from(n: Note) -> Self {
+        PitchOrNote::Note(n)
+    }
+}
+
+impl PitchOrNote {
+    pub fn pitch(&self) -> Pitch {
+        match self {
+            PitchOrNote::Pitch(p) => p.clone(),
+            PitchOrNote::Note(n) => n.pitch.clone(),
+        }
+    }
+}
+
+impl From<PitchOrNote> for Pitch {
+    fn from(p: PitchOrNote) -> Self {
+        p.pitch()
+    }
 }
 
 impl Pitch {
@@ -89,7 +124,7 @@ fn dissonance_score(
 ) -> f64 {
     let mut score_accidentals = 0.0;
     let mut score_ratio = 0.0;
-    let score_triad = 0.0;
+    let mut score_triad = 0.0;
 
     if pitches.is_empty() {
         return 0.0;
@@ -107,15 +142,12 @@ fn dissonance_score(
     let mut intervals = vec![];
 
     if small_pythagorean_ratio | triad_award {
-        //     try:
-        //     intervals = [interval.Interval(noteStart=p1, noteEnd=p2)
-        //                 for p1, p2 in itertools.combinations(pitches, 2)]
-        //     except interval.IntervalException:
-        //          return math.inf
-        // in rust
         for (index, p1) in pitches.iter().enumerate() {
             for p2 in pitches.iter().skip(index + 1) {
-                intervals.push(Interval::new(p1.clone(), p2.clone()));
+                match Interval::new(p1.clone(), p2.clone()) {
+                    Some(interval) => intervals.push(interval),
+                    None => return std::f64::INFINITY,
+                }
             }
         }
 
@@ -129,20 +161,33 @@ fn dissonance_score(
             //     score_ratio += penalty
 
             // score_ratio /= len(pitches)
-            for interval in intervals {
+            intervals.iter().for_each(|interval| {
                 let ratio = interval.interval_to_pythagorean_ratio();
                 let penalty = ((ratio.numerator * ratio.denominator) as f64 / ratio.f64()).ln()
                     * 0.03792663444;
                 score_ratio += penalty;
-            }
+            });
+            score_ratio /= pitches.len() as f64;
         }
 
-        // for (p1, p2) in pitches.iter().enumerate() {
-        //     intervals.push(Interval::new(p1.clone(), p2.clone()));
-        // }
+        if triad_award {
+            intervals.into_iter().for_each(|interval| {
+                let simple_directed = interval.generic.simple_directed;
+                let interval_semitones = interval.chromatic.semitones % 12;
+                if simple_directed == 3 && (interval_semitones == 3 || interval_semitones == 4) {
+                    score_triad -= 1.0;
+                } else if simple_directed == 6
+                    && (interval_semitones == 8 || interval_semitones == 9)
+                {
+                    score_triad -= 1.0;
+                }
+            });
+            score_triad /= pitches.len() as f64;
+        }
     }
 
-    0.0
+    (score_accidentals + score_ratio + score_triad)
+        / (small_pythagorean_ratio as i32 + accidental_penalty as i32 + triad_award as i32) as f64
 }
 
 fn greedy_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pitch> {
@@ -151,4 +196,11 @@ fn greedy_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pit
 
 fn brute_force_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pitch> {
     todo!()
+}
+
+fn convert_harmonic_to_cents(mut value: f64) -> i32 {
+    if value < 0.0 {
+        value = 1.0 / value.abs();
+    }
+    (1200.0 * value.log2()).round() as i32
 }
