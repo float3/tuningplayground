@@ -33,7 +33,10 @@ export function stopAllTones(): void {
 
 export const heldKeys: Record<string, boolean> = {};
 
-export function noteOn(tone_index: number, velocity?: number): void {
+export async function noteOn(
+  tone_index: number,
+  velocity?: number,
+): Promise<void> {
   console.log("noteOn");
   console.log("velocity: ", velocity);
   tone_index += parseInt(transpose.value);
@@ -42,7 +45,7 @@ export function noteOn(tone_index: number, velocity?: number): void {
   logToDiv(tone.name);
 }
 
-export function noteOff(tone_index: number): void {
+export async function noteOff(tone_index: number): Promise<void> {
   console.log("noteOff");
   tone_index += parseInt(transpose.value);
   if (!(tone_index in playingTones)) return;

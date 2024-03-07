@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/float3/tuningplayground#readme",
   "dependencies": {
+    "@tonejs/midi": "^2.0.28",
     "@types/webmidi": "^2.0.10",
     "abcjs": "^6.3.0",
     "wasm": "file:../tuningplayground/pkg"
