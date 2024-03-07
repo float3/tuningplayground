@@ -37,6 +37,9 @@ fn main() {
     assert_eq!(sixty_nine.name, "A4");
     //assert_eq!(sixty_nine.octave(), 5);
     assert!((sixty_nine.frequency() - 440.0).abs() < 1.5);
+
+    let s = "-1";
+    assert_eq!(-1, s.parse::<i32>().unwrap());
 }
 
 fn construct_just_intonation_tone(arg: i32) -> Tone {
@@ -44,5 +47,5 @@ fn construct_just_intonation_tone(arg: i32) -> Tone {
 }
 
 fn construct_et_tone(arg: u32) -> Tone {
-    Tone::new(TuningSystem::EqualTemperament, arg as usize)
+    Tone::new(TuningSystem::EqualTemperament { octave_size: 12 }, arg as usize)
 }

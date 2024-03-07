@@ -1,0 +1,118 @@
+on:
+  push:
+    branches:
+      - master
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "github-pages"
+  cancel-in-progress: true
+
+jobs:
+  workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.TOKEN }}
+
+      - name: install rust
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: nightly
+          components: rustfmt, clippy
+          override: true
+
+      - name: setup node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 21
+
+      - name: install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
+
+      - name: rust checks
+        run: |
+          cd ./music21-rs
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+          cd ..
+          cd ./tuning_systems
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+          cd ..
+          cd ./keymapping
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+          cd ..
+          cd ./tuningplayground
+          cargo fmt --all
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
+          cargo check --all-targets --all-features
+          cargo test --all-targets --all-features
+          cd ..
+
+      - name: build wasm
+        run: ./build.sh
+
+      - name: node checks
+        run: |
+          cd ./ts
+          npm install
+          npx prettier --write .
+          npm update
+          npm audit fix
+
+      - name: push
+        uses: stefanzweifel/git-auto-commit-action@v4.1.1
+        with:
+          commit_message: "actions"
+
+      - name: checkout master
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: "master"
+
+      - name: build
+        run: |
+          git pull
+          ./build_release.sh
+          rm ./www/*LICENSE.txt
+          rm ./www/styles.css
+          mv ./www ./www-master
+          git fetch
+          git checkout dev
+          git pull
+          ./build.sh
+          rm ./www/*LICENSE.txt
+          rm ./www/styles.css
+          mv ./www ./www-dev
+          mv ./www-master ./www/
+          mkdir -p ./www/dev
+          mv ./www-dev/* ./www/dev/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: "www"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.4

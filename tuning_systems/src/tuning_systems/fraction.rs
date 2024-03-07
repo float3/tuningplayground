@@ -6,14 +6,14 @@ use std::ops::{Div, DivAssign, Mul, MulAssign};
 
 #[derive(Clone, Copy, Debug)]
 // #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
-pub(crate) struct Fraction {
-    pub(crate) numerator: u32,
-    pub(crate) denominator: u32,
-    pub(crate) base: u32,
+pub struct Fraction {
+    pub numerator: u32,
+    pub denominator: u32,
+    pub base: u32,
 }
 
 impl Fraction {
-    pub(crate) const fn new(numerator: u32, denominator: u32) -> Fraction {
+    pub const fn new(numerator: u32, denominator: u32) -> Fraction {
         Fraction::new_with_base(numerator, denominator, 0)
     }
 
@@ -25,7 +25,7 @@ impl Fraction {
         }
     }
 
-    pub(crate) fn f64(&self) -> f64 {
+    pub fn f64(&self) -> f64 {
         f64::from(*self)
     }
 }

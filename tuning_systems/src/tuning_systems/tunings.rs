@@ -1,14 +1,12 @@
-use std::str::FromStr;
-
 use crate::{
-    equal_temperament, equal_temperament_default, Fraction, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE, INDIAN_SCALE,
-    INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, OCTAVE_SIZE, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS,
+    equal_temperament, get_ratio_from_step_algorithm, Fraction, TypeAlias, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE,
+    INDIAN_SCALE, INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS,
     TWELVE_TONE_NAMES,
 };
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
-    StepMethod,
-    EqualTemperament,
+    EqualTemperament { octave_size: TypeAlias },
+    StepMethod { octave_size: TypeAlias, step_size: TypeAlias },
 
     // Javanese,
     // Thai,
@@ -30,35 +28,11 @@ pub enum TuningSystem {
     Indian22,
 }
 
-impl FromStr for TuningSystem {
-    type Err = ();
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_lowercase().as_str() {
-            "stepmethod" => Ok(TuningSystem::StepMethod),
-            "equaltemperament" => Ok(TuningSystem::EqualTemperament),
-            "justintonation" => Ok(TuningSystem::JustIntonation),
-            "justintonation24" => Ok(TuningSystem::JustIntonation24),
-            "pythagoreantuning" => Ok(TuningSystem::PythagoreanTuning),
-            "fivelimit" => Ok(TuningSystem::FiveLimit),
-            "elevenlimit" => Ok(TuningSystem::ElevenLimit),
-            "fortythreetone" => Ok(TuningSystem::FortyThreeTone),
-            "indian" => Ok(TuningSystem::Indian),
-            "indianalt" => Ok(TuningSystem::IndianAlt),
-            "indianfull" => Ok(TuningSystem::Indian22),
-            // "thai" => Ok(TuningSystem::Thai),
-            // "javanese" => Ok(TuningSystem::Javanese),
-            "wholetone" => Ok(TuningSystem::WholeTone),
-            "quartertone" => Ok(TuningSystem::QuarterTone),
-            _ => Err(()),
-        }
-    }
-}
-
 impl TuningSystem {
-    pub(crate) fn get_fraction(&self, index: usize) -> Fraction {
+    pub fn get_fraction(&self, index: TypeAlias) -> Fraction {
         match &self {
-            TuningSystem::StepMethod => todo!("StepMethod"),
-            TuningSystem::EqualTemperament => equal_temperament_default(index),
+            TuningSystem::StepMethod { octave_size, step_size } => get_ratio_from_step_algorithm(index, *octave_size, *step_size),
+            TuningSystem::EqualTemperament { octave_size } => equal_temperament(index, *octave_size),
             // TuningSystem::Javanese => todo!(), // equal_temperament(index, 5), implement slendro and or pelog maybe
             // TuningSystem::Thai => equal_temperament(index, 9),
             TuningSystem::WholeTone => equal_temperament(index, 6),
@@ -75,7 +49,7 @@ impl TuningSystem {
         }
     }
 
-    pub fn size(&self) -> usize {
+    pub fn size(&self) -> TypeAlias {
         match &self {
             TuningSystem::JustIntonation
             | TuningSystem::JustIntonation24
@@ -86,7 +60,8 @@ impl TuningSystem {
             | TuningSystem::Indian
             | TuningSystem::IndianAlt
             | TuningSystem::Indian22 => self.get_lut_from_tuningsystem().len(),
-            TuningSystem::StepMethod | TuningSystem::EqualTemperament => *OCTAVE_SIZE.read().expect("couldn't read octave size"),
+            TuningSystem::StepMethod { .. } => 12,
+            TuningSystem::EqualTemperament { octave_size } => *octave_size,
             // TuningSystem::Thai => 9,
             // TuningSystem::Javanese => 5,
             TuningSystem::WholeTone => 6,
@@ -94,14 +69,14 @@ impl TuningSystem {
         }
     }
 
-    pub(crate) fn get_fraction_from_table(&self, index: usize) -> Fraction {
+    pub(crate) fn get_fraction_from_table(&self, index: TypeAlias) -> Fraction {
         let lut = self.get_lut_from_tuningsystem();
-        let len = lut.len();
+        let len = lut.len() as TypeAlias;
         let octave = index / len;
-        let index_mod = index % len;
+        let index_mod: TypeAlias = (index % len) as TypeAlias;
         let mut fraction = lut[index_mod];
-        // fraction.numerator += (2u32.pow(octave as u32) - 1) * fraction.denominator;
-        fraction.numerator *= 2u32.pow(octave as u32);
+        // fraction.numerator += (2ToneIndex.pow(octave as ToneIndex) - 1) * fraction.denominator;
+        fraction.numerator *= (2u32).pow(octave as u32);
         fraction
     }
 
@@ -117,8 +92,8 @@ impl TuningSystem {
             TuningSystem::IndianAlt => &INDIA_SCALE_ALT,
             TuningSystem::Indian22 => &INDIAN_SCALE_22,
 
-            TuningSystem::StepMethod
-            | TuningSystem::EqualTemperament
+            TuningSystem::StepMethod { ..}
+            | TuningSystem::EqualTemperament { .. }
             // | TuningSystem::Thai
             // | TuningSystem::Javanese
             | TuningSystem::QuarterTone
@@ -129,25 +104,35 @@ impl TuningSystem {
         lut
     }
 
-    pub(crate) fn get_tone_name(&self, tone_index: usize) -> String {
-        let octave_size = *OCTAVE_SIZE.read().expect("couldn't read octave size");
+    pub(crate) fn get_tone_name(&self, tone_index: TypeAlias) -> String {
         // if indian or indianalt we want to use 7
-        let name_index = tone_index % octave_size;
         let name = match self {
-            TuningSystem::EqualTemperament if octave_size == 24 => TWELVE_TONE_NAMES[name_index / 2],
-            TuningSystem::EqualTemperament if octave_size == 12 => TWELVE_TONE_NAMES[name_index],
-            TuningSystem::EqualTemperament if octave_size == 6 => TWELVE_TONE_NAMES[name_index * 2],
+            TuningSystem::EqualTemperament { octave_size } if *octave_size == 24 => {
+                TWELVE_TONE_NAMES[tone_index % octave_size / 2]
+            }
+            TuningSystem::EqualTemperament { octave_size } if *octave_size == 12 => TWELVE_TONE_NAMES[tone_index % octave_size],
+            TuningSystem::EqualTemperament { octave_size } if *octave_size == 6 => {
+                TWELVE_TONE_NAMES[tone_index % octave_size * 2]
+            }
             TuningSystem::WholeTone => TWELVE_TONE_NAMES[(tone_index % 6) * 2],
-            TuningSystem::EqualTemperament if octave_size == 4 => TWELVE_TONE_NAMES[name_index * 3],
-            TuningSystem::EqualTemperament if octave_size == 3 => TWELVE_TONE_NAMES[name_index * 4],
-            TuningSystem::EqualTemperament if octave_size == 2 => TWELVE_TONE_NAMES[name_index * 6],
-            TuningSystem::EqualTemperament if octave_size == 1 => TWELVE_TONE_NAMES[name_index * 12],
-            TuningSystem::EqualTemperament => TWELVE_TONE_NAMES[name_index * (octave_size / 12)],
+            TuningSystem::EqualTemperament { octave_size } if *octave_size == 4 => {
+                TWELVE_TONE_NAMES[tone_index % octave_size * 3]
+            }
+            TuningSystem::EqualTemperament { octave_size } if *octave_size == 3 => {
+                TWELVE_TONE_NAMES[tone_index % octave_size * 4]
+            }
+            TuningSystem::EqualTemperament { octave_size } if *octave_size == 2 => {
+                TWELVE_TONE_NAMES[tone_index % octave_size * 6]
+            }
+            TuningSystem::EqualTemperament { octave_size } if *octave_size == 1 => {
+                TWELVE_TONE_NAMES[tone_index % octave_size * 12]
+            }
+            TuningSystem::EqualTemperament { octave_size } => TWELVE_TONE_NAMES[tone_index % octave_size * (octave_size / 12)],
 
             TuningSystem::JustIntonation
             | TuningSystem::PythagoreanTuning
             | TuningSystem::FiveLimit
-            | TuningSystem::StepMethod => TWELVE_TONE_NAMES[name_index],
+            | TuningSystem::StepMethod { .. } => TWELVE_TONE_NAMES[tone_index % self.size()],
 
             TuningSystem::Indian | TuningSystem::IndianAlt => SWARAS[tone_index % SWARAS.len()],
             TuningSystem::Indian22 => SHRUTIS[tone_index % SHRUTIS.len()],
@@ -160,7 +145,7 @@ impl TuningSystem {
             TuningSystem::FortyThreeTone => "todo",
         };
 
-        let octave = tone_index / octave_size;
+        let octave = tone_index / self.size();
         let adjusted_octave: i32 = octave as i32 - 1;
         if adjusted_octave < 0 {
             format!("{}N{}", name, -adjusted_octave)

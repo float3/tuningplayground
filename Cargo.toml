@@ -1,7 +1,0 @@
-[package]
-name = "workspace"
-version = "1.0.0"
-edition = "2021"
-
-[workspace]
-members = ["tuning_systems", "tuningplayground", "music21-rs", "keymapping"]

@@ -1,50 +1,42 @@
 {
-    "name": "tuningplayground",
-    "version": "0.1.0",
-    "description": "tuning_systems",
-    "main": "index.js",
-    "bin": {
-        "create-wasm-app": ".bin/create-wasm-app.js"
-    },
-    "scripts": {
-        "build": "tsc && webpack --mode production",
-        "builddev": "tsc && webpack --mode development",
-        "serve": "webpack-dev-server --mode production",
-        "servedev": "webpack-dev-server --mode development"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/float3/tuningplayground.git"
-    },
-    "keywords": [
-        "webassembly",
-        "wasm",
-        "rust",
-        "webpack"
-    ],
-    "author": "hill <hill@hilll.dev>",
-    "license": "AGPL-3.0-only",
-    "bugs": {
-        "url": "https://github.com/float3/tuningplayground/issues"
-    },
-    "homepage": "https://github.com/float3/tuningplayground#readme",
-    "dependencies": {
-        "@types/webmidi": "^2.0.10",
-        "abcjs": "^6.3.0",
-        "tuningplayground": "file:../tuningplayground/pkg",
-        "tone": "^14.7.77",
-        "vexflow": "^4.2.3"
-    },
-    "devDependencies": {
-        "@types/node": "^20.11.19",
-        "@typescript-eslint/eslint-plugin": "^7.0.2",
-        "@typescript-eslint/parser": "^7.0.2",
-        "copy-webpack-plugin": "^12.0.2",
-        "eslint": "^8.56.0",
-        "hello-wasm-pack": "^0.1.0",
-        "typescript": "^5.3.3",
-        "webpack": "^5.90.3",
-        "webpack-cli": "^5.1.4",
-        "webpack-dev-server": "^5.0.2"
-    }
+  "name": "tuningplayground",
+  "version": "1.0.0",
+  "description": "piano demo with different features",
+  "main": "index.js",
+  "scripts": {
+    "serve": "webpack-dev-server --mode production",
+    "servedev": "webpack-dev-server --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/float3/tuningplayground.git"
+  },
+  "keywords": [
+    "webassembly",
+    "wasm",
+    "rust",
+    "webpack",
+    "music"
+  ],
+  "author": "hill <hill@hilll.dev>",
+  "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/float3/tuningplayground/issues"
+  },
+  "homepage": "https://github.com/float3/tuningplayground#readme",
+  "dependencies": {
+    "@types/webmidi": "^2.0.10",
+    "abcjs": "^6.3.0",
+    "wasm": "file:../tuningplayground/pkg"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "copy-webpack-plugin": "^12.0.2",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
+  }
 }
