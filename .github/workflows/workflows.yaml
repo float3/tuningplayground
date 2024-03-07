@@ -94,7 +94,6 @@ jobs:
         run: |
           git pull
           ./build_release.sh
-          rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-master
           git fetch
