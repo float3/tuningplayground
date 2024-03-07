@@ -25,9 +25,15 @@ let audioContext: AudioContext;
 
 export function stopAllTones(): void {
   console.log("stopAllTones");
-  for (const key in playingTones) {
-    playingTones[key].Oscillator.stop();
-    delete playingTones[key];
+  for (const tone_index in Object.keys(playingTones)) {
+    playingTones[tone_index].Oscillator.stop();
+    delete playingTones[tone_index];
+    const keyElement = document.querySelector(
+      `div[data-note="${parseInt(tone_index) - 24}"]`,
+    );
+    if (keyElement) {
+      keyElement.classList.remove("key-active");
+    }
   }
   playingTonesChanged();
 }
