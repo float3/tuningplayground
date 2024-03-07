@@ -48,12 +48,11 @@ impl Pitch {
             }
         }
 
-        let octave: Option<i32>;
-        octave = if tokens.peek().is_some() {
+        let octave: Option<i32> = if tokens.peek().is_some() {
             let x = tokens.collect::<String>();
             Some(
                 x.parse::<i32>()
-                    .expect(format!("Invalid octave: {}", x).as_str()),
+                    .unwrap_or_else(|_| panic!("Invalid octave: {}", x)),
             )
         } else {
             None

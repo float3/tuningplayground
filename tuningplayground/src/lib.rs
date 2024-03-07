@@ -96,13 +96,13 @@ pub fn convert_notes_core(notes: Vec<String>) -> String {
         notes
             .iter()
             .map(|note| {
-                let note = note.split("/").collect::<Vec<&str>>()[0];
+                let note = note.split('/').collect::<Vec<&str>>()[0];
                 let pitch: Pitch = Pitch::new(note.replace("N1", "-1"));
                 let octave_str = match pitch.octave {
                     Some(octave) => {
                         let diff = octave as isize - 4;
                         if diff < 0 {
-                            ",".repeat(diff.abs() as usize)
+                            ",".repeat(diff.unsigned_abs())
                         } else {
                             "'".repeat(diff as usize)
                         }
