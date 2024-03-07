@@ -14,7 +14,7 @@ crate-type = ["cdylib", "rlib"]
 default = ["mini-alloc", "wasm"]
 console_error_panic_hook = ["dep:console_error_panic_hook"]
 mini-alloc = ["dep:mini-alloc"]
-wasm = ["dep:wasm-bindgen", "dep:wasm-bindgen-test"]
+wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
 console_error_panic_hook = { version = "0.1.6", optional = true }
@@ -25,7 +25,7 @@ keymapping = { path = "../keymapping" }
 music21-rs = { path = "../music21-rs" }
 
 [dev-dependencies]
-wasm-bindgen-test = { version = "0.3.41", optional = true }
+wasm-bindgen-test = { version = "0.3.41" }
 
 [profile.release]
 codegen-units = 1
