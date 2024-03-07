@@ -43,7 +43,9 @@ export async function noteOn(
   tone_index += parseInt(transpose.value);
   const tone: Tone = wasm.get_tone(tone_index);
   playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
-  const keyElement = document.querySelector(`div[data-note="${tone_index - 24}"]`);
+  const keyElement = document.querySelector(
+    `div[data-note="${tone_index - 24}"]`,
+  );
   if (keyElement) {
     keyElement.classList.add("key-active");
   }
@@ -57,7 +59,9 @@ export async function noteOff(tone_index: number): Promise<void> {
   playingTones[tone_index].Oscillator.stop();
   delete playingTones[tone_index];
   playingTonesChanged();
-  const keyElement = document.querySelector(`div[data-note="${tone_index - 24}"]`);
+  const keyElement = document.querySelector(
+    `div[data-note="${tone_index - 24}"]`,
+  );
   if (keyElement) {
     keyElement.classList.remove("key-active");
   }
