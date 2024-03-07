@@ -19,8 +19,9 @@ impl Pitch {
         }
         let alter;
         let accidental;
-        match tokens.next() {
+        match tokens.peek() {
             Some('b') => {
+                tokens.next();
                 if tokens.peek() == Some(&'b') {
                     tokens.next();
                     alter = -2.0;
@@ -31,6 +32,7 @@ impl Pitch {
                 }
             }
             Some('#') => {
+                tokens.next();
                 if tokens.peek() == Some(&'#') {
                     tokens.next();
                     alter = 2.0;
@@ -47,19 +49,15 @@ impl Pitch {
         }
 
         let octave: Option<i32>;
-        match tokens.peek().is_some() {
-            true => {
-                octave = None;
-            }
-            false => {
-                octave = Some(
-                    tokens
-                        .collect::<String>()
-                        .parse::<i32>()
-                        .expect("Invalid octave"),
-                );
-            }
-        }
+        octave = if tokens.peek().is_some() {
+            let x = tokens.collect::<String>();
+            Some(
+                x.parse::<i32>()
+                    .expect(format!("Invalid octave: {}", x).as_str()),
+            )
+        } else {
+            None
+        };
 
         Pitch {
             name: name.to_string(),

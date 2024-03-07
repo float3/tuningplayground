@@ -1,6 +1,7 @@
 use keymapping::US_KEYMAP;
 use music21_rs::Pitch;
 use tuning_systems::{Tone, TuningSystem, TypeAlias};
+#[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "mini-alloc")]
@@ -16,6 +17,7 @@ static mut OCTAVE_SIZE: usize = 12;
 static mut STEP_SIZE: usize = 7;
 static mut TUNING_SYSTEM: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
 
+#[cfg(feature = "wasm")]
 #[wasm_bindgen(start)]
 pub(crate) fn main() {
     #[cfg(debug_assertions)]
@@ -24,6 +26,7 @@ pub(crate) fn main() {
     set_panic_hook();
 }
 
+#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 extern "C" {
     #[cfg(debug_assertions)]
@@ -51,6 +54,7 @@ extern "C" {
     ) -> JsValue;
 }
 
+#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tone(index: usize) -> JsValue {
     #[cfg(debug_assertions)]
@@ -70,6 +74,7 @@ pub fn get_tone(index: usize) -> JsValue {
     )
 }
 
+#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tuning_size() -> TypeAlias {
     #[cfg(debug_assertions)]
@@ -77,6 +82,7 @@ pub fn get_tuning_size() -> TypeAlias {
     unsafe { TUNING_SYSTEM.size() }
 }
 
+#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn from_keymap(key: &str) -> i32 {
     #[cfg(debug_assertions)]
@@ -84,24 +90,26 @@ pub fn from_keymap(key: &str) -> i32 {
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
-#[wasm_bindgen]
-pub fn convert_notes(notes: Vec<JsValue>) -> String {
-    #[cfg(debug_assertions)]
-    log("convert_notes");
+pub fn convert_notes_core(notes: Vec<String>) -> String {
     format!(
         "L: 1/1 \n[{}]",
         notes
             .iter()
             .map(|note| {
-                let pitch: Pitch = Pitch::new(note.as_string().unwrap().replace("N1", "-1"));
+                let note = note.split("/").collect::<Vec<&str>>()[0];
+                let pitch: Pitch = Pitch::new(note.replace("N1", "-1"));
                 let octave_str = match pitch.octave {
-                    Some(octave) if octave != -1 => match octave {
-                        4 => "".to_string(),
-                        _ if octave < 4 => ",".repeat(4 - octave as usize),
-                        _ => "'".repeat(octave as usize - 4),
-                    },
-                    _ => ",,,,,,".to_string(), // Default case for octave -1 or None
+                    Some(octave) => {
+                        let diff = octave as isize - 4;
+                        if diff < 0 {
+                            ",".repeat(diff.abs() as usize)
+                        } else {
+                            "'".repeat(diff as usize)
+                        }
+                    }
+                    None => "".to_string(),
                 };
+
                 format!(
                     "{}{}{}",
                     pitch.accidental.replace('#', "^").replace('b', "_"),
@@ -114,6 +122,15 @@ pub fn convert_notes(notes: Vec<JsValue>) -> String {
     )
 }
 
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn convert_notes(notes: Vec<String>) -> String {
+    #[cfg(debug_assertions)]
+    log("convert_notes");
+    convert_notes_core(notes)
+}
+
+#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn set_tuning_system(tuning_system: &str, octave_size: TypeAlias, step_size: TypeAlias) {
     #[cfg(debug_assertions)]
