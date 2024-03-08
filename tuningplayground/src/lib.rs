@@ -137,7 +137,7 @@ pub fn convert_notes_core(notes: Vec<String>) -> String {
                     .unwrap_or(4) as isize
                     - 4;
                 let octave_str = if octave_modifier < 0 {
-                    ",".repeat(octave_modifier.unsigned_abs() as usize)
+                    ",".repeat(octave_modifier.unsigned_abs())
                 } else {
                     "'".repeat(octave_modifier as usize)
                 };
