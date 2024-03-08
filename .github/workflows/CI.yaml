@@ -23,21 +23,19 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
 
-      - name: install rust
+      - name: rust
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
           sh rustup.sh --default-toolchain nightly --profile minimal -y
           rustup component add rustfmt clippy --toolchain nightly
           source "$HOME/.cargo/env"
           rustup update
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
-      - name: setup node
+      - name: node
         uses: actions/setup-node@v4.0.2
         with:
           node-version: 21
-
-      - name: install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
       - name: lint
         run: |
@@ -80,11 +78,11 @@ jobs:
           mkdir -p ./www/dev
           mv ./www-dev/* ./www/dev/
 
-      - name: Upload artifact
+      - name: upload
         uses: actions/upload-pages-artifact@v3.0.1
         with:
           path: "www"
 
-      - name: Deploy to GitHub Pages
+      - name: deploy
         id: deployment
         uses: actions/deploy-pages@v4.0.4
