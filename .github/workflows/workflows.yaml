@@ -40,27 +40,11 @@ jobs:
 
       - name: rust checks
         run: |
-          cd ./tuning_systems
           cargo fmt --all
-          cargo fix --allow-dirty --allow-staged --all-targets --all-features
-          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
-          cargo check --all-targets --all-features
-          cargo test --all-targets --all-features
-          cd ..
-          cd ./keymapping
-          cargo fmt --all
-          cargo fix --allow-dirty --allow-staged --all-targets --all-features
-          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
-          cargo check --all-targets --all-features
-          cargo test --all-targets --all-features
-          cd ..
-          cd ./tuningplayground
-          cargo fmt --all
-          cargo fix --allow-dirty --allow-staged --all-targets --all-features
-          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings
-          cargo check --all-targets --all-features
-          cargo test --all-targets --all-features
-          cd ..
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features -- -D warnings --workspace
+          cargo check --all-targets --all-features --workspace
+          cargo test --all-targets --all-features --workspace
 
       - name: build wasm
         run: ./build.sh
@@ -69,7 +53,8 @@ jobs:
         run: |
           cd ./ts
           npm install
-          npx prettier --write .
+          npx prettier . --write
+          npx eslint . --fix -ext .ts 
           npm update
           npm audit fix
 

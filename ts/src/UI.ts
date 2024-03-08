@@ -71,3 +71,15 @@ export function playingTonesChanged(): void {
 export function logToDiv(message: string): void {
   logContainer.innerHTML = "<p>" + message + "</p>" + logContainer.innerHTML;
 }
+
+const keyboardOffset = 24;
+
+export function keyActive(tone_index: number, active: boolean) {
+  const keyElement = document.querySelector(
+    `div[data-note="${tone_index - keyboardOffset}"]`,
+  );
+  if (keyElement) {
+    if (active) keyElement.classList.add("key-active");
+    else keyElement.classList.remove("key-active");
+  }
+}

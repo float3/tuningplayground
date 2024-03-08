@@ -1,7 +1,6 @@
 import * as wasm from "wasm";
 import { heldKeys, noteOn, noteOff } from ".";
 import { stopAllTones } from ".";
-import { logToDiv } from "./UI";
 
 export function visibilityChange(): void {
   console.log("visibilityChange");

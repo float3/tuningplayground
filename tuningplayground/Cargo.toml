@@ -26,25 +26,3 @@ keymapping = { path = "../keymapping" }
 
 [dev-dependencies]
 wasm-bindgen-test = { version = "0.3.41" }
-
-[profile.release]
-codegen-units = 1
-debug = false
-debug-assertions = false
-incremental = true
-lto = true
-opt-level = "z"
-overflow-checks = false
-panic = "unwind"
-rpath = false
-split-debuginfo = "off"
-strip = "symbols"
-
-[package.metadata.wasm-pack.profile.release]
-wasm-opt = ['-Oz']
-
-[package.metadata.wasm-pack.profile.release.wasm-bindgen]
-debug-js-glue = false
-demangle-name-section = false
-dwarf-debug-info = false
-omit-default-module-path = false

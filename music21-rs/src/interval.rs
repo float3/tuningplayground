@@ -1,5 +1,5 @@
 use lazy_static::lazy_static;
-use std::{clone, collections::HashMap, sync::Mutex};
+use std::{collections::HashMap, sync::Mutex};
 
 use tuning_systems::Fraction;
 
@@ -103,6 +103,12 @@ impl Interval {
     }
 }
 
+impl GenericInterval {
+    pub(crate) fn new(simple_directed: i32) -> GenericInterval {
+        todo!("GenericInterval::new")
+    }
+}
+
 fn intervals_to_diatonic(g_int: &GenericInterval, c_int: &ChromaticInterval) -> DiatonicInterval {
     let specifier = get_specifier_from_generic_chromatic(g_int, c_int);
     DiatonicInterval {
@@ -128,9 +134,13 @@ fn notes_to_chromatic(p1: &Pitch, p2: &Pitch) -> ChromaticInterval {
 fn notes_to_generic(p1: &Pitch, p2: &Pitch) -> GenericInterval {
     let staff_dist = p2.diatonic_note_num - p1.diatonic_note_num;
     let gen_dist = convert_staff_distance_to_interval(staff_dist);
-    return GenericInterval(gen_dist);
+    GenericInterval::new(gen_dist)
 }
 
-fn convert_staff_distance_to_interval(staff_dist: i32) -> _ {
-    todo!()
+fn convert_staff_distance_to_interval(staff_dist: i32) -> i32 {
+    match staff_dist {
+        0 => 1,
+        dist if dist > 0 => dist + 1,
+        dist => dist - 1,
+    }
 }

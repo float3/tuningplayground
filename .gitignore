@@ -3,3 +3,8 @@ ts/dist/
 ts/src/styles.css
 ts/tsconfig.tsbuildinfo
 www/
+debug/
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
