@@ -1,3 +1,6 @@
+use lazy_static::lazy_static;
+use std::{clone, collections::HashMap, sync::Mutex};
+
 use tuning_systems::Fraction;
 
 use crate::pitch::Pitch;
@@ -30,6 +33,11 @@ pub enum IntervalType {
     Melodic,
 }
 
+lazy_static! {
+    static ref PYTHAGOREAN_CACHE: Mutex<HashMap<String, (Pitch, Fraction)>> =
+        Mutex::new(HashMap::new());
+}
+
 impl Interval {
     pub(crate) fn new(pitch_start: Pitch, pitch_end: Pitch) -> Option<Interval> {
         let generic = notes_to_generic(&pitch_start, &pitch_end);
@@ -37,8 +45,8 @@ impl Interval {
         let diatonic = intervals_to_diatonic(&generic, &chromatic);
 
         Some(Interval {
-            pitch_start: pitch_start.into(),
-            pitch_end: pitch_end.into(),
+            pitch_start: pitch_start,
+            pitch_end: pitch_end,
             implicit_diatonic: false,
             generic,
             diatonic,
@@ -47,8 +55,51 @@ impl Interval {
         })
     }
 
-    pub(crate) fn interval_to_pythagorean_ratio(&self) -> Fraction {
+    fn new_from_name(name: &str) -> Option<Interval> {
         todo!()
+    }
+
+    pub(crate) fn interval_to_pythagorean_ratio(&self) -> Option<Fraction> {
+        let start_pitch = Pitch::new("C1".to_string());
+        let end_pitch_wanted = start_pitch.transpose(self);
+
+        let mut cache = PYTHAGOREAN_CACHE.lock().unwrap();
+
+        let mut end_pitch_ratio: Option<(Pitch, Fraction)> = None;
+        if cache.contains_key(&end_pitch_wanted.name) {
+            end_pitch_ratio = Some(cache.get(&end_pitch_wanted.name).unwrap().clone());
+        } else {
+            let mut end_pitch_up = start_pitch.clone();
+            let mut end_pitch_down = start_pitch.clone();
+            for counter in 0..37 {
+                if end_pitch_up.name == end_pitch_wanted.name {
+                    end_pitch_ratio = Some((end_pitch_up, Fraction::new(3, 2).pow(counter)));
+                    break;
+                } else if end_pitch_down.name == end_pitch_wanted.name {
+                    end_pitch_ratio = Some((end_pitch_down, Fraction::new(2, 3).pow(counter)));
+                    break;
+                } else {
+                    end_pitch_up = end_pitch_up.transpose(&Interval::new_from_name("P5").unwrap());
+                    end_pitch_down =
+                        end_pitch_down.transpose(&Interval::new_from_name("-P5").unwrap());
+                }
+            }
+            match end_pitch_ratio.clone() {
+                Some((end_pitch, ratio)) => {
+                    cache.insert(end_pitch_wanted.name.clone(), (end_pitch, ratio.clone()));
+                }
+                None => {
+                    return None;
+                }
+            }
+        }
+        match end_pitch_ratio {
+            Some((end_pitch, ratio)) => {
+                let octaves = ((end_pitch_wanted.ps - end_pitch.ps) / 12) as i32;
+                Some(ratio * Fraction::new(2, 1).pow(octaves))
+            }
+            _ => None,
+        }
     }
 }
 

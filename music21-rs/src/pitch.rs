@@ -9,6 +9,7 @@ pub struct Pitch {
     pub accidental: String,
     pub octave: Option<i32>,
     pub diatonic_note_num: i32,
+    pub ps: i32,
     // pub frequency: f64,
 }
 
@@ -76,6 +77,10 @@ impl Pitch {
     }
 
     fn to_string(&self) -> String {
+        todo!()
+    }
+
+    pub(crate) fn transpose(&self, arg: &Interval) -> Pitch {
         todo!()
     }
 }

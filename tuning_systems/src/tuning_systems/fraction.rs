@@ -28,6 +28,18 @@ impl Fraction {
     pub fn f64(&self) -> f64 {
         f64::from(*self)
     }
+
+    pub fn pow(&self, exp: i32) -> Fraction {
+        if exp < 0 {
+            panic!("Negative exponent is not supported for Fraction::pow");
+        }
+
+        Fraction {
+            numerator: self.numerator.pow(exp as u32),
+            denominator: self.denominator.pow(exp as u32),
+            base: self.base,
+        }
+    }
 }
 
 impl From<Fraction> for f64 {
