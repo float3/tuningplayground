@@ -84,7 +84,7 @@ impl Pitch {
         Pitch {
             name: name.to_string(),
             alter,
-            accidental: accidental,
+            accidental,
             octave,
             diatonic_note_num: todo!(),
             ps: todo!(),
@@ -111,10 +111,8 @@ impl Pitch {
                 Some(pitch) => {
                     let accidental = pitch.accidental.clone().unwrap();
                     //this is incorrect TODO rework this
-                    if accidental.name.len() > 0 {
-                        if accidental.alter.abs() > (alter_limit as f64) {
-                            break;
-                        }
+                    if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64) {
+                        break;
                     }
                     if !post.contains(&pitch) {
                         post.push(pitch);
@@ -131,10 +129,8 @@ impl Pitch {
                 Some(pitch) => {
                     let accidental = pitch.accidental.clone().unwrap();
                     //this is incorrect TODO rework this
-                    if accidental.name.len() > 0 {
-                        if accidental.alter.abs() > alter_limit as f64 {
-                            break;
-                        }
+                    if !accidental.name.is_empty() && accidental.alter.abs() > alter_limit as f64 {
+                        break;
                     }
                     if !post.contains(&pitch) {
                         post.push(pitch);

@@ -45,8 +45,8 @@ impl Interval {
         let diatonic = intervals_to_diatonic(&generic, &chromatic);
 
         Some(Interval {
-            pitch_start: pitch_start,
-            pitch_end: pitch_end,
+            pitch_start,
+            pitch_end,
             implicit_diatonic: false,
             generic,
             diatonic,
@@ -86,7 +86,7 @@ impl Interval {
             }
             match end_pitch_ratio.clone() {
                 Some((end_pitch, ratio)) => {
-                    cache.insert(end_pitch_wanted.name.clone(), (end_pitch, ratio.clone()));
+                    cache.insert(end_pitch_wanted.name.clone(), (end_pitch, ratio));
                 }
                 None => {
                     return None;
@@ -95,7 +95,7 @@ impl Interval {
         }
         match end_pitch_ratio {
             Some((end_pitch, ratio)) => {
-                let octaves = ((end_pitch_wanted.ps - end_pitch.ps) / 12) as i32;
+                let octaves = (end_pitch_wanted.ps - end_pitch.ps) / 12;
                 Some(ratio * Fraction::new(2, 1).pow(octaves))
             }
             _ => None,
