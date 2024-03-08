@@ -24,11 +24,11 @@ jobs:
           token: ${{ secrets.TOKEN }}
 
       - name: install rust
-        uses: actions-rs/toolchain@v1.0.6
-        with:
-          toolchain: nightly
-          components: rustfmt, clippy
-          override: true
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+          rustup toolchain install nightly --profile minimal
+          rustup component add rustfmt clippy --toolchain nightly
+          rustup default nightly
 
       - name: setup node
         uses: actions/setup-node@v4.0.2
@@ -54,7 +54,7 @@ jobs:
           cd ./ts
           npm install
           npx prettier . --write
-          npx eslint . --fix -ext .ts 
+          npx eslint . --fix --ext .ts 
           npm update
           npm audit fix
 

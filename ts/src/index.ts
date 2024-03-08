@@ -22,7 +22,7 @@ document.addEventListener("visibilitychange", visibilityChange);
 window.addEventListener("blur", stopAllTones);
 window.createTone = createTone;
 
-wasm.default();
+void wasm.default(); // TODO: don't allow stuff to happen before this finishes
 
 export const playingTones: Record<number, Tone> = [];
 let audioContext: AudioContext;
@@ -30,30 +30,28 @@ let audioContext: AudioContext;
 
 export function stopAllTones(): void {
   console.log("stopAllTones");
-  for (const tone_index in Object.keys(playingTones)) {
+  Object.keys(playingTones).forEach((key) => {
+    const tone_index: number = parseInt(key);
     playingTones[tone_index].Oscillator.stop();
     delete playingTones[tone_index];
-    keyActive(parseInt(tone_index), false);
-  }
+    keyActive(tone_index, false);
+  });
   playingTonesChanged();
 }
 
 export const heldKeys: Record<string, boolean> = {};
 
-export async function noteOn(
-  tone_index: number,
-  velocity?: number,
-): Promise<void> {
+export function noteOn(tone_index: number, velocity?: number): void {
   console.log("noteOn");
   console.log("velocity: ", velocity);
   tone_index += parseInt(transpose.value);
-  const tone: Tone = wasm.get_tone(tone_index);
+  const tone: Tone = wasm.get_tone(tone_index) as Tone;
   playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
   keyActive(tone_index, true);
   logToDiv(tone.name);
 }
 
-export async function noteOff(tone_index: number): Promise<void> {
+export function noteOff(tone_index: number): void {
   console.log("noteOff");
   tone_index += parseInt(transpose.value);
   if (!(tone_index in playingTones)) return;

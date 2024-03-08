@@ -1,5 +1,5 @@
 import { noteOn, noteOff } from ".";
-import { Midi } from "@tonejs/midi";
+// import { Midi } from "@tonejs/midi";
 
 export function requestMIDI(): void {
   if (navigator.requestMIDIAccess) {
@@ -16,7 +16,8 @@ export function requestMIDI(): void {
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
   console.log("onMIDISuccess");
-  const input = midiAccess.inputs.values().next().value;
+  const input: WebMidi.MIDIInput = midiAccess.inputs.values().next()
+    .value as WebMidi.MIDIInput;
 
   if (input) {
     input.onmidimessage = onMIDIMessage;
@@ -44,22 +45,22 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
   }
 }
 
-async function playMIDIFile(midiFile: string): Promise<void> {
-  console.log("playMIDIFile");
+// async function playMIDIFile(midiFile: string): Promise<void> {
+//   console.log("playMIDIFile");
 
-  const response = await fetch(midiFile);
-  const arrayBuffer = await response.arrayBuffer();
-  const midi = new Midi(arrayBuffer);
+//   const response = await fetch(midiFile);
+//   const arrayBuffer = await response.arrayBuffer();
+//   const midi = new Midi(arrayBuffer);
 
-  const track = midi.tracks[0];
+//   const track = midi.tracks[0];
 
-  track.notes.forEach((note) => {
-    const noteOnTime = note.time;
-    const noteOffTime = note.time + note.duration;
-    const velocity = note.velocity;
-    const midiNote = note.midi;
+//   track.notes.forEach((note) => {
+//     const noteOnTime = note.time;
+//     const noteOffTime = note.time + note.duration;
+//     const velocity = note.velocity;
+//     const midiNote = note.midi;
 
-    setTimeout(() => noteOn(midiNote, velocity), noteOnTime * 1000);
-    setTimeout(() => noteOff(midiNote), noteOffTime * 1000);
-  });
-}
+//     setTimeout(() => void noteOn(midiNote, velocity), noteOnTime * 1000);
+//     setTimeout(() => void noteOff(midiNote), noteOffTime * 1000);
+//   });
+// }
