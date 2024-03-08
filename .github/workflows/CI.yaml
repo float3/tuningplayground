@@ -62,15 +62,19 @@ jobs:
 
       - name: build
         run: |
+          echo "building master"
           git fetch
           git pull
           git checkout master
           ./build_release.sh
+          echo "master built"
           rm ./www/styles.css
           mv ./www ./www-master
+          echo "building dev"
           git checkout dev
           git pull
           ./build.sh
+          echo "dev built"
           rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-dev
