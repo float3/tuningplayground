@@ -28,6 +28,7 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
           sh rustup.sh --default-toolchain nightly --profile minimal -y
           rustup component add rustfmt clippy --toolchain nightly
+          source "$HOME/.cargo/env"
 
       - name: setup node
         uses: actions/setup-node@v4.0.2
