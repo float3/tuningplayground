@@ -6,23 +6,26 @@ import { keydown, keyup, visibilityChange } from "./events";
 import {
   playingTonesChanged,
   logToDiv,
-  transpose,
   volumeSlider,
   keyActive,
+  DOMContentLoaded,
 } from "./UI";
 
 console.log("static");
 
-requestMIDI();
-
-document.addEventListener("keydown", keydown);
-document.addEventListener("keyup", keyup);
+document.addEventListener("DOMContentLoaded", DOMContentLoaded);
 document.addEventListener("visibilitychange", visibilityChange);
-
 window.addEventListener("blur", stopAllTones);
 window.createTone = createTone;
 
-void wasm.default(); // TODO: don't allow stuff to happen before this finishes
+wasm
+  .default()
+  .then(() => {
+    requestMIDI();
+    document.addEventListener("keydown", keydown);
+    document.addEventListener("keyup", keyup);
+  })
+  .catch(console.error);
 
 export const playingTones: Record<number, Tone> = [];
 let audioContext: AudioContext;
@@ -44,7 +47,6 @@ export const heldKeys: Record<string, boolean> = {};
 export function noteOn(tone_index: number, velocity?: number): void {
   console.log("noteOn");
   console.log("velocity: ", velocity);
-  tone_index += parseInt(transpose.value);
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
   playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
   keyActive(tone_index, true);
@@ -53,7 +55,6 @@ export function noteOn(tone_index: number, velocity?: number): void {
 
 export function noteOff(tone_index: number): void {
   console.log("noteOff");
-  tone_index += parseInt(transpose.value);
   if (!(tone_index in playingTones)) return;
   playingTones[tone_index].Oscillator.stop();
   delete playingTones[tone_index];

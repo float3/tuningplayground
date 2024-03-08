@@ -16,7 +16,6 @@
 // TODO: add bass clef
 // TODO: Fix visibility pub(crate) and fix tests maybe inline them per file
 // TODO: make better tests
-// TODO: tuning system better contstructors
-// TODO: debug wasm and js compiled size
 // TOOD: extend keymapping library
 // TODO: fix the keyboard numbers, for now using offset hack
+// TODO: fix transpose

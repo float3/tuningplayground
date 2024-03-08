@@ -79,13 +79,13 @@
       <p>
         <noscript> hey this page needs javascript</noscript>
       </p>
-      <!--script
-        src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"
-        integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-      ></script-->
       <p>use your computer keyboard or a midi device</p>
+
+      <input type="file" id="fileInput" accept=".midi,.mid" />
+      <input type="text" id="linkInput" placeholder="Enter MIDI file link" />
+      <button id="playButton">Play</button>
+      <button id="stopButton">Stop</button>
+
       <p>
         <label for="tuningSelect">Select Tuning System:</label>
         <select id="tuningSelect" name="tuningSelect">
@@ -110,13 +110,13 @@
         </select>
       </p>
 
-      <p>
+      <!--p>
         <label for="soundMethod">Select Sound Method:</label>
         <select id="soundMethod" name="soundMethod">
           <option value="native">Native</option>
-          <!--option value="tone.js">tone.js</option-->
+          <option value="tone.js">tone.js</option>
         </select>
-      </p>
+      </p-->
 
       <p>
         Volume:
@@ -145,6 +145,11 @@
       </div>
       <div class="container">
         <div class="keyboard">
+          <div class="octave">
+            <div class="white-key" data-note="21"></div>
+            <div class="black-key" data-note="22"></div>
+            <div class="white-key" data-note="23"></div>
+          </div>
           <div class="octave">
             <div class="white-key" data-note="24"></div>
             <div class="black-key" data-note="25"></div>
@@ -186,6 +191,65 @@
             <div class="white-key" data-note="57"></div>
             <div class="black-key" data-note="58"></div>
             <div class="white-key" data-note="59"></div>
+          </div>
+          <div class="octave">
+            <div class="white-key" data-note="60"></div>
+            <div class="black-key" data-note="61"></div>
+            <div class="white-key" data-note="62"></div>
+            <div class="black-key" data-note="63"></div>
+            <div class="white-key" data-note="64"></div>
+            <div class="white-key" data-note="65"></div>
+            <div class="black-key" data-note="66"></div>
+            <div class="white-key" data-note="67"></div>
+            <div class="black-key" data-note="68"></div>
+            <div class="white-key" data-note="69"></div>
+            <div class="black-key" data-note="70"></div>
+            <div class="white-key" data-note="71"></div>
+          </div>
+          <div class="octave">
+            <div class="white-key" data-note="72"></div>
+            <div class="black-key" data-note="73"></div>
+            <div class="white-key" data-note="74"></div>
+            <div class="black-key" data-note="75"></div>
+            <div class="white-key" data-note="76"></div>
+            <div class="white-key" data-note="77"></div>
+            <div class="black-key" data-note="78"></div>
+            <div class="white-key" data-note="79"></div>
+            <div class="black-key" data-note="80"></div>
+            <div class="white-key" data-note="81"></div>
+            <div class="black-key" data-note="82"></div>
+            <div class="white-key" data-note="83"></div>
+          </div>
+          <div class="octave">
+            <div class="white-key" data-note="84"></div>
+            <div class="black-key" data-note="85"></div>
+            <div class="white-key" data-note="86"></div>
+            <div class="black-key" data-note="87"></div>
+            <div class="white-key" data-note="88"></div>
+            <div class="white-key" data-note="89"></div>
+            <div class="black-key" data-note="90"></div>
+            <div class="white-key" data-note="91"></div>
+            <div class="black-key" data-note="92"></div>
+            <div class="white-key" data-note="93"></div>
+            <div class="black-key" data-note="94"></div>
+            <div class="white-key" data-note="95"></div>
+          </div>
+          <div class="octave">
+            <div class="white-key" data-note="96"></div>
+            <div class="black-key" data-note="97"></div>
+            <div class="white-key" data-note="98"></div>
+            <div class="black-key" data-note="99"></div>
+            <div class="white-key" data-note="100"></div>
+            <div class="white-key" data-note="101"></div>
+            <div class="black-key" data-note="102"></div>
+            <div class="white-key" data-note="103"></div>
+            <div class="black-key" data-note="104"></div>
+            <div class="white-key" data-note="105"></div>
+            <div class="black-key" data-note="106"></div>
+            <div class="white-key" data-note="107"></div>
+          </div>
+          <div class="octave">
+            <div class="white-key" data-note="108"></div>
           </div>
         </div>
         <div
