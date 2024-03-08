@@ -1,22 +1,31 @@
 console.log("imports");
 import * as wasm from "wasm";
-import { playingTonesChanged, logToDiv, transpose, volumeSlider } from "./UI";
 import { Tone, createTone } from "./Tone";
 import { requestMIDI } from "./MIDI";
 import { keydown, keyup, visibilityChange } from "./events";
+import {
+  playingTonesChanged,
+  logToDiv,
+  volumeSlider,
+  keyActive,
+  DOMContentLoaded,
+} from "./UI";
 
 console.log("static");
 
-requestMIDI();
-
-document.addEventListener("keydown", keydown);
-document.addEventListener("keyup", keyup);
+document.addEventListener("DOMContentLoaded", DOMContentLoaded);
 document.addEventListener("visibilitychange", visibilityChange);
-
 window.addEventListener("blur", stopAllTones);
 window.createTone = createTone;
 
-wasm.default();
+wasm
+  .default()
+  .then(() => {
+    requestMIDI();
+    document.addEventListener("keydown", keydown);
+    document.addEventListener("keyup", keyup);
+  })
+  .catch(console.error);
 
 export const playingTones: Record<number, Tone> = [];
 let audioContext: AudioContext;
@@ -24,10 +33,12 @@ let audioContext: AudioContext;
 
 export function stopAllTones(): void {
   console.log("stopAllTones");
-  for (const key in playingTones) {
-    playingTones[key].Oscillator.stop();
-    delete playingTones[key];
-  }
+  Object.keys(playingTones).forEach((key) => {
+    const tone_index: number = parseInt(key);
+    playingTones[tone_index].Oscillator.stop();
+    delete playingTones[tone_index];
+    keyActive(tone_index, false);
+  });
   playingTonesChanged();
 }
 
@@ -36,19 +47,19 @@ export const heldKeys: Record<string, boolean> = {};
 export function noteOn(tone_index: number, velocity?: number): void {
   console.log("noteOn");
   console.log("velocity: ", velocity);
-  tone_index += parseInt(transpose.value);
-  const tone: Tone = wasm.get_tone(tone_index);
+  const tone: Tone = wasm.get_tone(tone_index) as Tone;
   playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
+  keyActive(tone_index, true);
   logToDiv(tone.name);
 }
 
 export function noteOff(tone_index: number): void {
   console.log("noteOff");
-  tone_index += parseInt(transpose.value);
   if (!(tone_index in playingTones)) return;
   playingTones[tone_index].Oscillator.stop();
   delete playingTones[tone_index];
   playingTonesChanged();
+  keyActive(tone_index, false);
 }
 
 function playFrequencyNative(

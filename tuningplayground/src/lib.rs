@@ -1,5 +1,4 @@
 use keymapping::US_KEYMAP;
-use music21_rs::Pitch;
 use tuning_systems::{Tone, TuningSystem, TypeAlias};
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
@@ -95,25 +94,58 @@ pub fn convert_notes_core(notes: Vec<String>) -> String {
         "L: 1/1 \n[{}]",
         notes
             .iter()
-            .map(|note| {
-                let note = note.split('/').collect::<Vec<&str>>()[0];
-                let pitch: Pitch = Pitch::new(note.replace("N1", "-1"));
-                let octave_str = match pitch.octave {
-                    Some(octave) => {
-                        let diff = octave as isize - 4;
-                        if diff < 0 {
-                            ",".repeat(diff.unsigned_abs())
+            .map(|note_str| {
+                let mut tokens = note_str.chars().peekable();
+                let name = tokens.next().expect("no name");
+
+                if !('A'..='G').contains(&name) {
+                    panic!("Invalid note name");
+                }
+
+                let accidental;
+
+                match tokens.peek() {
+                    Some('b') => {
+                        tokens.next();
+                        if tokens.peek() == Some(&'b') {
+                            tokens.next();
+                            accidental = "bb".to_string();
                         } else {
-                            "'".repeat(diff as usize)
+                            accidental = "b".to_string();
                         }
                     }
-                    None => "".to_string(),
+                    Some('#') => {
+                        tokens.next();
+                        if tokens.peek() == Some(&'#') {
+                            tokens.next();
+                            accidental = "##".to_string();
+                        } else {
+                            accidental = "#".to_string();
+                        }
+                    }
+                    _ => {
+                        accidental = "".to_string();
+                    }
+                }
+
+                let octave_modifier = note_str
+                    .replace("N1", "-1")
+                    .chars()
+                    .last()
+                    .unwrap_or('4')
+                    .to_digit(10)
+                    .unwrap_or(4) as isize
+                    - 4;
+                let octave_str = if octave_modifier < 0 {
+                    ",".repeat(octave_modifier.unsigned_abs())
+                } else {
+                    "'".repeat(octave_modifier as usize)
                 };
 
                 format!(
                     "{}{}{}",
-                    pitch.accidental.replace('#', "^").replace('b', "_"),
-                    pitch.name,
+                    accidental.replace('#', "^").replace('b', "_"),
+                    name,
                     octave_str
                 )
             })

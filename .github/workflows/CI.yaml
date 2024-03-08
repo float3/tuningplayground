@@ -1,0 +1,92 @@
+on:
+  push:
+    branches:
+      - master
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "github-pages"
+  cancel-in-progress: true
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          token: ${{ secrets.TOKEN }}
+
+      - name: rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
+          sh rustup.sh --default-toolchain nightly --profile minimal -y
+          rustup component add rustfmt clippy --toolchain nightly
+          source "$HOME/.cargo/env"
+          rustup update
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
+
+      - name: node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 21
+
+      - name: lint
+        run: |
+          cargo fmt --all --verbose
+          cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace --verbose
+          cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace --verbose -- -D warnings
+          cargo check --all-targets --all-features --workspace --verbose
+          cargo test --all-targets --all-features --workspace --verbose
+          ./build.sh
+          cd ./ts
+          npm install
+          npx prettier . --write
+          npx eslint . --fix --ext .ts 
+          npm update
+          npm audit fix
+
+      - name: commit
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add .
+          git diff --staged --quiet || git commit -m "lint"
+          git push || echo "No changes to commit"
+
+      - name: build
+        run: |
+          echo "building master"
+          git fetch
+          git pull
+          git checkout master
+          ./build_release.sh
+          echo "master built"
+          rm ./www/styles.css
+          mv ./www ./www-master
+          echo "building dev"
+          git checkout dev
+          git pull
+          ./build.sh
+          echo "dev built"
+          rm ./www/*LICENSE.txt
+          rm ./www/styles.css
+          mv ./www ./www-dev
+          mv ./www-master ./www/
+          mkdir -p ./www/dev
+          mv ./www-dev/* ./www/dev/
+
+      - name: upload
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: "www"
+
+      - name: deploy
+        id: deployment
+        uses: actions/deploy-pages@v4.0.4

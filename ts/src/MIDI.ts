@@ -1,4 +1,5 @@
 import { noteOn, noteOff } from ".";
+import { Midi } from "@tonejs/midi";
 
 export function requestMIDI(): void {
   if (navigator.requestMIDIAccess) {
@@ -15,7 +16,8 @@ export function requestMIDI(): void {
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
   console.log("onMIDISuccess");
-  const input = midiAccess.inputs.values().next().value;
+  const input: WebMidi.MIDIInput = midiAccess.inputs.values().next()
+    .value as WebMidi.MIDIInput;
 
   if (input) {
     input.onmidimessage = onMIDIMessage;
@@ -41,4 +43,27 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
   if (is_note_on) {
     noteOn(tone_index, velocity);
   }
+}
+
+const multiplier = 1000;
+
+export function playMIDIFile(midiFile: ArrayBuffer): void {
+  console.log("playMIDIFile");
+
+  const midi = new Midi(midiFile);
+
+  const track = midi.tracks[0];
+
+  const startTime = track.notes[0].time * multiplier;
+
+  track.notes.forEach((note) => {
+    console.log(note.time);
+    const noteOnTime = note.time * multiplier - startTime;
+    const noteOffTime = (note.time + note.duration) * multiplier - startTime;
+    const velocity = note.velocity;
+    const midiNote = note.midi;
+
+    setTimeout(() => noteOn(midiNote, velocity), noteOnTime);
+    setTimeout(() => noteOff(midiNote), noteOffTime);
+  });
 }
