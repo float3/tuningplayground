@@ -1,4 +1,4 @@
-use crate::{interval::PitchOrNote, note::Note};
+use crate::note::Note;
 
 use super::interval::Interval;
 
@@ -8,39 +8,13 @@ pub struct Pitch {
     pub alter: f64,
     pub accidental: String,
     pub octave: Option<i32>,
+    pub diatonic_note_num: i32,
     // pub frequency: f64,
 }
 
-#[derive(Clone)]
-pub enum PitchOrNote {
-    Pitch(Pitch),
-    Note(Note),
-}
-
-impl From<Pitch> for PitchOrNote {
-    fn from(p: Pitch) -> Self {
-        PitchOrNote::Pitch(p)
-    }
-}
-
-impl From<Note> for PitchOrNote {
-    fn from(n: Note) -> Self {
-        PitchOrNote::Note(n)
-    }
-}
-
-impl PitchOrNote {
-    pub fn pitch(&self) -> Pitch {
-        match self {
-            PitchOrNote::Pitch(p) => p.clone(),
-            PitchOrNote::Note(n) => n.pitch.clone(),
-        }
-    }
-}
-
-impl From<PitchOrNote> for Pitch {
-    fn from(p: PitchOrNote) -> Self {
-        p.pitch()
+impl From<Note> for Pitch {
+    fn from(note: Note) -> Self {
+        note.pitch
     }
 }
 
@@ -152,15 +126,6 @@ fn dissonance_score(
         }
 
         if small_pythagorean_ratio {
-            // # score_ratio = Pythagorean ratio complexity per pitch
-            // for this_interval in intervals:
-            //     # does not accept weird intervals, e.g. with semitones
-            //     ratio = interval.intervalToPythagoreanRatio(this_interval)
-            //     # d2 is 1.0
-            //     penalty = math.log(ratio.numerator * ratio.denominator / ratio) * 0.03792663444
-            //     score_ratio += penalty
-
-            // score_ratio /= len(pitches)
             intervals.iter().for_each(|interval| {
                 let ratio = interval.interval_to_pythagorean_ratio();
                 let penalty = ((ratio.numerator * ratio.denominator) as f64 / ratio.f64()).ln()
