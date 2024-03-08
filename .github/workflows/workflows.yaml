@@ -29,6 +29,7 @@ jobs:
           sh rustup.sh --default-toolchain nightly --profile minimal -y
           rustup component add rustfmt clippy --toolchain nightly
           source "$HOME/.cargo/env"
+          rustup update
 
       - name: setup node
         uses: actions/setup-node@v4.0.2
@@ -38,19 +39,14 @@ jobs:
       - name: install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
-      - name: rust checks
+      - name: lint
         run: |
           cargo fmt --all
           cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace
           cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace -- -D warnings
           cargo check --all-targets --all-features --workspace
           cargo test --all-targets --all-features --workspace
-
-      - name: build wasm
-        run: ./build.sh
-
-      - name: node checks
-        run: |
+          ./build.sh
           cd ./ts
           npm install
           npx prettier . --write
@@ -58,23 +54,22 @@ jobs:
           npm update
           npm audit fix
 
-      - name: push
-        uses: stefanzweifel/git-auto-commit-action@v4.1.1
-        with:
-          commit_message: "actions"
-
-      - name: checkout master
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: "master"
+      - name: commit
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add .
+          git commit -m "lint"
+          git push
 
       - name: build
         run: |
+          git fetch
           git pull
+          git checkout master
           ./build_release.sh
           rm ./www/styles.css
           mv ./www ./www-master
-          git fetch
           git checkout dev
           git pull
           ./build.sh
