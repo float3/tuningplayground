@@ -111,7 +111,8 @@ impl Pitch {
                 Some(pitch) => {
                     let accidental = pitch.accidental.clone().unwrap();
                     //this is incorrect TODO rework this
-                    if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64) {
+                    if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64)
+                    {
                         break;
                     }
                     if !post.contains(&pitch) {

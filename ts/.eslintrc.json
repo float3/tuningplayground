@@ -17,11 +17,7 @@
     "sourceType": "module",
     "project": "./tsconfig.eslint.json"
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "rules": {},
-  "ignorePatterns": [
-    "webpack.config.ts"
-  ]
+  "ignorePatterns": ["webpack.config.ts"]
 }
