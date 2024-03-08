@@ -3,6 +3,7 @@ use crate::{
     INDIAN_SCALE, INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS,
     TWELVE_TONE_NAMES,
 };
+
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
     EqualTemperament { octave_size: TypeAlias },

@@ -21,6 +21,12 @@ struct Accidental {
     alter: f64,
 }
 
+impl Accidental {
+    fn new(arg: &str) -> Accidental {
+        todo!()
+    }
+}
+
 impl From<Note> for Pitch {
     fn from(note: Note) -> Self {
         note.pitch.clone()
@@ -91,10 +97,6 @@ impl Pitch {
         }
     }
 
-    fn to_string(&self) -> String {
-        todo!()
-    }
-
     pub(crate) fn transpose(&self, arg: &Interval) -> Pitch {
         todo!()
     }
@@ -106,42 +108,32 @@ impl Pitch {
             post.push(c);
         }
         let c = self.clone();
-        loop {
-            match c.get_higher_enharmonic() {
-                Some(pitch) => {
-                    let accidental = pitch.accidental.clone().unwrap();
-                    //this is incorrect TODO rework this
-                    if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64)
-                    {
-                        break;
-                    }
-                    if !post.contains(&pitch) {
-                        post.push(pitch);
-                    } else {
-                        break;
-                    }
-                }
-                None => break,
+        while let Some(pitch) = c.get_higher_enharmonic() {
+            let accidental = pitch.accidental.clone().unwrap();
+            //this is incorrect TODO rework this
+            if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64) {
+                break;
+            }
+            if !post.contains(&pitch) {
+                post.push(pitch);
+            } else {
+                break;
             }
         }
         let c = self.clone();
-        loop {
-            match c.get_lower_enharmonic() {
-                Some(pitch) => {
-                    let accidental = pitch.accidental.clone().unwrap();
-                    //this is incorrect TODO rework this
-                    if !accidental.name.is_empty() && accidental.alter.abs() > alter_limit as f64 {
-                        break;
-                    }
-                    if !post.contains(&pitch) {
-                        post.push(pitch);
-                    } else {
-                        break;
-                    }
-                }
-                None => break,
+        while let Some(pitch) = c.get_lower_enharmonic() {
+            let accidental = pitch.accidental.clone().unwrap();
+            //this is incorrect TODO rework this
+            if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64) {
+                break;
+            }
+            if !post.contains(&pitch) {
+                post.push(pitch);
+            } else {
+                break;
             }
         }
+
         post
     }
 
@@ -174,21 +166,39 @@ impl Pitch {
 
         let mut c = self.clone();
 
-        match c.accidental {
-            Some(ref accidental) => {
-                if accidental.alter.abs() < 2.0
-                    && !["E#", "B#", "C-", "F-"].contains(&c.name.as_str())
-                {
-                    // pass
-                } else {
-                    let save_octave = self.octave;
-                    c.ps = self.ps;
-                    if save_octave.is_none() {
-                        c.octave = None;
-                    }
+        if let Some(ref accidental) = c.accidental {
+            if accidental.alter.abs() < 2.0 && !["E#", "B#", "C-", "F-"].contains(&c.name.as_str())
+            {
+                // pass
+            } else {
+                let save_octave = self.octave;
+                c.ps = self.ps;
+                if save_octave.is_none() {
+                    c.octave = None;
                 }
             }
-            None => {}
+        }
+
+        if most_common {
+            match c.name.as_str() {
+                "D#" => {
+                    c.name = "E".to_string();
+                    c.accidental = Some(Accidental::new("flat"));
+                }
+                "A#" => {
+                    c.name = "B".to_string();
+                    c.accidental = Some(Accidental::new("flat"));
+                }
+                "G-" => {
+                    c.name = "F".to_string();
+                    c.accidental = Some(Accidental::new("sharp"));
+                }
+                "D-" => {
+                    c.name = "C".to_string();
+                    c.accidental = Some(Accidental::new("sharp"));
+                }
+                _ => {}
+            }
         }
         c
     }
@@ -213,7 +223,7 @@ pub(crate) fn simplify_multiple_enharmonics(pitches: Vec<Pitch>) -> Vec<Pitch> {
 }
 
 fn dissonance_score(
-    pitches: &Vec<Pitch>,
+    pitches: &[Pitch],
     small_pythagorean_ratio: bool,
     accidental_penalty: bool,
     triad_award: bool,
@@ -265,10 +275,9 @@ fn dissonance_score(
             intervals.into_iter().for_each(|interval| {
                 let simple_directed = interval.generic.simple_directed;
                 let interval_semitones = interval.chromatic.semitones % 12;
-                if simple_directed == 3 && (interval_semitones == 3 || interval_semitones == 4) {
-                    score_triad -= 1.0;
-                } else if simple_directed == 6
-                    && (interval_semitones == 8 || interval_semitones == 9)
+                if (simple_directed == 3 && (interval_semitones == 3 || interval_semitones == 4))
+                    || (simple_directed == 6
+                        && (interval_semitones == 8 || interval_semitones == 9))
                 {
                     score_triad -= 1.0;
                 }
