@@ -108,62 +108,31 @@ impl Pitch {
             post.push(c);
         }
         let c = self.clone();
-        while let Some(pitch) = c.get_higher_enharmonic() {
-            let accidental = pitch.accidental.clone().unwrap();
-            //this is incorrect TODO rework this
-            if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64) {
-                break;
+
+        let get_enharmonics = |c: Pitch, get_enharmonic: fn(Pitch) -> Option<Pitch>| {
+            let mut c = c;
+            while let Some(pitch) = get_enharmonic(c) {
+                if let Some(accidental) = pitch.accidental {
+                    if accidental.alter.abs() > (alter_limit as f64) {
+                        break;
+                    }
+                }
+                if !post.contains(&pitch) {
+                    post.push(pitch);
+                } else {
+                    break;
+                }
+                c = pitch;
             }
-            if !post.contains(&pitch) {
-                post.push(pitch);
-            } else {
-                break;
-            }
-        }
-        let c = self.clone();
-        while let Some(pitch) = c.get_lower_enharmonic() {
-            let accidental = pitch.accidental.clone().unwrap();
-            //this is incorrect TODO rework this
-            if !accidental.name.is_empty() && accidental.alter.abs() > (alter_limit as f64) {
-                break;
-            }
-            if !post.contains(&pitch) {
-                post.push(pitch);
-            } else {
-                break;
-            }
-        }
+        };
+
+        get_enharmonics(c.clone(), Pitch::get_higher_enharmonic);
+        get_enharmonics(c, Pitch::get_lower_enharmonic);
 
         post
     }
 
     fn simplify_enharmonic(&self, most_common: bool) -> Pitch {
-        /*        if returnObj.accidental is not None:
-            if (abs(returnObj.accidental.alter) < 2.0
-                    and returnObj.name not in ('E#', 'B#', 'C-', 'F-')):
-                pass
-            else:
-                # by resetting the pitch space value, we will get a simpler
-                # enharmonic spelling
-                saveOctave = self.octave
-                returnObj.ps = self.ps
-                if saveOctave is None:
-                    returnObj.octave = None
-
-        if mostCommon:
-            if returnObj.name == 'D#':
-                returnObj.step = 'E'
-                returnObj.accidental = Accidental('flat')
-            elif returnObj.name == 'A#':
-                returnObj.step = 'B'
-                returnObj.accidental = Accidental('flat')
-            elif returnObj.name == 'G-':
-                returnObj.step = 'F'
-                returnObj.accidental = Accidental('sharp')
-            elif returnObj.name == 'D-':
-                returnObj.step = 'C'
-                returnObj.accidental = Accidental('sharp') */
-
         let mut c = self.clone();
 
         if let Some(ref accidental) = c.accidental {
@@ -291,13 +260,6 @@ fn dissonance_score(
 }
 
 fn greedy_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pitch> {
-    /*def _greedyEnharmonicsSearch(oldPitches, scoreFunc=_dissonanceScore):
-    newPitches = oldPitches[:1]
-    for oldPitch in oldPitches[1:]:
-        candidates = [oldPitch] + oldPitch.getAllCommonEnharmonics()
-        newPitch = min(candidates, key=lambda x: scoreFunc(newPitches + [x]))
-        newPitches.append(newPitch)
-    return newPitches */
     let mut new_pitches = vec![old_pitches[0].clone()];
     for old_pitch in old_pitches.iter().skip(1) {
         let mut candidates = vec![old_pitch.clone()];
