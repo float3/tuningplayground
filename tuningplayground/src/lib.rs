@@ -1,3 +1,5 @@
+use std::sync::Mutex;
+
 use keymapping::US_KEYMAP;
 use tuning_systems::{Tone, TuningSystem, TypeAlias};
 #[cfg(feature = "wasm")]
@@ -12,9 +14,10 @@ pub(crate) fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
-static mut OCTAVE_SIZE: usize = 12;
-static mut STEP_SIZE: usize = 7;
-static mut TUNING_SYSTEM: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
+static OCTAVE_SIZE: Mutex<usize> = Mutex::new(12);
+static STEP_SIZE: Mutex<usize> = Mutex::new(7);
+static TUNING_SYSTEM: Mutex<TuningSystem> =
+    Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 });
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen(start)]
@@ -60,9 +63,9 @@ pub fn get_tone(index: usize) -> JsValue {
     log("get_tone");
 
     let tone: Tone;
-    unsafe {
-        tone = Tone::new(TUNING_SYSTEM, index);
-    }
+    let tun_sys: TuningSystem = *TUNING_SYSTEM.lock().expect("couldn't lock");
+
+    tone = Tone::new(tun_sys, index);
 
     createTone(
         index,
@@ -78,7 +81,7 @@ pub fn get_tone(index: usize) -> JsValue {
 pub fn get_tuning_size() -> TypeAlias {
     #[cfg(debug_assertions)]
     log("get_tuning_size");
-    unsafe { TUNING_SYSTEM.size() }
+    *OCTAVE_SIZE.lock().expect("couldn't lock") as TypeAlias
 }
 
 #[cfg(feature = "wasm")]
@@ -95,8 +98,8 @@ pub fn convert_notes_core(notes: Vec<String>) -> String {
         notes
             .iter()
             .map(|note_str| {
-                let mut tokens = note_str.chars().peekable();
-                let name = tokens.next().expect("no name");
+                let mut chars = note_str.chars().peekable();
+                let name = chars.next().expect("no name");
 
                 if !('A'..='G').contains(&name) {
                     panic!("Invalid note name");
@@ -104,20 +107,20 @@ pub fn convert_notes_core(notes: Vec<String>) -> String {
 
                 let accidental;
 
-                match tokens.peek() {
+                match chars.peek() {
                     Some('b') => {
-                        tokens.next();
-                        if tokens.peek() == Some(&'b') {
-                            tokens.next();
+                        chars.next();
+                        if chars.peek() == Some(&'b') {
+                            chars.next();
                             accidental = "bb".to_string();
                         } else {
                             accidental = "b".to_string();
                         }
                     }
                     Some('#') => {
-                        tokens.next();
-                        if tokens.peek() == Some(&'#') {
-                            tokens.next();
+                        chars.next();
+                        if chars.peek() == Some(&'#') {
+                            chars.next();
                             accidental = "##".to_string();
                         } else {
                             accidental = "#".to_string();
@@ -189,11 +192,11 @@ pub fn set_tuning_system(tuning_system: &str, octave_size: TypeAlias, step_size:
         _ => None,
     };
     match tuning_system {
-        Some(tuning_system) => unsafe {
-            TUNING_SYSTEM = tuning_system;
-            OCTAVE_SIZE = octave_size;
-            STEP_SIZE = step_size;
-        },
+        Some(tuning_system) => {
+            *TUNING_SYSTEM.lock().expect("couldn't lock") = tuning_system;
+            *OCTAVE_SIZE.lock().expect("couldn't lock") = octave_size;
+            *STEP_SIZE.lock().expect("couldn't lock") = step_size;
+        }
         None => {
             #[cfg(debug_assertions)]
             error("Invalid tuning system");
