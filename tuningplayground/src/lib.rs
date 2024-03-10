@@ -62,7 +62,6 @@ pub fn get_tone(index: usize) -> JsValue {
     #[cfg(debug_assertions)]
     log("get_tone");
 
-    
     let tun_sys: TuningSystem = *TUNING_SYSTEM.lock().expect("couldn't lock");
 
     let tone: Tone = Tone::new(tun_sys, index);
