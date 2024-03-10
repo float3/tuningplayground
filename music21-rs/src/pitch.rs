@@ -109,16 +109,16 @@ impl Pitch {
         }
         let c = self.clone();
 
-        let get_enharmonics = |c: Pitch, get_enharmonic: fn(Pitch) -> Option<Pitch>| {
+        let mut get_enharmonics = |c: Pitch, get_enharmonic: fn(&Pitch) -> Option<Pitch>| {
             let mut c = c;
-            while let Some(pitch) = get_enharmonic(c) {
-                if let Some(accidental) = pitch.accidental {
+            while let Some(pitch) = get_enharmonic(&c) {
+                if let Some(ref accidental) = pitch.accidental {
                     if accidental.alter.abs() > (alter_limit as f64) {
                         break;
                     }
                 }
-                if !post.contains(&pitch) {
-                    post.push(pitch);
+                if !post.contains(&pitch.clone()) {
+                    post.push(pitch.clone());
                 } else {
                     break;
                 }
