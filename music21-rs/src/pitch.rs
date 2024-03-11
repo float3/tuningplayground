@@ -10,6 +10,7 @@ pub struct Pitch {
     pub octave: Option<i32>,
     pub diatonic_note_num: i32,
     pub ps: i32,
+    pub pitch_class: i32,
     // pub frequency: f64,
 }
 
@@ -109,6 +110,7 @@ impl Pitch {
             octave,
             diatonic_note_num: todo!(),
             ps: todo!(),
+            pitch_class: todo!(),
         }
     }
 
