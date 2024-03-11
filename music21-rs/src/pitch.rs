@@ -1,8 +1,6 @@
-use std::vec;
+use std::{collections::HashMap, vec};
 
-use crate::note::Note;
-
-use super::interval::Interval;
+use crate::{interval::Interval, note::Note};
 
 #[derive(Clone, PartialEq)]
 pub struct Pitch {
@@ -32,6 +30,23 @@ impl From<Note> for Pitch {
         note.pitch.clone()
     }
 }
+
+#[derive(Clone)]
+enum TranspositionIntervalDirection {
+    Up,
+    Down,
+}
+
+impl TranspositionIntervalDirection {
+    fn to_string(&self) -> String {
+        match self {
+            TranspositionIntervalDirection::Up => "d2".to_string(),
+            TranspositionIntervalDirection::Down => "-d2".to_string(),
+        }
+    }
+}
+
+type PitchReturn = Option<Pitch>;
 
 impl Pitch {
     pub fn new(string: String) -> Pitch {
@@ -101,6 +116,17 @@ impl Pitch {
         todo!()
     }
 
+    fn transpose_note(&self, note: &Note) -> Note {
+        let new_pitch = self.transpose_pitch(&note.pitch);
+        let mut new_note = note.clone();
+        new_note.pitch = new_pitch;
+        return new_note;
+    }
+
+    fn transpose_pitch(&self, arg: &Pitch) -> Pitch {
+        todo!()
+    }
+
     fn get_all_common_enharmonics(&self, alter_limit: i32) -> Vec<Pitch> {
         let mut post: Vec<Pitch> = vec![];
         let c = self.simplify_enharmonic(false);
@@ -109,9 +135,9 @@ impl Pitch {
         }
         let c = self.clone();
 
-        let mut get_enharmonics = |c: Pitch, get_enharmonic: fn(&Pitch) -> Option<Pitch>| {
+        let mut get_enharmonics = |c: Pitch, direction: TranspositionIntervalDirection| {
             let mut c = c;
-            while let Some(pitch) = get_enharmonic(&c) {
+            while let Some(pitch) = c.get_enharmonic_helper(direction.clone()) {
                 if let Some(ref accidental) = pitch.accidental {
                     if accidental.alter.abs() > (alter_limit as f64) {
                         break;
@@ -126,8 +152,8 @@ impl Pitch {
             }
         };
 
-        get_enharmonics(c.clone(), Pitch::get_higher_enharmonic);
-        get_enharmonics(c, Pitch::get_lower_enharmonic);
+        get_enharmonics(c.clone(), TranspositionIntervalDirection::Up);
+        get_enharmonics(c, TranspositionIntervalDirection::Down);
 
         post
     }
@@ -172,11 +198,43 @@ impl Pitch {
         c
     }
 
-    fn get_higher_enharmonic(&self) -> Option<Pitch> {
-        todo!()
-    }
+    fn get_enharmonic_helper(&self, direction: TranspositionIntervalDirection) -> PitchReturn {
+        /*
+                       intervalString: t.Literal['d2', '-d2'] = 'd2'
+               if not up:
+                   intervalString = '-d2'
 
-    fn get_lower_enharmonic(&self) -> Option<Pitch> {
+               if intervalString not in self._transpositionIntervals:
+                   self._transpositionIntervals[intervalString] = interval.Interval(intervalString)
+               intervalObj = self._transpositionIntervals[intervalString]
+               octaveStored = self.octave  # may be None
+               p = intervalObj.transposePitch(self, maxAccidental=None)
+               if not inPlace:
+                   if octaveStored is None:
+                       p.octave = None
+                   return p
+               else:
+                   self.step = p.step
+                   self.accidental = p.accidental
+                   if p.microtone is not None:
+                       self.microtone = p.microtone
+                   if octaveStored is None:
+                       self.octave = None
+                   else:
+                       self.octave = p.octave
+                   return None
+        */
+        let interval_string = match direction {
+            TranspositionIntervalDirection::Up => "d2",
+            TranspositionIntervalDirection::Down => "-d2",
+        };
+
+        // TODO: cache the transposition intervals?
+        // if !self.transpostion_intevals.contains(&interval_string) {}
+
+        let octave_stored = self.octave;
+        let p = self.transpose(&Interval::new_from_name(interval_string).unwrap());
+
         todo!()
     }
 }

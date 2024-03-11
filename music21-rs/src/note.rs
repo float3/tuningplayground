@@ -1,4 +1,4 @@
-use super::pitch::Pitch;
+use crate::pitch::Pitch;
 
 #[derive(Clone)]
 pub struct Note {

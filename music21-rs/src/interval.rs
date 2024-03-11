@@ -55,7 +55,7 @@ impl Interval {
         })
     }
 
-    fn new_from_name(name: &str) -> Option<Interval> {
+    pub fn new_from_name(name: &str) -> Option<Interval> {
         todo!()
     }
 
