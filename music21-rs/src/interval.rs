@@ -127,7 +127,7 @@ fn get_specifier_from_generic_chromatic(
 fn notes_to_chromatic(p1: &Pitch, p2: &Pitch) -> ChromaticInterval {
     ChromaticInterval {
         semitones: p2.ps - p1.ps,
-        simple_directed: p2.diatonic_note_num - p1.diatonic_note_num,
+        simple_directed: p2.diatonic_note_num() - p1.diatonic_note_num(),
     }
 }
 

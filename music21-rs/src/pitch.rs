@@ -8,7 +8,6 @@ pub struct Pitch {
     pub alter: f64,
     pub accidental: Option<Accidental>,
     pub octave: Option<i32>,
-    pub diatonic_note_num: i32,
     pub ps: i32,
     pub pitch_class: i32,
     // pub frequency: f64,
@@ -108,10 +107,20 @@ impl Pitch {
             alter,
             accidental,
             octave,
-            diatonic_note_num: todo!(),
             ps: todo!(),
             pitch_class: todo!(),
         }
+    }
+
+    fn diatonic_note_num(&self, new_num: i32) -> i32 {
+        /*
+                octave = int((newNum - 1) / 7)
+        noteNameNum = newNum - 1 - (7 * octave)
+        pitchList: tuple[StepName, ...] = ('C', 'D', 'E', 'F', 'G', 'A', 'B')
+        noteName: StepName = pitchList[noteNameNum]
+        self.octave = octave
+        self.step = noteName */
+        let octave = (new_num - 1) / 7;
     }
 
     pub(crate) fn transpose(&self, arg: &Interval) -> Pitch {
