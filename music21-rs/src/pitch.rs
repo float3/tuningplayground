@@ -1,4 +1,4 @@
-use std::{vec};
+use std::vec;
 
 use crate::{interval::Interval, note::Note};
 
