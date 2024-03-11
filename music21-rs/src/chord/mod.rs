@@ -74,12 +74,12 @@ impl Chord {
             || name_str.contains("semitone")
         {
             let bass = self.bass();
-            let bass_name = bass.name.replace("-", "b");
-            return format!("{} above {}", name_str, bass_name);
+            let bass_name = bass.name.replace('-', "b");
+            format!("{} above {}", name_str, bass_name)
         } else {
             let root = self.root().unwrap_or_else(|| self.pitches()[0].clone());
-            let root_name = root.name.replace("-", "b");
-            return format!("{}-{}", root_name, name_str);
+            let root_name = root.name.replace('-', "b");
+            format!("{}-{}", root_name, name_str)
         }
     }
 

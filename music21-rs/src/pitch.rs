@@ -1,4 +1,4 @@
-use std::{collections::HashMap, vec};
+use std::{vec};
 
 use crate::{interval::Interval, note::Note};
 
@@ -122,7 +122,7 @@ impl Pitch {
         let new_pitch = self.transpose_pitch(&note.pitch);
         let mut new_note = note.clone();
         new_note.pitch = new_pitch;
-        return new_note;
+        new_note
     }
 
     fn transpose_pitch(&self, arg: &Pitch) -> Pitch {
