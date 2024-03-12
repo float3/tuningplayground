@@ -5,6 +5,16 @@ use tuning_systems::Fraction;
 
 use crate::pitch::Pitch;
 
+#[derive(Debug, Clone, Copy)]
+enum IntervalQuality {
+    Perfect,
+    Major,
+    Minor,
+    Augmented,
+    Diminished,
+}
+
+#[derive(Debug, Clone)]
 pub struct Interval {
     pitch_start: Pitch,
     pitch_end: Pitch,
@@ -13,21 +23,26 @@ pub struct Interval {
     pub diatonic: DiatonicInterval,
     pub chromatic: ChromaticInterval,
     interval_type: IntervalType,
+    interval_quality: IntervalQuality,
 }
 
+#[derive(Clone, Debug)]
 pub struct DiatonicInterval {
     specifier: String,
     generic: GenericInterval,
 }
+
+#[derive(Clone, Debug)]
 pub struct ChromaticInterval {
     pub semitones: i32,
     pub simple_directed: i32,
 }
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct GenericInterval {
     pub simple_directed: i32,
 }
 
+#[derive(Clone, Debug)]
 pub enum IntervalType {
     Harmonic,
     Melodic,
@@ -52,6 +67,7 @@ impl Interval {
             diatonic,
             chromatic,
             interval_type: todo!(),
+            interval_quality: todo!(),
         })
     }
 
@@ -132,7 +148,7 @@ fn notes_to_chromatic(p1: &Pitch, p2: &Pitch) -> ChromaticInterval {
 }
 
 fn notes_to_generic(p1: &Pitch, p2: &Pitch) -> GenericInterval {
-    let staff_dist = p2.diatonic_note_num - p1.diatonic_note_num;
+    let staff_dist = p2.diatonic_note_num() - p1.diatonic_note_num();
     let gen_dist = convert_staff_distance_to_interval(staff_dist);
     GenericInterval::new(gen_dist)
 }

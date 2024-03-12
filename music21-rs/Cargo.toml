@@ -13,6 +13,7 @@ default = []
 #wasm-bindgen = ["dep:wasm-bindgen"]
 
 [dependencies]
+itertools = "0.12.1"
 lazy_static = "1.4.0"
 tuning_systems = { path = "../tuning_systems" }
 #wasm-bindgen = { version = "0.2.91", optional = true }

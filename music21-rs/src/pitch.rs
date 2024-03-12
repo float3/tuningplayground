@@ -1,19 +1,60 @@
 use std::vec;
 
 use crate::{interval::Interval, note::Note};
+use itertools::Itertools;
 
-#[derive(Clone, PartialEq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+enum StepName {
+    C,
+    D,
+    E,
+    F,
+    G,
+    A,
+    B,
+}
+
+impl StepName {
+    fn from_usize(n: usize) -> Self {
+        match n {
+            0 => Self::C,
+            1 => Self::D,
+            2 => Self::E,
+            3 => Self::F,
+            4 => Self::G,
+            5 => Self::A,
+            6 => Self::B,
+            _ => panic!(),
+        }
+    }
+
+    fn to_usize(&self) -> usize {
+        match self {
+            StepName::C => 1,
+            StepName::D => 2,
+            StepName::E => 3,
+            StepName::F => 4,
+            StepName::G => 5,
+            StepName::A => 6,
+            StepName::B => 7,
+        }
+    }
+}
+
+#[derive(Clone, PartialEq, Debug)]
 pub struct Pitch {
     pub name: String,
     pub alter: f64,
     pub accidental: Option<Accidental>,
     pub octave: Option<i32>,
+    pub implicit_octave: i32,
     pub ps: i32,
     pub pitch_class: i32,
+    step: StepName,
     // pub frequency: f64,
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 struct Accidental {
     name: String,
     alter: f64,
@@ -109,18 +150,21 @@ impl Pitch {
             octave,
             ps: todo!(),
             pitch_class: todo!(),
+            step: todo!(),
+            implicit_octave: todo!(),
         }
     }
 
-    fn diatonic_note_num(&self, new_num: i32) -> i32 {
-        /*
-                octave = int((newNum - 1) / 7)
-        noteNameNum = newNum - 1 - (7 * octave)
-        pitchList: tuple[StepName, ...] = ('C', 'D', 'E', 'F', 'G', 'A', 'B')
-        noteName: StepName = pitchList[noteNameNum]
-        self.octave = octave
-        self.step = noteName */
+    pub fn diatonic_note_num(&self) -> i32 {
+        self.step.to_usize() as i32 + 1 + (7 * self.implicit_octave)
+    }
+
+    fn diatonic_note_num_setter(&mut self, new_num: i32) {
         let octave = (new_num - 1) / 7;
+        let note_name_num = new_num - 1 - (7 * octave);
+        let note_name = StepName::from_usize(note_name_num as usize);
+        self.octave = Some(octave);
+        self.step = note_name;
     }
 
     pub(crate) fn transpose(&self, arg: &Interval) -> Pitch {
@@ -244,19 +288,21 @@ impl Pitch {
         // if !self.transpostion_intevals.contains(&interval_string) {}
 
         let octave_stored = self.octave;
-        let p = self.transpose(&Interval::new_from_name(interval_string).unwrap());
-
-        todo!()
+        let mut p = self.transpose(&Interval::new_from_name(interval_string).unwrap());
+        match octave_stored {
+            None => p.octave = None,
+            Some(_) => (),
+        }
+        Some(p)
     }
 }
 
 pub(crate) fn simplify_multiple_enharmonics(pitches: Vec<Pitch>) -> Vec<Pitch> {
     let old_pitches: Vec<Pitch> = pitches.clone();
-    let criterion = dissonance_score(&pitches, true, true, true);
     if old_pitches.len() < 5 {
-        brute_force_enharmonics_search(old_pitches, criterion)
+        brute_force_enharmonics_search(old_pitches, |x| dissonance_score(x, true, true, true))
     } else {
-        greedy_enharmonics_search(old_pitches, criterion)
+        greedy_enharmonics_search(old_pitches, |x| dissonance_score(x, true, true, true))
     }
 }
 
@@ -328,7 +374,10 @@ fn dissonance_score(
         / (small_pythagorean_ratio as i32 + accidental_penalty as i32 + triad_award as i32) as f64
 }
 
-fn greedy_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pitch> {
+fn greedy_enharmonics_search(
+    old_pitches: Vec<Pitch>,
+    score_func: fn(&[Pitch]) -> f64,
+) -> Vec<Pitch> {
     let mut new_pitches = vec![old_pitches[0].clone()];
     for old_pitch in old_pitches.iter().skip(1) {
         let mut candidates = vec![old_pitch.clone()];
@@ -337,7 +386,7 @@ fn greedy_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pit
             .iter()
             .min_by(|x, y| {
                 dissonance_score(&new_pitches, true, true, true)
-                    .partial_cmp(&dissonance_score(&new_pitches, true, true, true))
+                    .partial_cmp(&score_func(&new_pitches))
                     .unwrap()
             })
             .unwrap();
@@ -346,8 +395,35 @@ fn greedy_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pit
     new_pitches
 }
 
-fn brute_force_enharmonics_search(old_pitches: Vec<Pitch>, criterion: f64) -> Vec<Pitch> {
-    todo!()
+fn brute_force_enharmonics_search(
+    old_pitches: Vec<Pitch>,
+    score_func: fn(&[Pitch]) -> f64,
+) -> Vec<Pitch> {
+    let all_possible_pitches: Vec<Vec<Pitch>> = old_pitches[1..]
+        .iter()
+        .map(|p| {
+            let mut enharmonics = p.get_all_common_enharmonics(2);
+            enharmonics.insert(0, p.clone());
+            enharmonics
+        })
+        .collect();
+
+    let all_pitch_combinations = all_possible_pitches.into_iter().multi_cartesian_product();
+
+    let mut min_score = f64::MAX;
+    let mut best_combination = Vec::new();
+
+    for combination in all_pitch_combinations {
+        let mut pitches = old_pitches[0..1].to_vec();
+        pitches.extend(combination);
+        let score = score_func(&pitches);
+        if score < min_score {
+            min_score = score;
+            best_combination = pitches;
+        }
+    }
+
+    best_combination
 }
 
 fn convert_harmonic_to_cents(mut value: f64) -> i32 {
