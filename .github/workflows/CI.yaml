@@ -62,13 +62,13 @@ jobs:
           ./build_release.sh
           echo "master built"
           rm ./www/styles.css
+          rm ./www/*.LICENSE.txt
           mv ./www ./www-master
           echo "building dev"
           git checkout dev
           git pull
           ./build_dev.sh
           echo "dev built"
-          rm ./www/*LICENSE.txt
           rm ./www/styles.css
           mv ./www ./www-dev
           mv ./www-master ./www/
