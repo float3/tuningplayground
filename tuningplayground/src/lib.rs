@@ -102,105 +102,90 @@ fn static_data() -> &'static HashMap<i32, String> {
 pub fn convert_notes_core(input: Vec<String>) -> String {
     //return "L: 1/1 \n\"C\"[C E G]".to_string();
     let mut bitmap = 0;
-    for note in input.clone() {
-        let note = note
+    let mut notes = Vec::new();
+
+    input.into_iter().for_each(|note_str| {
+        let note = note_str
             .split('/')
             .next()
             .unwrap()
             .trim_end_matches(|c: char| c.is_numeric());
 
         let index = match note {
-            "B#" => 0,
-            "C" => 0,
-            "C#" => 1,
-            "Db" => 1,
-            "D" => 2,
-            "D#" => 3,
-            "Eb" => 3,
-            "E" => 4,
-            "Fb" => 4,
-            "E#" => 5,
-            "F" => 5,
-            "F#" => 6,
-            "Gb" => 6,
-            "G" => 7,
-            "G#" => 8,
-            "Ab" => 8,
-            "A" => 9,
-            "A#" => 10,
-            "Bb" => 10,
-            "B" => 11,
-            "Cb" => 11,
+            "B#" | "C" | "Dbb" => 0,
+            "B##" | "C#" | "Db" => 1,
+            "C##" | "D" | "Ebb" => 2,
+            "D#" | "Eb" | "Fbb" => 3,
+            "D##" | "E" | "Fb" => 4,
+            "E#" | "F" | "Gbb" => 5,
+            "E##" | "F#" | "Gb" => 6,
+            "F##" | "G" | "Abb" => 7,
+            "G#" | "Ab" => 8,
+            "G##" | "A" | "Bbb" => 9,
+            "A#" | "Bb" | "Cbb" => 10,
+            "A##" | "B" | "Cb" => 11,
             _ => panic!("Invalid note"),
         };
 
         bitmap |= 1 << index;
-    }
+
+        let mut chars = note_str.chars().peekable();
+        let name = chars.next().expect("no name");
+
+        if !('A'..='G').contains(&name) {
+            panic!("Invalid note name");
+        }
+
+        let accidental = match chars.peek() {
+            Some('b') => {
+                chars.next();
+                if chars.peek() == Some(&'b') {
+                    chars.next();
+                    "bb".to_string()
+                } else {
+                    "b".to_string()
+                }
+            }
+            Some('#') => {
+                chars.next();
+                if chars.peek() == Some(&'#') {
+                    chars.next();
+                    "##".to_string()
+                } else {
+                    "#".to_string()
+                }
+            }
+            _ => "".to_string(),
+        };
+
+        let octave_modifier = note_str
+            .replace("N1", "-1")
+            .chars()
+            .last()
+            .unwrap_or('4')
+            .to_digit(10)
+            .unwrap_or(4) as isize
+            - 4;
+        let octave_str = if octave_modifier < 0 {
+            ",".repeat(octave_modifier.unsigned_abs())
+        } else {
+            "'".repeat(octave_modifier as usize)
+        };
+
+        notes.push(format!(
+            "{}{}{}",
+            accidental.replace('#', "^").replace('b', "_"),
+            name,
+            octave_str
+        ));
+    });
 
     let chord: String = static_data()
         .get(&bitmap)
         .unwrap_or(&"".to_string())
         .to_string();
 
-    let notes = input
-        .iter()
-        .map(|note_str| {
-            let mut chars = note_str.chars().peekable();
-            let name = chars.next().expect("no name");
-
-            if !('A'..='G').contains(&name) {
-                panic!("Invalid note name");
-            }
-
-            let accidental;
-
-            match chars.peek() {
-                Some('b') => {
-                    chars.next();
-                    if chars.peek() == Some(&'b') {
-                        chars.next();
-                        accidental = "bb".to_string();
-                    } else {
-                        accidental = "b".to_string();
-                    }
-                }
-                Some('#') => {
-                    chars.next();
-                    if chars.peek() == Some(&'#') {
-                        chars.next();
-                        accidental = "##".to_string();
-                    } else {
-                        accidental = "#".to_string();
-                    }
-                }
-                _ => {
-                    accidental = "".to_string();
-                }
-            }
-
-            let octave_modifier = note_str
-                .replace("N1", "-1")
-                .chars()
-                .last()
-                .unwrap_or('4')
-                .to_digit(10)
-                .unwrap_or(4) as isize
-                - 4;
-            let octave_str = if octave_modifier < 0 {
-                ",".repeat(octave_modifier.unsigned_abs())
-            } else {
-                "'".repeat(octave_modifier as usize)
-            };
-
-            format!(
-                "{}{}{}",
-                accidental.replace('#', "^").replace('b', "_"),
-                name,
-                octave_str
-            )
-        })
-        .collect::<Vec<String>>()
-        .join(" ");
+    let notes = notes.join(" ");
 
     format!("L: 1/1 \n\"{}\"[{}]", chord, notes)
 }
