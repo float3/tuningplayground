@@ -97,7 +97,7 @@ impl Chord {
     fn unordered_pitch_classes(&self) -> Vec<i32> {
         let mut vec = vec![];
         for p in self.pitches() {
-            vec.push(p.pitch_class);
+            vec.push(p.pitch_class());
         }
         vec
     }

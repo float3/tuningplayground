@@ -5,3 +5,4 @@ mod note;
 mod pitch;
 #[allow(unused_imports)]
 pub use chord::*;
+mod tests;

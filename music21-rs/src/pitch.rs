@@ -76,7 +76,7 @@ pub struct Pitch {
     pub accidental: Option<Accidental>,
     pub octave: Option<i32>,
     pub implicit_octave: i32,
-    pub pitch_class: i32,
+    spelling_is_inferred: bool,
     step: StepName,
     microtone: Option<Microtone>,
     // pub frequency: f64,
@@ -181,11 +181,33 @@ impl Pitch {
             alter,
             accidental,
             octave,
-            pitch_class: todo!(),
             step: todo!(),
             implicit_octave: todo!(),
             microtone: todo!(),
+            spelling_is_inferred: todo!(),
         }
+    }
+
+    pub fn pitch_class(&self) -> i32 {
+        self.ps() as i32 % 12 // maybe need to call round() on ps
+    }
+
+    fn pitch_class_setter(&mut self, new_val: i32) {
+        /*
+            # permit the submission of strings, like "A" and "B"
+        valueOut: int|float = _convertPitchClassToNumber(value)
+        # get step and accidental w/o octave
+        self.step, self._accidental = _convertPsToStep(valueOut)[0:2]
+
+        # do not know what accidental is
+        self.spellingIsInferred = True
+        # setting step informs client
+         */
+        let value_out: f64 = convert_pitch_class_to_number(new_val);
+        let (step, accidental) = convert_ps_to_step(value_out);
+        self.step = step;
+        self.accidental = accidental;
+        self.spelling_is_inferred = true;
     }
 
     pub fn diatonic_note_num(&self) -> i32 {
@@ -355,6 +377,14 @@ impl Pitch {
     fn microtone_setter(&mut self) {
         todo!()
     }
+}
+
+fn convert_ps_to_step(value_out: f64) -> (StepName, Option<Accidental>) {
+    todo!()
+}
+
+fn convert_pitch_class_to_number(new_val: i32) -> f64 {
+    todo!()
 }
 
 pub(crate) fn simplify_multiple_enharmonics(pitches: Vec<Pitch>) -> Vec<Pitch> {
