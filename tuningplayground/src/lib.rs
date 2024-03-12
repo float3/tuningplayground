@@ -93,11 +93,10 @@ pub fn from_keymap(key: &str) -> i32 {
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
-static CHORDS: &str = include_str!("../chords.json");
-static DATA: OnceLock<HashMap<i32, String>> = OnceLock::new();
+static CHORD_LUT: OnceLock<HashMap<i32, String>> = OnceLock::new();
 
 fn static_data() -> &'static HashMap<i32, String> {
-    DATA.get_or_init(|| serde_json::from_str(CHORDS).unwrap())
+    CHORD_LUT.get_or_init(|| serde_json::from_str(include_str!("../chords.json")).unwrap())
 }
 
 pub fn convert_notes_core(input: Vec<String>) -> String {
@@ -138,9 +137,6 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
         bitmap |= 1 << index;
     }
 
-    #[cfg(debug_assertions)]
-    warn(bitmap.to_string().as_str());
-
     let chord: String = static_data()
         .get(&bitmap)
         .unwrap_or(&"".to_string())
@@ -149,8 +145,6 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
     let notes = input
         .iter()
         .map(|note_str| {
-            #[cfg(debug_assertions)]
-            log(note_str);
             let mut chars = note_str.chars().peekable();
             let name = chars.next().expect("no name");
 
