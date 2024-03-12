@@ -1,3 +1,4 @@
+use core::panic;
 use std::vec;
 
 use crate::{interval::Interval, note::Note};
@@ -14,8 +15,10 @@ enum StepName {
     B,
 }
 
+type StepType = i32;
+
 impl StepName {
-    fn from_usize(n: usize) -> Self {
+    fn step_to_dnn_offset_reverse(n: StepType) -> Self {
         match n {
             0 => Self::C,
             1 => Self::D,
@@ -28,7 +31,7 @@ impl StepName {
         }
     }
 
-    fn to_usize(&self) -> usize {
+    fn step_to_dnn_offset(&self) -> StepType {
         match self {
             StepName::C => 1,
             StepName::D => 2,
@@ -37,6 +40,31 @@ impl StepName {
             StepName::G => 5,
             StepName::A => 6,
             StepName::B => 7,
+        }
+    }
+
+    fn step_ref(&self) -> StepType {
+        match self {
+            StepName::C => 0,
+            StepName::D => 2,
+            StepName::E => 4,
+            StepName::F => 5,
+            StepName::G => 7,
+            StepName::A => 9,
+            StepName::B => 11,
+        }
+    }
+
+    fn step_ref_reverse(n: StepType) -> Self {
+        match n {
+            0 => StepName::C,
+            2 => StepName::D,
+            4 => StepName::E,
+            5 => StepName::F,
+            7 => StepName::G,
+            9 => StepName::A,
+            11 => StepName::B,
+            _ => panic!(),
         }
     }
 }
@@ -48,10 +76,15 @@ pub struct Pitch {
     pub accidental: Option<Accidental>,
     pub octave: Option<i32>,
     pub implicit_octave: i32,
-    pub ps: i32,
     pub pitch_class: i32,
     step: StepName,
+    microtone: Option<Microtone>,
     // pub frequency: f64,
+}
+
+#[derive(Clone, PartialEq, Debug)]
+struct Microtone {
+    alter: f64,
 }
 
 #[derive(Clone, PartialEq, Debug)]
@@ -148,25 +181,44 @@ impl Pitch {
             alter,
             accidental,
             octave,
-            ps: todo!(),
             pitch_class: todo!(),
             step: todo!(),
             implicit_octave: todo!(),
+            microtone: todo!(),
         }
     }
 
     pub fn diatonic_note_num(&self) -> i32 {
-        self.step.to_usize() as i32 + 1 + (7 * self.implicit_octave)
+        self.step.step_to_dnn_offset() as i32 + 1 + (7 * self.implicit_octave)
     }
 
     fn diatonic_note_num_setter(&mut self, new_num: i32) {
         let octave = (new_num - 1) / 7;
         let note_name_num = new_num - 1 - (7 * octave);
-        let note_name = StepName::from_usize(note_name_num as usize);
+        let note_name = StepName::step_to_dnn_offset_reverse(note_name_num);
         self.octave = Some(octave);
         self.step = note_name;
     }
 
+    fn ps(&self) -> f64 {
+        /*
+                step = self._step
+        ps = float(((self.implicitOctave + 1) * 12) + STEPREF[step])
+        if self.accidental is not None:
+            ps = ps + self.accidental.alter
+        if self._microtone is not None:
+            ps = ps + self.microtone.alter
+        return ps
+         */
+        let step = self.step;
+        let ps: f64 = ((self.implicit_octave + 1) * 12 + StepName::step_ref(&step)) as f64;
+        match &self.accidental {
+            Some(accidental) => ps + accidental.alter,
+            None => ps + self.microtone().alter,
+        }
+    }
+
+    fn ps_setter(&mut self, new_val: f64) {}
     pub(crate) fn transpose(&self, arg: &Interval) -> Pitch {
         todo!()
     }
@@ -222,7 +274,7 @@ impl Pitch {
                 // pass
             } else {
                 let save_octave = self.octave;
-                c.ps = self.ps;
+                c.ps_setter(self.ps());
                 if save_octave.is_none() {
                     c.octave = None;
                 }
@@ -294,6 +346,14 @@ impl Pitch {
             Some(_) => (),
         }
         Some(p)
+    }
+
+    fn microtone(&self) -> Microtone {
+        todo!()
+    }
+
+    fn microtone_setter(&mut self) {
+        todo!()
     }
 }
 
