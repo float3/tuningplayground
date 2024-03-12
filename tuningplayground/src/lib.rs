@@ -105,7 +105,7 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
     let mut bitmap = 0;
     for note in input.clone() {
         let note = note
-            .split("/")
+            .split('/')
             .next()
             .unwrap()
             .trim_end_matches(|c: char| c.is_numeric());
