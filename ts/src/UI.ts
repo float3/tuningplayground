@@ -56,7 +56,7 @@ function fileInputChange(event: Event): void {
   }
 }
 
-function linkInputChange(): void { }
+function linkInputChange(): void {}
 
 function stop(): void {
   console.log("stop");
@@ -116,7 +116,7 @@ export function playingTonesChanged(): void {
   }
 
   let tones: string = "";
-  Object.values(playingTones).forEach(element => {
+  Object.values(playingTones).forEach((element) => {
     tones += element.name + " ";
   });
 
