@@ -38,7 +38,7 @@ jobs:
           node-version: 21
 
       - name: lint
-        run: lint.sh 
+        run: ./lint.sh 
 
       - name: commit
         run: |
