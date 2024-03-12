@@ -44,7 +44,7 @@ jobs:
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
       - name: lint
-        run: ./lint.sh 
+        run: ./lint.sh
 
       - name: commit
         run: |
@@ -66,7 +66,7 @@ jobs:
           echo "building dev"
           git checkout dev
           git pull
-          ./build.sh
+          ./build_dev.sh
           echo "dev built"
           rm ./www/*LICENSE.txt
           rm ./www/styles.css

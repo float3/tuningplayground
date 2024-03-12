@@ -6,4 +6,4 @@ cd ../ts
 curl https://raw.githubusercontent.com/float3/float3.github.io/master/static/styles.css -o ./src/styles.css
 npm install
 npx tsc
-npx webpack --mode production
+npx webpack --mode development

@@ -1,6 +1,8 @@
-use std::sync::Mutex;
-
 use keymapping::US_KEYMAP;
+use std::collections::HashMap;
+
+use std::sync::Mutex;
+use std::sync::OnceLock;
 use tuning_systems::{Tone, TuningSystem, TypeAlias};
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
@@ -91,69 +93,122 @@ pub fn from_keymap(key: &str) -> i32 {
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
-pub fn convert_notes_core(notes: Vec<String>) -> String {
-    format!(
-        "L: 1/1 \n[{}]",
-        notes
-            .iter()
-            .map(|note_str| {
-                let mut chars = note_str.chars().peekable();
-                let name = chars.next().expect("no name");
+static CHORDS: &str = include_str!("../chords.json");
+static DATA: OnceLock<HashMap<i32, String>> = OnceLock::new();
 
-                if !('A'..='G').contains(&name) {
-                    panic!("Invalid note name");
-                }
+fn static_data() -> &'static HashMap<i32, String> {
+    DATA.get_or_init(|| serde_json::from_str(CHORDS).unwrap())
+}
 
-                let accidental;
+pub fn convert_notes_core(input: Vec<String>) -> String {
+    //return "L: 1/1 \n\"C\"[C E G]".to_string();
+    let mut bitmap = 0;
+    for note in input.clone() {
+        let note = note
+            .split("/")
+            .next()
+            .unwrap()
+            .trim_end_matches(|c: char| c.is_numeric());
 
-                match chars.peek() {
-                    Some('b') => {
+        let index = match note {
+            "B#" => 0,
+            "C" => 0,
+            "C#" => 1,
+            "Db" => 1,
+            "D" => 2,
+            "D#" => 3,
+            "Eb" => 3,
+            "E" => 4,
+            "Fb" => 4,
+            "E#" => 5,
+            "F" => 5,
+            "F#" => 6,
+            "Gb" => 6,
+            "G" => 7,
+            "G#" => 8,
+            "Ab" => 8,
+            "A" => 9,
+            "A#" => 10,
+            "Bb" => 10,
+            "B" => 11,
+            "Cb" => 11,
+            _ => panic!("Invalid note"),
+        };
+
+        bitmap |= 1 << index;
+    }
+
+    #[cfg(debug_assertions)]
+    warn(bitmap.to_string().as_str());
+
+    let chord: String = static_data()
+        .get(&bitmap)
+        .unwrap_or(&"".to_string())
+        .to_string();
+
+    let notes = input
+        .iter()
+        .map(|note_str| {
+            #[cfg(debug_assertions)]
+            log(note_str);
+            let mut chars = note_str.chars().peekable();
+            let name = chars.next().expect("no name");
+
+            if !('A'..='G').contains(&name) {
+                panic!("Invalid note name");
+            }
+
+            let accidental;
+
+            match chars.peek() {
+                Some('b') => {
+                    chars.next();
+                    if chars.peek() == Some(&'b') {
                         chars.next();
-                        if chars.peek() == Some(&'b') {
-                            chars.next();
-                            accidental = "bb".to_string();
-                        } else {
-                            accidental = "b".to_string();
-                        }
-                    }
-                    Some('#') => {
-                        chars.next();
-                        if chars.peek() == Some(&'#') {
-                            chars.next();
-                            accidental = "##".to_string();
-                        } else {
-                            accidental = "#".to_string();
-                        }
-                    }
-                    _ => {
-                        accidental = "".to_string();
+                        accidental = "bb".to_string();
+                    } else {
+                        accidental = "b".to_string();
                     }
                 }
+                Some('#') => {
+                    chars.next();
+                    if chars.peek() == Some(&'#') {
+                        chars.next();
+                        accidental = "##".to_string();
+                    } else {
+                        accidental = "#".to_string();
+                    }
+                }
+                _ => {
+                    accidental = "".to_string();
+                }
+            }
 
-                let octave_modifier = note_str
-                    .replace("N1", "-1")
-                    .chars()
-                    .last()
-                    .unwrap_or('4')
-                    .to_digit(10)
-                    .unwrap_or(4) as isize
-                    - 4;
-                let octave_str = if octave_modifier < 0 {
-                    ",".repeat(octave_modifier.unsigned_abs())
-                } else {
-                    "'".repeat(octave_modifier as usize)
-                };
+            let octave_modifier = note_str
+                .replace("N1", "-1")
+                .chars()
+                .last()
+                .unwrap_or('4')
+                .to_digit(10)
+                .unwrap_or(4) as isize
+                - 4;
+            let octave_str = if octave_modifier < 0 {
+                ",".repeat(octave_modifier.unsigned_abs())
+            } else {
+                "'".repeat(octave_modifier as usize)
+            };
 
-                format!(
-                    "{}{}{}",
-                    accidental.replace('#', "^").replace('b', "_"),
-                    name,
-                    octave_str
-                )
-            })
-            .collect::<Vec<String>>()
-            .join(" ")
-    )
+            format!(
+                "{}{}{}",
+                accidental.replace('#', "^").replace('b', "_"),
+                name,
+                octave_str
+            )
+        })
+        .collect::<Vec<String>>()
+        .join(" ");
+
+    format!("L: 1/1 \n\"{}\"[{}]", chord, notes)
 }
 
 #[cfg(feature = "wasm")]

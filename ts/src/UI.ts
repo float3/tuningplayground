@@ -107,7 +107,12 @@ export function playingTonesChanged(): void {
     const notes = Object.values(playingTones).map((tone) => {
       return tone.name;
     });
-    abcjs.renderAbc("output", wasm.convert_notes(notes));
+
+    const formatted_notes = wasm.convert_notes(notes);
+
+    console.log(formatted_notes);
+
+    abcjs.renderAbc("output", formatted_notes);
   }
 }
 
