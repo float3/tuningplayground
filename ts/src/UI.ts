@@ -56,7 +56,7 @@ function fileInputChange(event: Event): void {
   }
 }
 
-function linkInputChange(): void {}
+function linkInputChange(): void { }
 
 function stop(): void {
   console.log("stop");
@@ -114,6 +114,13 @@ export function playingTonesChanged(): void {
 
     abcjs.renderAbc("output", formatted_notes);
   }
+
+  let tones: string = "";
+  Object.values(playingTones).forEach(element => {
+    tones += element.name + " ";
+  });
+
+  logToDiv(tones);
 }
 
 export function logToDiv(message: string): void {
