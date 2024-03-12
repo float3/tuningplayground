@@ -189,7 +189,7 @@ impl Pitch {
     }
 
     pub fn diatonic_note_num(&self) -> i32 {
-        self.step.step_to_dnn_offset() as i32 + 1 + (7 * self.implicit_octave)
+        self.step.step_to_dnn_offset() + 1 + (7 * self.implicit_octave)
     }
 
     fn diatonic_note_num_setter(&mut self, new_num: i32) {
@@ -200,7 +200,7 @@ impl Pitch {
         self.step = note_name;
     }
 
-    fn ps(&self) -> f64 {
+    pub fn ps(&self) -> f64 {
         /*
                 step = self._step
         ps = float(((self.implicitOctave + 1) * 12) + STEPREF[step])
@@ -444,7 +444,7 @@ fn greedy_enharmonics_search(
         candidates.extend(old_pitch.get_all_common_enharmonics(2));
         let new_pitch = candidates
             .iter()
-            .min_by(|x, y| {
+            .min_by(|_x, _y| {
                 dissonance_score(&new_pitches, true, true, true)
                     .partial_cmp(&score_func(&new_pitches))
                     .unwrap()

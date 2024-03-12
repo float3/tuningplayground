@@ -111,7 +111,7 @@ impl Interval {
         }
         match end_pitch_ratio {
             Some((end_pitch, ratio)) => {
-                let octaves = (end_pitch_wanted.ps - end_pitch.ps) / 12;
+                let octaves = (end_pitch_wanted.ps() - end_pitch.ps()) as i32 / 12;
                 Some(ratio * Fraction::new(2, 1).pow(octaves))
             }
             _ => None,
@@ -142,7 +142,7 @@ fn get_specifier_from_generic_chromatic(
 
 fn notes_to_chromatic(p1: &Pitch, p2: &Pitch) -> ChromaticInterval {
     ChromaticInterval {
-        semitones: p2.ps - p1.ps,
+        semitones: (p2.ps() - p1.ps()) as i32,
         simple_directed: p2.diatonic_note_num() - p1.diatonic_note_num(),
     }
 }
