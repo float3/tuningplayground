@@ -2,22 +2,21 @@ import * as wasm from "wasm";
 import * as abcjs from "abcjs";
 import { noteOff, noteOn, playingTones, stopAllTones } from ".";
 import { playMIDIFile, stopMIDIFile } from "./MIDI";
+import { keyboardOffset } from "./config";
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;
 const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-// const linkInput = document.getElementById("linkInput") as HTMLInputElement;
+const linkInput = document.getElementById("linkInput") as HTMLInputElement;
 
 const logContainer = document.getElementById("logContainer") as HTMLDivElement;
 const output = document.getElementById("output") as HTMLDivElement;
 const stepSizeParent = stepSize.parentElement as HTMLDivElement;
 
-const playButton = document.getElementById("playButton") as HTMLButtonElement;
+export const playButton = document.getElementById(
+  "playButton",
+) as HTMLButtonElement;
 const stopButton = document.getElementById("stopButton") as HTMLButtonElement;
-
-document.querySelectorAll(".white-key, .black-key").forEach((key) => {
-  addEvents(key);
-});
 
 export const tuningSelect = document.getElementById(
   "tuningSelect",
@@ -42,7 +41,6 @@ output.style.color = "black";
 octaveSize.onchange = handleTuningSelectChange;
 tuningSelect.onchange = handleTuningSelectChange;
 stepSize.onchange = handleTuningSelectChange;
-playButton.onclick = play;
 stopButton.onclick = stop;
 fileInput.onchange = fileInputChange;
 // linkInput.onchange = linkInputChange;
@@ -60,14 +58,22 @@ function fileInputChange(event: Event): void {
   }
 }
 
-// function linkInputChange(): void { }
+// export function linkInputChange(): void {
+//   console.log("linkInputChange");
+//   const link = linkInput.value;
+//   fetch(link)
+//     .then((response) => response.arrayBuffer())
+//     .then((buffer) => {
+//       midiFile = buffer;
+//     });
+// }
 
 function stop(): void {
   console.log("stop");
   stopMIDIFile();
 }
 
-function play(): void {
+export function play(): void {
   console.log("play");
   playMIDIFile(midiFile);
 }
@@ -132,8 +138,6 @@ export function logToDiv(message: string): void {
   logContainer.innerHTML = "<p>" + message + "</p>" + logContainer.innerHTML;
 }
 
-const keyboardOffset = 24;
-
 export function keyActive(tone_index: number, active: boolean) {
   const keyElement = document.querySelector(
     `div[data-note="${tone_index - keyboardOffset}"]`,
@@ -144,18 +148,17 @@ export function keyActive(tone_index: number, active: boolean) {
   }
 }
 
-function addEvents(key: Element) {
-  const addEvent = (eventName: string, action: (note: number) => void) => {
-    key.addEventListener(eventName, () => {
-      const note = parseInt(key.getAttribute("data-note")!) + keyboardOffset;
-      action(note);
-    });
+export function addEvents(key: Element) {
+  const note = parseInt(key.getAttribute("data-note")!) + keyboardOffset;
+
+  const addEvent = (eventName: string, callback: () => void) => {
+    key.addEventListener(eventName, callback);
   };
 
-  addEvent("mousedown", noteOn);
-  addEvent("mouseup", noteOff);
-  addEvent("mouseenter", noteOn);
-  addEvent("mouseleave", noteOff);
-  addEvent("touchstart", noteOn);
-  addEvent("touchend", noteOff);
+  addEvent("mousedown", () => noteOn(note));
+  addEvent("mouseup", () => noteOff(note));
+  addEvent("mouseenter", () => noteOn(note));
+  addEvent("mouseleave", () => noteOff(note));
+  addEvent("touchstart", () => noteOn(note));
+  addEvent("touchend", () => noteOff(note));
 }
