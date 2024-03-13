@@ -21,3 +21,5 @@
 // TODO: fix transpose
 // TODO: fix keyboard offset
 // TODO: fix C10 being parsed as C1 by some part of the program
+
+// TODO: link to source code and to dev/master version of site
