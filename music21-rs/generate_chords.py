@@ -31,9 +31,5 @@ if __name__ == "__main__":
         outer_dict[original_notes[i]] = inner_dict
         notes = rotate_left(notes)
 
-    with open("../tuningplayground/chords.json", "w") as outfile:
+    with open("../ts/src/chords.json", "w") as outfile:
         json.dump(outer_dict, outfile)
-
-    import shutil
-
-    shutil.copy("../tuningplayground/chords.json", "../ts/src/chords.json")
