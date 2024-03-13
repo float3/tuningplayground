@@ -79,10 +79,18 @@
       <p>
         <noscript> hey this page needs javascript</noscript>
       </p>
-      <p>use your computer keyboard or a midi device</p>
+      <p>
+        use your computer keyboard, a midi device, or provide a midi file for
+        example 
+        <a
+          href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid"
+          download="mozart_dies_irea.mid"
+          >this one</a
+        >
+      </p>
 
       <input type="file" id="fileInput" accept=".midi,.mid" />
-      <!--input type="text" id="linkInput" placeholder="Enter MIDI file link" /-->
+      <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
       <button id="playButton">Play</button>
       <button id="stopButton">Stop</button>
 
@@ -93,8 +101,8 @@
           <option value="JustIntonation24">Just Intonation 24</option>
           <option value="StepMethod">Just Intonated Step Method</option>
           <option value="EqualTemperament">Equal Temperament</option>
-          <!--option value="thai">thai</option>
-         <option value="Javanese">Javanese</option-->
+          <!-- <option value="thai">thai</option>
+          <option value="Javanese">Javanese</option> -->
           <option value="WholeTone">WholeTone</option>
           <option value="QuarterTone">QuarterTone</option>
           <option value="PythagoreanTuning">Pythagorean Tuning</option>
@@ -104,19 +112,19 @@
           <option value="Indian">Indian</option>
           <option value="IndianAlt">Indian Alt</option>
           <option value="IndianFull">Indian Full</option>
-          <!--option value="meantone_temperament">Meantone Temperament</option>
-         <option value="well_temperament">Well Temperament</option>
-         <option value="equal_temperament">Equal Temperament</option-->
+          <!-- <option value="meantone_temperament">Meantone Temperament</option>
+          <option value="well_temperament">Well Temperament</option> -->
+          <option value="equal_temperament">Equal Temperament</option>
         </select>
       </p>
 
-      <!--p>
+      <!-- <p>
         <label for="soundMethod">Select Sound Method:</label>
         <select id="soundMethod" name="soundMethod">
           <option value="native">Native</option>
           <option value="tone.js">tone.js</option>
         </select>
-      </p-->
+      </p> -->
 
       <p>
         Volume:

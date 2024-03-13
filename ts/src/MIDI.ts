@@ -1,5 +1,6 @@
 import { noteOn, noteOff } from ".";
 import { Midi } from "@tonejs/midi";
+import { midiMultiplier } from "./config";
 
 export function requestMIDI(): void {
   if (navigator.requestMIDIAccess) {
@@ -40,7 +41,6 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
   }
 }
 
-const multiplier = 1000;
 let timeoutIds: NodeJS.Timeout[] = [];
 
 export function stopMIDIFile(): void {
@@ -54,14 +54,17 @@ export function playMIDIFile(midiFile: ArrayBuffer): void {
 
   const midi = new Midi(midiFile);
 
+  // const tempo = midi.header.tempos[0].bpm;
+
   const track = midi.tracks[0];
 
-  const startTime = track.notes[0].time * multiplier;
+  const startTime = track.notes[0].time * midiMultiplier;
 
   track.notes.forEach((note) => {
     console.log(note.time);
-    const noteOnTime = note.time * multiplier - startTime;
-    const noteOffTime = (note.time + note.duration) * multiplier - startTime;
+    const noteOnTime = note.time * midiMultiplier - startTime;
+    const noteOffTime =
+      (note.time + note.duration) * midiMultiplier - startTime;
     const velocity = note.velocity;
     const midiNote = note.midi;
 
