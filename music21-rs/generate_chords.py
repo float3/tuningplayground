@@ -3,7 +3,6 @@ if __name__ == "__main__":
     import itertools
     import json
     import sys
-    from collections import deque
 
     sys.path.append("./music21")
     from music21 import chord
