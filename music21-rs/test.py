@@ -3,13 +3,14 @@ if __name__ == "__main__":
     import sys
 
     sys.path.append("./music21")
+    import music21
     from music21 import chord
 
     chord_definitions = [
-        "E G B",
-        "E# G# B#",
         "E G# B",
+        "E Ab B",
         "E Ab Cb",
+        "E G# Cb",
         # "C G F E B",
         # "E G F C B",
         # "E C F G B",
@@ -42,11 +43,6 @@ if __name__ == "__main__":
         # "A# D# G",
         # "C F A",
     ]
-
-    # make a sequence of ints
-    ints = [72, 64, 67]
-    c = chord.Chord(ints)
-    print(c.pitchedCommonName)
 
     for definition in chord_definitions:
         c = chord.Chord(definition)
