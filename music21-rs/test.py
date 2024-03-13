@@ -6,12 +6,13 @@ if __name__ == "__main__":
     from music21 import chord
 
     chord_definitions = [
-        "C E F G B",
-        "C G F E B",
-        "E G F C B",
-        "E C F G B",
-        "G E F C B",
-        "G C F E B",
+        "E G B",
+        "E# G# B#",
+        # "C G F E B",
+        # "E G F C B",
+        # "E C F G B",
+        # "G E F C B",
+        # "G C F E B",
         # "C E G B",
         # "C E G B D",
         # "C E G B D F",
