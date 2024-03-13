@@ -29,10 +29,10 @@ jobs:
         with:
           node-version: 21
 
-      - name: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
+      # - name: python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: 3.11
 
       - name: rust
         run: |
@@ -61,10 +61,9 @@ jobs:
           git checkout master
           ./build_release.sh
           echo "master built"
-          ls ./www/
           rm ./www/styles.css
-          rm ./www/chords.json
-          rm ./www/*.LICENSE.txt
+          # rm ./www/chords.json
+          # rm ./www/*.LICENSE.txt
           mv ./www ./www-master
           echo "building dev"
           git checkout dev

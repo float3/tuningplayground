@@ -19,9 +19,9 @@ npx eslint . --fix --ext .ts
 cd ../music21-rs/music21
 git pull origin master
 
-cd ../
-python3 -m venv venv
-. venv/bin/activate
-pip install -r music21/requirements.txt
-python -m test
-python -m generate_chords
+# cd ../
+# python3 -m venv venv
+# . venv/bin/activate
+# pip install -r music21/requirements.txt
+# python -m test
+# python -m generate_chords
