@@ -93,42 +93,23 @@ pub fn from_keymap(key: &str) -> i32 {
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
-static CHORD_LUT: OnceLock<HashMap<i32, String>> = OnceLock::new();
+type LUTType = HashMap<String, HashMap<i32, String>>;
 
-fn static_data() -> &'static HashMap<i32, String> {
+static CHORD_LUT: OnceLock<LUTType> = OnceLock::new();
+
+fn static_data() -> &'static LUTType {
     CHORD_LUT.get_or_init(|| serde_json::from_str(include_str!("../chords.json")).unwrap())
 }
 
 pub fn convert_notes_core(input: Vec<String>) -> String {
     //return "L: 1/1 \n\"C\"[C E G]".to_string();
-    let mut bitmap = 0;
+    let mut bitmask = 0;
     let mut notes = Vec::new();
+    let binding = input.clone();
+    let mut bass: String = "".to_string();
+    let first: bool = true;
 
     input.into_iter().for_each(|note_str| {
-        let note = note_str
-            .split('/')
-            .next()
-            .unwrap()
-            .trim_end_matches(|c: char| c.is_numeric());
-
-        let index = match note {
-            "B#" | "C" | "Dbb" => 0,
-            "B##" | "C#" | "Db" => 1,
-            "C##" | "D" | "Ebb" => 2,
-            "D#" | "Eb" | "Fbb" => 3,
-            "D##" | "E" | "Fb" => 4,
-            "E#" | "F" | "Gbb" => 5,
-            "E##" | "F#" | "Gb" => 6,
-            "F##" | "G" | "Abb" => 7,
-            "G#" | "Ab" => 8,
-            "G##" | "A" | "Bbb" => 9,
-            "A#" | "Bb" | "Cbb" => 10,
-            "A##" | "B" | "Cb" => 11,
-            _ => panic!("Invalid note"),
-        };
-
-        bitmap |= 1 << index;
-
         let mut chars = note_str.chars().peekable();
         let name = chars.next().expect("no name");
 
@@ -158,6 +139,30 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
             _ => "".to_string(),
         };
 
+        let full_name = name.to_string() + &accidental;
+
+        if first {
+            bass.clone_from(&full_name);
+        }
+
+        let index = match full_name.as_str() {
+            "B#" | "C" | "Dbb" => 0,
+            "B##" | "C#" | "Db" => 1,
+            "C##" | "D" | "Ebb" => 2,
+            "D#" | "Eb" | "Fbb" => 3,
+            "D##" | "E" | "Fb" => 4,
+            "E#" | "F" | "Gbb" => 5,
+            "E##" | "F#" | "Gb" => 6,
+            "F##" | "G" | "Abb" => 7,
+            "G#" | "Ab" => 8,
+            "G##" | "A" | "Bbb" => 9,
+            "A#" | "Bb" | "Cbb" => 10,
+            "A##" | "B" | "Cb" => 11,
+            _ => panic!("Invalid note"),
+        };
+
+        bitmask |= 1 << index;
+
         let octave_modifier = note_str
             .replace("N1", "-1")
             .chars()
@@ -166,6 +171,7 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
             .to_digit(10)
             .unwrap_or(4) as isize
             - 4;
+
         let octave_str = if octave_modifier < 0 {
             ",".repeat(octave_modifier.unsigned_abs())
         } else {
@@ -180,10 +186,13 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
         ));
     });
 
-    let chord: String = static_data()
-        .get(&bitmap)
-        .unwrap_or(&"".to_string())
-        .to_string();
+    let chord: String = match static_data().get(&bass) {
+        Some(chord) => match chord.get(&bitmask) {
+            Some(chord) => chord.to_string(),
+            None => "".to_string(),
+        },
+        None => "".to_string(),
+    };
 
     let notes = notes.join(" ");
 

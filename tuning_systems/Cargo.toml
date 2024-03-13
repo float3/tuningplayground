@@ -10,10 +10,3 @@ version = "1.0.0"
 
 [features]
 default = []
-#wasm-bindgen = ["dep:wasm-bindgen"]
-
-#[dependencies]
-#wasm-bindgen = { version = "0.2.91", optional = true }
-
-#[dev-dependencies]
-#wasm-bindgen-test = "0.3.41"

@@ -13,10 +13,3 @@ default = []
 
 [dependencies]
 lazy_static = "1.4.0"
-#wasm-bindgen = ["dep:wasm-bindgen"]
-
-#[dependencies]
-#wasm-bindgen = { version = "0.2.91", optional = true }
-
-#[dev-dependencies]
-#wasm-bindgen-test = "0.3.41"

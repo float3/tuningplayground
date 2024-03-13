@@ -5,7 +5,6 @@ import { requestMIDI } from "./MIDI";
 import { keydown, keyup, visibilityChange } from "./events";
 import {
   playingTonesChanged,
-  logToDiv,
   volumeSlider,
   keyActive,
   DOMContentLoaded,
