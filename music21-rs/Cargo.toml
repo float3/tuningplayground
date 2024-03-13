@@ -10,12 +10,11 @@ version = "0.0.1"
 
 [features]
 default = []
-#wasm-bindgen = ["dep:wasm-bindgen"]
 
 [dependencies]
+itertools = "0.12.1"
 lazy_static = "1.4.0"
 tuning_systems = { path = "../tuning_systems" }
-#wasm-bindgen = { version = "0.2.91", optional = true }
 
-#[dev-dependencies]
-#wasm-bindgen-test = "0.3.41"
+[dev-dependencies]
+pyo3 = { version = "0.15", features = ["extension-module"] }

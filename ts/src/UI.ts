@@ -6,7 +6,7 @@ import { playMIDIFile } from "./MIDI";
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;
 const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-const linkInput = document.getElementById("linkInput") as HTMLInputElement;
+// const linkInput = document.getElementById("linkInput") as HTMLInputElement;
 
 const logContainer = document.getElementById("logContainer") as HTMLDivElement;
 const output = document.getElementById("output") as HTMLDivElement;
@@ -41,7 +41,7 @@ stepSize.onchange = handleTuningSelectChange;
 playButton.onclick = play;
 stopButton.onclick = stop;
 fileInput.onchange = fileInputChange;
-linkInput.onchange = linkInputChange;
+// linkInput.onchange = linkInputChange;
 
 let midiFile: ArrayBuffer;
 
@@ -56,7 +56,7 @@ function fileInputChange(event: Event): void {
   }
 }
 
-function linkInputChange(): void {}
+// function linkInputChange(): void { }
 
 function stop(): void {
   console.log("stop");
@@ -107,8 +107,20 @@ export function playingTonesChanged(): void {
     const notes = Object.values(playingTones).map((tone) => {
       return tone.name;
     });
-    abcjs.renderAbc("output", wasm.convert_notes(notes));
+
+    const formatted_notes = wasm.convert_notes(notes);
+
+    console.log(formatted_notes);
+
+    abcjs.renderAbc("output", formatted_notes);
   }
+
+  let tones: string = "";
+  Object.values(playingTones).forEach((element) => {
+    tones += element.name + " ";
+  });
+
+  logToDiv(tones);
 }
 
 export function logToDiv(message: string): void {

@@ -22,7 +22,8 @@ mini-alloc = { version = "0.4.2", optional = true }
 wasm-bindgen = { version = "0.2.91", optional = true }
 tuning_systems = { path = "../tuning_systems" }
 keymapping = { path = "../keymapping" }
-#music21-rs = { path = "../music21-rs" }
+serde_json = "1.0.114"
+serde = "1.0.197"
 
 [dev-dependencies]
 wasm-bindgen-test = { version = "0.3.41" }

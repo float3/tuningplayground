@@ -1,4 +1,8 @@
 use keymapping::US_KEYMAP;
+use std::collections::HashMap;
+
+use std::sync::Mutex;
+use std::sync::OnceLock;
 use tuning_systems::{Tone, TuningSystem, TypeAlias};
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
@@ -12,9 +16,10 @@ pub(crate) fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
-static mut OCTAVE_SIZE: usize = 12;
-static mut STEP_SIZE: usize = 7;
-static mut TUNING_SYSTEM: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
+static OCTAVE_SIZE: Mutex<usize> = Mutex::new(12);
+static STEP_SIZE: Mutex<usize> = Mutex::new(7);
+static TUNING_SYSTEM: Mutex<TuningSystem> =
+    Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 });
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen(start)]
@@ -59,10 +64,9 @@ pub fn get_tone(index: usize) -> JsValue {
     #[cfg(debug_assertions)]
     log("get_tone");
 
-    let tone: Tone;
-    unsafe {
-        tone = Tone::new(TUNING_SYSTEM, index);
-    }
+    let tun_sys: TuningSystem = *TUNING_SYSTEM.lock().expect("couldn't lock");
+
+    let tone: Tone = Tone::new(tun_sys, index);
 
     createTone(
         index,
@@ -78,7 +82,7 @@ pub fn get_tone(index: usize) -> JsValue {
 pub fn get_tuning_size() -> TypeAlias {
     #[cfg(debug_assertions)]
     log("get_tuning_size");
-    unsafe { TUNING_SYSTEM.size() }
+    *OCTAVE_SIZE.lock().expect("couldn't lock") as TypeAlias
 }
 
 #[cfg(feature = "wasm")]
@@ -89,69 +93,110 @@ pub fn from_keymap(key: &str) -> i32 {
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
-pub fn convert_notes_core(notes: Vec<String>) -> String {
-    format!(
-        "L: 1/1 \n[{}]",
-        notes
-            .iter()
-            .map(|note_str| {
-                let mut tokens = note_str.chars().peekable();
-                let name = tokens.next().expect("no name");
+type LUTType = HashMap<String, HashMap<i32, String>>;
 
-                if !('A'..='G').contains(&name) {
-                    panic!("Invalid note name");
-                }
+static CHORD_LUT: OnceLock<LUTType> = OnceLock::new();
 
-                let accidental;
+fn static_data() -> &'static LUTType {
+    CHORD_LUT.get_or_init(|| serde_json::from_str(include_str!("../chords.json")).unwrap())
+}
 
-                match tokens.peek() {
-                    Some('b') => {
-                        tokens.next();
-                        if tokens.peek() == Some(&'b') {
-                            tokens.next();
-                            accidental = "bb".to_string();
-                        } else {
-                            accidental = "b".to_string();
-                        }
-                    }
-                    Some('#') => {
-                        tokens.next();
-                        if tokens.peek() == Some(&'#') {
-                            tokens.next();
-                            accidental = "##".to_string();
-                        } else {
-                            accidental = "#".to_string();
-                        }
-                    }
-                    _ => {
-                        accidental = "".to_string();
-                    }
-                }
+pub fn convert_notes_core(input: Vec<String>) -> String {
+    //return "L: 1/1 \n\"C\"[C E G]".to_string();
+    let mut bitmask = 0;
+    let mut notes = Vec::new();
+    let binding = input.clone();
+    let mut bass: String = "".to_string();
+    let first: bool = true;
 
-                let octave_modifier = note_str
-                    .replace("N1", "-1")
-                    .chars()
-                    .last()
-                    .unwrap_or('4')
-                    .to_digit(10)
-                    .unwrap_or(4) as isize
-                    - 4;
-                let octave_str = if octave_modifier < 0 {
-                    ",".repeat(octave_modifier.unsigned_abs())
+    input.into_iter().for_each(|note_str| {
+        let mut chars = note_str.chars().peekable();
+        let name = chars.next().expect("no name");
+
+        if !('A'..='G').contains(&name) {
+            panic!("Invalid note name");
+        }
+
+        let accidental = match chars.peek() {
+            Some('b') => {
+                chars.next();
+                if chars.peek() == Some(&'b') {
+                    chars.next();
+                    "bb".to_string()
                 } else {
-                    "'".repeat(octave_modifier as usize)
-                };
+                    "b".to_string()
+                }
+            }
+            Some('#') => {
+                chars.next();
+                if chars.peek() == Some(&'#') {
+                    chars.next();
+                    "##".to_string()
+                } else {
+                    "#".to_string()
+                }
+            }
+            _ => "".to_string(),
+        };
 
-                format!(
-                    "{}{}{}",
-                    accidental.replace('#', "^").replace('b', "_"),
-                    name,
-                    octave_str
-                )
-            })
-            .collect::<Vec<String>>()
-            .join(" ")
-    )
+        let full_name = name.to_string() + &accidental;
+
+        if first {
+            bass.clone_from(&full_name);
+        }
+
+        let index = match full_name.as_str() {
+            "B#" | "C" | "Dbb" => 0,
+            "B##" | "C#" | "Db" => 1,
+            "C##" | "D" | "Ebb" => 2,
+            "D#" | "Eb" | "Fbb" => 3,
+            "D##" | "E" | "Fb" => 4,
+            "E#" | "F" | "Gbb" => 5,
+            "E##" | "F#" | "Gb" => 6,
+            "F##" | "G" | "Abb" => 7,
+            "G#" | "Ab" => 8,
+            "G##" | "A" | "Bbb" => 9,
+            "A#" | "Bb" | "Cbb" => 10,
+            "A##" | "B" | "Cb" => 11,
+            _ => panic!("Invalid note"),
+        };
+
+        bitmask |= 1 << index;
+
+        let octave_modifier = note_str
+            .replace("N1", "-1")
+            .chars()
+            .last()
+            .unwrap_or('4')
+            .to_digit(10)
+            .unwrap_or(4) as isize
+            - 4;
+
+        let octave_str = if octave_modifier < 0 {
+            ",".repeat(octave_modifier.unsigned_abs())
+        } else {
+            "'".repeat(octave_modifier as usize)
+        };
+
+        notes.push(format!(
+            "{}{}{}",
+            accidental.replace('#', "^").replace('b', "_"),
+            name,
+            octave_str
+        ));
+    });
+
+    let chord: String = match static_data().get(&bass) {
+        Some(chord) => match chord.get(&bitmask) {
+            Some(chord) => chord.to_string(),
+            None => "".to_string(),
+        },
+        None => "".to_string(),
+    };
+
+    let notes = notes.join(" ");
+
+    format!("L: 1/1 \n\"{}\"[{}]", chord, notes)
 }
 
 #[cfg(feature = "wasm")]
@@ -189,11 +234,11 @@ pub fn set_tuning_system(tuning_system: &str, octave_size: TypeAlias, step_size:
         _ => None,
     };
     match tuning_system {
-        Some(tuning_system) => unsafe {
-            TUNING_SYSTEM = tuning_system;
-            OCTAVE_SIZE = octave_size;
-            STEP_SIZE = step_size;
-        },
+        Some(tuning_system) => {
+            *TUNING_SYSTEM.lock().expect("couldn't lock") = tuning_system;
+            *OCTAVE_SIZE.lock().expect("couldn't lock") = octave_size;
+            *STEP_SIZE.lock().expect("couldn't lock") = step_size;
+        }
         None => {
             #[cfg(debug_assertions)]
             error("Invalid tuning system");

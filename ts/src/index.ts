@@ -5,7 +5,6 @@ import { requestMIDI } from "./MIDI";
 import { keydown, keyup, visibilityChange } from "./events";
 import {
   playingTonesChanged,
-  logToDiv,
   volumeSlider,
   keyActive,
   DOMContentLoaded,
@@ -49,8 +48,8 @@ export function noteOn(tone_index: number, velocity?: number): void {
   console.log("velocity: ", velocity);
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
   playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
+  playingTonesChanged();
   keyActive(tone_index, true);
-  logToDiv(tone.name);
 }
 
 export function noteOff(tone_index: number): void {

@@ -60,7 +60,31 @@ impl Chord {
     }
 
     fn pitched_common_name(&self) -> String {
-        todo!()
+        let name_str = self.common_name();
+        if name_str == "empty chord" {
+            return name_str;
+        }
+        if name_str == "note" || name_str == "unison" {
+            return self.pitches()[0].name.clone();
+        }
+
+        if self.pitch_class_cardinality() <= 2
+            || name_str.contains("enharmonic")
+            || name_str.contains("forte class")
+            || name_str.contains("semitone")
+        {
+            let bass = self.bass();
+            let bass_name = bass.name.replace('-', "b");
+            format!("{} above {}", name_str, bass_name)
+        } else {
+            let root = self.root().unwrap_or_else(|| self.pitches()[0].clone());
+            let root_name = root.name.replace('-', "b");
+            format!("{}-{}", root_name, name_str)
+        }
+    }
+
+    fn pitch_class_cardinality(&self) -> usize {
+        self.unordered_pitch_classes().len()
     }
 
     fn simplify_enharmonics_in_place(&mut self) {
@@ -68,5 +92,21 @@ impl Chord {
         for (i, pitch) in pitches.iter().enumerate() {
             self.notes[i].pitch = pitch.clone();
         }
+    }
+
+    fn unordered_pitch_classes(&self) -> Vec<i32> {
+        let mut vec = vec![];
+        for p in self.pitches() {
+            vec.push(p.pitch_class());
+        }
+        vec
+    }
+
+    fn bass(&self) -> Pitch {
+        todo!()
+    }
+
+    fn root(&self) -> Option<Pitch> {
+        todo!()
     }
 }

@@ -4,8 +4,8 @@
   "description": "piano demo with different features",
   "main": "index.js",
   "scripts": {
-    "serve": "webpack-dev-server --mode production",
-    "servedev": "webpack-dev-server --mode development"
+    "serve_release": "webpack-dev-server --mode production",
+    "serve_dev": "webpack-dev-server --mode development"
   },
   "repository": {
     "type": "git",
@@ -35,9 +35,13 @@
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "copy-webpack-plugin": "^12.0.2",
+    "css-minimizer-webpack-plugin": "^6.0.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
+    "html-minimizer-webpack-plugin": "^5.0.0",
+    "json-minimizer-webpack-plugin": "^5.0.0",
+    "mini-css-extract-plugin": "^2.8.1",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
