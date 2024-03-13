@@ -93,7 +93,7 @@ pub fn from_keymap(key: &str) -> i32 {
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
-type LUTType = HashMap<String, HashMap<i32, String>>;
+type LUTType = HashMap<i32, String>;
 
 static CHORD_LUT: OnceLock<LUTType> = OnceLock::new();
 
@@ -105,7 +105,6 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
     //return "L: 1/1 \n\"C\"[C E G]".to_string();
     let mut bitmask = 0;
     let mut notes = Vec::new();
-    let binding = input.clone();
     let mut bass: String = "".to_string();
     let first: bool = true;
 
@@ -186,11 +185,8 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
         ));
     });
 
-    let chord: String = match static_data().get(&bass) {
-        Some(chord) => match chord.get(&bitmask) {
-            Some(chord) => chord.to_string(),
-            None => "".to_string(),
-        },
+    let chord: String = match static_data().get(&bitmask) {
+        Some(chord) => chord.clone(),
         None => "".to_string(),
     };
 
