@@ -1,12 +1,8 @@
 import { noteOn, noteOff } from ".";
 import { Midi } from "@tonejs/midi";
+import { midiMultiplier } from "./config";
 
 export function requestMIDI(): void {
-  if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-  } else {
-    alert("WebMIDI is not supported in this browser.");
-  }
   if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
   } else {
@@ -45,25 +41,34 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
   }
 }
 
-const multiplier = 1000;
+let timeoutIds: NodeJS.Timeout[] = [];
+
+export function stopMIDIFile(): void {
+  console.log("stopMIDIFile");
+  timeoutIds.forEach((id) => clearTimeout(id));
+  timeoutIds = [];
+}
 
 export function playMIDIFile(midiFile: ArrayBuffer): void {
   console.log("playMIDIFile");
 
   const midi = new Midi(midiFile);
 
+  // const tempo = midi.header.tempos[0].bpm;
+
   const track = midi.tracks[0];
 
-  const startTime = track.notes[0].time * multiplier;
+  const startTime = track.notes[0].time * midiMultiplier;
 
   track.notes.forEach((note) => {
     console.log(note.time);
-    const noteOnTime = note.time * multiplier - startTime;
-    const noteOffTime = (note.time + note.duration) * multiplier - startTime;
+    const noteOnTime = note.time * midiMultiplier - startTime;
+    const noteOffTime =
+      (note.time + note.duration) * midiMultiplier - startTime;
     const velocity = note.velocity;
     const midiNote = note.midi;
 
-    setTimeout(() => noteOn(midiNote, velocity), noteOnTime);
-    setTimeout(() => noteOff(midiNote), noteOffTime);
+    timeoutIds.push(setTimeout(() => noteOn(midiNote, velocity), noteOnTime));
+    timeoutIds.push(setTimeout(() => noteOff(midiNote), noteOffTime));
   });
 }

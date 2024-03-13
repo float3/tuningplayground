@@ -424,7 +424,11 @@ fn dissonance_score(
     if small_pythagorean_ratio | triad_award {
         for (index, p1) in pitches.iter().enumerate() {
             for p2 in pitches.iter().skip(index + 1) {
-                match Interval::new(p1.clone(), p2.clone()) {
+                let mut p1 = p1.clone();
+                let mut p2 = p2.clone();
+                p1.octave = None;
+                p2.octave = None;
+                match Interval::new(p1, p2) {
                     Some(interval) => intervals.push(interval),
                     None => return std::f64::INFINITY,
                 }
@@ -434,11 +438,7 @@ fn dissonance_score(
         if small_pythagorean_ratio {
             for interval in intervals.iter() {
                 match interval.interval_to_pythagorean_ratio() {
-                    Some(ratio) => {
-                        score_ratio += ((ratio.numerator * ratio.denominator) as f64 / ratio.f64())
-                            .ln()
-                            * 0.03792663444
-                    }
+                    Some(ratio) => score_ratio += (ratio.denominator as f64).ln() * 0.03792663444,
                     None => return std::f64::INFINITY,
                 };
             }

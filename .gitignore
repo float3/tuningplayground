@@ -1,7 +1,3 @@
-ts/node_modules/
-ts/dist/
-ts/src/styles.css
-ts/tsconfig.tsbuildinfo
 www/
 debug/
 target/
