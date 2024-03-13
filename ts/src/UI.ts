@@ -1,7 +1,7 @@
 import * as wasm from "wasm";
 import * as abcjs from "abcjs";
-import { playingTones, stopAllTones } from ".";
-import { playMIDIFile } from "./MIDI";
+import { noteOff, noteOn, playingTones, stopAllTones } from ".";
+import { playMIDIFile, stopMIDIFile } from "./MIDI";
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;
@@ -14,6 +14,10 @@ const stepSizeParent = stepSize.parentElement as HTMLDivElement;
 
 const playButton = document.getElementById("playButton") as HTMLButtonElement;
 const stopButton = document.getElementById("stopButton") as HTMLButtonElement;
+
+document.querySelectorAll(".white-key, .black-key").forEach((key) => {
+  addEvents(key);
+});
 
 export const tuningSelect = document.getElementById(
   "tuningSelect",
@@ -60,6 +64,7 @@ function fileInputChange(event: Event): void {
 
 function stop(): void {
   console.log("stop");
+  stopMIDIFile();
 }
 
 function play(): void {
@@ -137,4 +142,20 @@ export function keyActive(tone_index: number, active: boolean) {
     if (active) keyElement.classList.add("key-active");
     else keyElement.classList.remove("key-active");
   }
+}
+
+function addEvents(key: Element) {
+  const addEvent = (eventName: string, action: (note: number) => void) => {
+    key.addEventListener(eventName, () => {
+      const note = parseInt(key.getAttribute("data-note")!) + keyboardOffset;
+      action(note);
+    });
+  };
+
+  addEvent("mousedown", noteOn);
+  addEvent("mouseup", noteOff);
+  addEvent("mouseenter", noteOn);
+  addEvent("mouseleave", noteOff);
+  addEvent("touchstart", noteOn);
+  addEvent("touchend", noteOff);
 }

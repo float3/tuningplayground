@@ -19,3 +19,5 @@
 // TOOD: extend keymapping library
 // TODO: fix the keyboard numbers, for now using offset hack
 // TODO: fix transpose
+// TODO: fix keyboard offset
+// TODO: fix C10 being parsed as C1 by some part of the program

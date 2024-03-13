@@ -7,11 +7,6 @@ export function requestMIDI(): void {
   } else {
     alert("WebMIDI is not supported in this browser.");
   }
-  if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-  } else {
-    alert("WebMIDI is not supported in this browser.");
-  }
 }
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
@@ -46,6 +41,13 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
 }
 
 const multiplier = 1000;
+let timeoutIds: NodeJS.Timeout[] = [];
+
+export function stopMIDIFile(): void {
+  console.log("stopMIDIFile");
+  timeoutIds.forEach((id) => clearTimeout(id));
+  timeoutIds = [];
+}
 
 export function playMIDIFile(midiFile: ArrayBuffer): void {
   console.log("playMIDIFile");
@@ -63,7 +65,7 @@ export function playMIDIFile(midiFile: ArrayBuffer): void {
     const velocity = note.velocity;
     const midiNote = note.midi;
 
-    setTimeout(() => noteOn(midiNote, velocity), noteOnTime);
-    setTimeout(() => noteOff(midiNote), noteOffTime);
+    timeoutIds.push(setTimeout(() => noteOn(midiNote, velocity), noteOnTime));
+    timeoutIds.push(setTimeout(() => noteOff(midiNote), noteOffTime));
   });
 }

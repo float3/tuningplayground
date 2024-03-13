@@ -8,6 +8,8 @@ if __name__ == "__main__":
     chord_definitions = [
         "E G B",
         "E# G# B#",
+        "E G# B",
+        "E Ab Cb",
         # "C G F E B",
         # "E G F C B",
         # "E C F G B",
@@ -40,6 +42,11 @@ if __name__ == "__main__":
         # "A# D# G",
         # "C F A",
     ]
+
+    # make a sequence of ints
+    ints = [72, 64, 67]
+    c = chord.Chord(ints)
+    print(c.pitchedCommonName)
 
     for definition in chord_definitions:
         c = chord.Chord(definition)
