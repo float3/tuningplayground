@@ -16,5 +16,5 @@ itertools = "0.12.1"
 lazy_static = "1.4.0"
 tuning_systems = { path = "../tuning_systems" }
 
-[dev-dependencies]
-pyo3 = { version = "0.15", features = ["extension-module"] }
+# [dev-dependencies]
+# pyo3 = { version = "0.15", features = ["extension-module"] }
