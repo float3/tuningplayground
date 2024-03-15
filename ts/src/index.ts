@@ -11,6 +11,7 @@ import {
   addEvents,
   playButton,
   play,
+  soundMethod,
   // linkInputChange,
 } from "./UI";
 
@@ -44,7 +45,7 @@ export function stopAllTones(): void {
   console.log("stopAllTones");
   Object.keys(playingTones).forEach((key) => {
     const tone_index: number = parseInt(key);
-    playingTones[tone_index].Oscillator.stop();
+    playingTones[tone_index].node.stop();
     delete playingTones[tone_index];
     keyActive(tone_index, false);
   });
@@ -57,7 +58,15 @@ export function noteOn(tone_index: number, velocity?: number): void {
   console.log("noteOn");
   console.log("velocity: ", velocity);
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
-  playFrequencyNative(tone, parseFloat(volumeSlider.value), tone_index);
+  const volume = Math.pow(parseFloat(volumeSlider.value), 2);
+  switch (soundMethod.value) {
+    case "native":
+      playFrequencyNative(tone, volume);
+      break;
+    case "sample":
+      playFrequencySample(tone, volume);
+      break;
+  }
   playingTonesChanged();
   keyActive(tone_index, true);
 }
@@ -65,29 +74,57 @@ export function noteOn(tone_index: number, velocity?: number): void {
 export function noteOff(tone_index: number): void {
   console.log("noteOff");
   if (!(tone_index in playingTones)) return;
-  playingTones[tone_index].Oscillator.stop();
+
+  switch (soundMethod.value) {
+    case "native":
+      playingTones[tone_index].node.stop();
+      break;
+    case "sample":
+      break;
+  }
   delete playingTones[tone_index];
   playingTonesChanged();
   keyActive(tone_index, false);
 }
 
-function playFrequencyNative(
-  tone: Tone,
-  volume: number,
-  tone_index: number,
-): void {
+function playFrequencySample(tone: Tone, volume: number): void {
+  console.log("playFrequencySample");
+  audioContext = new window.AudioContext();
+  fetch("a1.wav")
+    .then((response) =>
+      response
+        .arrayBuffer()
+        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer)),
+    )
+    .then((audioBuffer) => {
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = volume;
+      source.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      source.playbackRate.value = tone.freq / 220;
+      source.start();
+      tone.node = source;
+      playingTones[tone.index] = tone;
+      playingTonesChanged();
+    })
+    .catch(console.error);
+}
+
+function playFrequencyNative(tone: Tone, volume: number): void {
   console.log("playFrequencyNative");
   audioContext = new window.AudioContext();
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
-  gainNode.gain.value = Math.pow(volume, 2);
+  gainNode.gain.value = volume;
   gainNode.connect(audioContext.destination);
   oscillator.type = "square"; // TODO: make this configurable
   oscillator.frequency.setValueAtTime(tone.freq, audioContext.currentTime);
   oscillator.connect(gainNode);
   oscillator.start();
-  tone.Oscillator = oscillator;
-  if (tone_index in playingTones) playingTones[tone_index].Oscillator.stop();
-  playingTones[tone_index] = tone;
+  tone.node = oscillator;
+  if (tone.index in playingTones) playingTones[tone.index].node.stop();
+  playingTones[tone.index] = tone;
   playingTonesChanged();
 }

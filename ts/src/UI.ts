@@ -7,6 +7,9 @@ import { keyboardOffset } from "./config";
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;
 const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+export const soundMethod = document.getElementById(
+  "soundMethod",
+) as HTMLSelectElement;
 // const linkInput = document.getElementById("linkInput") as HTMLInputElement;
 
 const logContainer = document.getElementById("logContainer") as HTMLDivElement;
