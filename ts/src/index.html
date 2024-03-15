@@ -33,6 +33,7 @@
       display: inline-block;
       position: relative;
       z-index: 1;
+      outline: 2px solid #000;
     }
 
     .black-key {
@@ -42,6 +43,7 @@
       position: absolute;
       margin-left: -7.5px;
       z-index: 2;
+      outline: 2px solid #000;
     }
 
     .white-key:nth-child(1) ~ .black-key {
@@ -66,9 +68,16 @@
       margin-left: 180.5px;
     }
 
-    .key-active {
-      background: #646464;
-      transform: translateY(-2px);
+    .white-key.key-active {
+      background: #a0a0a0; /* Lighter grey for active white keys */
+    }
+
+    .black-key.key-active {
+      background: #404040; /* Darker grey for active black keys */
+    }
+
+    .key-marked {
+      background: #d77914;
     }
   </style>
   <body>

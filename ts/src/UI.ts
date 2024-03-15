@@ -117,28 +117,46 @@ export function handleTuningSelectChange(): void {
 export function playingTonesChanged(): void {
   console.log("playingTonesChanged");
 
-  if (octaveSize.value === "12") {
-    const notes = Object.values(playingTones).map((tone) => {
-      return tone.name;
-    });
+  const notes = Object.keys(playingTones).map(Number);
 
-    const formatted_notes = wasm.convert_notes(notes);
+  if (notes.length === 0) return;
+
+  let chordName;
+  const tones = Object.values(playingTones)
+    .map((tone) => tone.name)
+    .join(" ");
+
+  if (octaveSize.value === "12") {
+    const formatted_notes = wasm.convert_notes(tones.split(" "));
+    chordName = wasm.get_chord_name();
 
     console.log(formatted_notes);
 
     abcjs.renderAbc("output", formatted_notes);
   }
 
-  let tones: string = "";
-  Object.values(playingTones).forEach((element) => {
-    tones += element.name + " ";
-  });
-
-  logToDiv(tones);
+  logToDiv(`${tones} | ${chordName}`, notes);
 }
 
-export function logToDiv(message: string): void {
-  logContainer.innerHTML = "<p>" + message + "</p>" + logContainer.innerHTML;
+export function logToDiv(message: string, notes: number[]): void {
+  const p = document.createElement("p");
+  p.textContent = message;
+
+  const shareButton = document.createElement("button");
+  shareButton.textContent = "Share";
+  shareButton.onclick = function () {
+    const url = `${window.location.href}#${encodeURIComponent(notes.join("&"))}`;
+    navigator.clipboard.writeText(url).catch(console.error);
+  };
+
+  const div = document.createElement("div");
+  div.style.display = "flex";
+  div.style.justifyContent = "space-between";
+  div.style.alignItems = "center";
+  div.appendChild(p);
+  div.appendChild(shareButton);
+
+  logContainer.insertBefore(div, logContainer.firstChild);
 }
 
 export function keyActive(tone_index: number, active: boolean) {
@@ -148,6 +166,15 @@ export function keyActive(tone_index: number, active: boolean) {
   if (keyElement) {
     if (active) keyElement.classList.add("key-active");
     else keyElement.classList.remove("key-active");
+  }
+}
+
+export function keyMarked(tone_index: number) {
+  const keyElement = document.querySelector(
+    `div[data-note="${tone_index - keyboardOffset}"]`,
+  );
+  if (keyElement) {
+    keyElement.classList.add("key-marked");
   }
 }
 

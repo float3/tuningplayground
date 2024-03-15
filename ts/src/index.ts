@@ -2,7 +2,7 @@ console.log("imports");
 import * as wasm from "wasm";
 import { Tone, createTone } from "./Tone";
 import { requestMIDI } from "./MIDI";
-import { keydown, keyup, visibilityChange } from "./events";
+import { keydown, keyup, visibilityChange, onload } from "./events";
 import {
   playingTonesChanged,
   volumeSlider,
@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", DOMContentLoaded);
 document.addEventListener("visibilitychange", visibilityChange);
 window.addEventListener("blur", stopAllTones);
 window.createTone = createTone;
-
 wasm
   .default()
   .then(() => {
@@ -33,6 +32,7 @@ wasm
     document.querySelectorAll(".white-key, .black-key").forEach((key) => {
       addEvents(key);
     });
+    onload();
     // linkInputChange();
   })
   .catch(console.error);
