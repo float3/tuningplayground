@@ -191,7 +191,7 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
         None => "".to_string(),
     };
 
-    *CHORD_NAME.lock().expect("couldn't lock") = chord.clone();
+    CHORD_NAME.lock().expect("couldn't lock").clone_from(&chord);
 
     let notes = notes.join(" ");
 
