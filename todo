@@ -23,4 +23,5 @@
 // TODO: fix C10 being parsed as C1 by some part of the program
 // TODO: FIX LOOKUPTABLE GENERATION to use numbers instead of tones so we have enharmonic agnosticism
 // TODO: link to source code and to dev/master version of site
-// TODO: cache volume 
+// TODO: cache volume
+// TODO: generate embeds

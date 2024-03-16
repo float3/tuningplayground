@@ -1,4 +1,4 @@
-import * from "wasm";
+import * as wasm from "wasm";
 import { heldKeys, noteOn, noteOff } from ".";
 import { stopAllTones } from ".";
 import { keyMarked, transpose } from "./UI";
