@@ -129,7 +129,7 @@
       background: #92520d;
     }
 
-    #playMarked {
+    #markedButtons {
       display: none;
     }
   </style>
@@ -151,12 +151,11 @@
           >this one</a
         >
       </p>
-      <div style="display: flex">
+      <div style="display: block">
         <input type="file" id="fileInput" accept=".midi,.mid" />
         <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
         <button id="playButton">Play</button>
         <button id="stopButton">Stop</button>
-        <button id="playMarked">Play Marked Notes</button>
       </div>
       <p>
         <label for="tuningSelect">Select Tuning System:</label>
@@ -215,6 +214,10 @@
       <div id="octaveSize_container" style="display: block">
         <label for="octaveSize">Octave Size:</label>
         <input id="octaveSize" value="12" />
+      </div>
+      <div id="markedButtons" style="display: none">
+        <button id="playMarked">Play Marked Notes</button>
+        <button id="shareMarked">Share Marked Notes</button>
       </div>
       <div id="output" style="background-color: white; color: black"></div>
       <div class="keyboard dark-mode-invert">

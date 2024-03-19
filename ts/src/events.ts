@@ -1,7 +1,7 @@
 import * as wasm from "wasm";
 import { heldKeys, noteOn, noteOff } from ".";
 import { stopAllTones } from ".";
-import { keyMarked, playMarkedButton } from "./UI";
+import { markKey, markedButtons } from "./UI";
 
 export function visibilityChange(): void {
   if (document.hidden) {
@@ -13,14 +13,14 @@ export function onload(): void {
   const hash = window.location.hash.substring(1);
   if (hash) {
     const notes = hash.split(",");
-    playMarkedButton.style.display = "block";
+    markedButtons.style.display = "flex";
     notes.forEach((note) => {
       const index = parseInt(note);
       // noteOn(index);
-      keyMarked(index);
+      markKey(index);
     });
   } else {
-    playMarkedButton.style.display = "none";
+    markedButtons.style.display = "none";
   }
 }
 

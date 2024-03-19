@@ -20,13 +20,20 @@ export const soundMethod = document.getElementById(
 
 const logContainer = document.getElementById("logContainer") as HTMLDivElement;
 const stepSizeParent = stepSize.parentElement as HTMLDivElement;
+export const markedButtons = document.getElementById(
+  "markedButtons",
+) as HTMLDivElement;
 
 export const playButton = document.getElementById(
   "playButton",
 ) as HTMLButtonElement;
-export const playMarkedButton = document.getElementById(
+export const shareMarked = document.getElementById(
+  "shareMarked",
+) as HTMLButtonElement;
+export const playMarked = document.getElementById(
   "playMarked",
 ) as HTMLButtonElement;
+
 const stopButton = document.getElementById("stopButton") as HTMLButtonElement;
 
 export const tuningSelect = document.getElementById(
@@ -44,12 +51,14 @@ export const output = document.getElementById("output") as HTMLElement;
 octaveSize.onchange = handleTuningSelectChange;
 tuningSelect.onchange = handleTuningSelectChange;
 stepSize.onchange = handleTuningSelectChange;
-stopButton.onclick = stop;
 fileInput.onchange = fileInputChange;
-playMarkedButton.onclick = playMarkedKeys;
 transpose.onchange = transposeChange;
 volumeSlider.onchange = volumeChange;
 // linkInput.onchange = linkInputChange;
+
+stopButton.onclick = stop;
+playMarked.onclick = playMarkedKeys;
+shareMarked.onclick = sharedMarkedKeys;
 
 export let tranposeValue = 0;
 function transposeChange(): void {
@@ -110,6 +119,12 @@ function fileInputChange(event: Event): Promise<void> {
 function playMarkedKeys(): void {
   markedKeys.forEach((note) => _noteOn(note, undefined, true));
   playingTonesChanged;
+}
+
+function sharedMarkedKeys(): void {
+  const hash = markedKeys.join(",");
+  const url = `${window.location.origin + window.location.pathname}#${hash}`;
+  navigator.clipboard.writeText(url).catch(console.error);
 }
 
 function stop(): void {
@@ -209,11 +224,36 @@ export function keyActive(tone_index: number, active: boolean) {
   }
 }
 
-export function keyMarked(tone_index: number) {
+export function markKey(tone_index: number) {
+  if (markedKeys.includes(tone_index)) return;
   markedKeys.push(tone_index);
   const keyElement = document.querySelector(`div[data-note="${tone_index}"]`);
   if (keyElement) {
     keyElement.classList.add("key-marked");
+  }
+  markedButtons.style.display = "block";
+}
+
+export function unmarkKey(tone_index: number): void {
+  const index = markedKeys.indexOf(tone_index);
+  if (index > -1) {
+    markedKeys.splice(index, 1);
+  }
+  const keyElement = document.querySelector(`div[data-note="${tone_index}"]`);
+  if (keyElement) {
+    keyElement.classList.remove("key-marked");
+  }
+  if (markedKeys.length === 0) {
+    markedButtons.style.display = "none";
+  }
+}
+
+export function markOrUnmarkKey(tone_index: number) {
+  const index = markedKeys.indexOf(tone_index);
+  if (index > -1) {
+    unmarkKey(tone_index);
+  } else {
+    markKey(tone_index);
   }
 }
 
@@ -224,9 +264,34 @@ export function addEvents(key: Element) {
     key.addEventListener(eventName, callback);
   };
 
-  addEvent("mousedown", () => noteOn(note));
+  key.addEventListener("mousedown", (event) => {
+    const mouseEvent = event as MouseEvent;
+    if (mouseEvent.ctrlKey) {
+      markKey(note);
+    } else {
+      noteOn(note);
+    }
+  });
+
+  // key.addEventListener("mouseup", (event) => {
+  //   let mouseEvent = event as MouseEvent;
+  //   if (mouseEvent.ctrlKey) {
+  //     unmarkKey(note);
+  //   } else {
+  //     noteOff(note);
+  //   }
+  // });
+
   addEvent("mouseup", () => noteOff(note));
-  addEvent("mouseenter", () => noteOn(note));
+
+  key.addEventListener("mouseenter", (event) => {
+    const mouseEvent = event as MouseEvent;
+    if (mouseEvent.ctrlKey) {
+      return;
+    }
+    noteOn(note);
+  });
+
   addEvent("mouseleave", () => noteOff(note));
   addEvent("touchstart", () => noteOn(note));
   addEvent("touchend", () => noteOff(note));
