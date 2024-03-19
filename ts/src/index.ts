@@ -56,15 +56,23 @@ export function stopAllTones(): void {
   playingTonesChanged();
 }
 
-export function noteOn(tone_index: number, velocity?: number): void {
+export function noteOn(
+  tone_index: number,
+  velocity?: number,
+  cancel?: boolean,
+): void {
   console.log("noteOn");
   console.log("velocity: ", velocity);
 
-  _noteOn(tone_index);
+  _noteOn(tone_index, velocity, cancel);
   playingTonesChanged();
 }
 
-export function _noteOn(tone_index: number) {
+export function _noteOn(
+  tone_index: number,
+  velocity?: number,
+  cancel?: boolean,
+) {
   tone_index += tranposeValue;
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
   const volume = Math.pow(parseFloat(volumeSlider.value), 2);
@@ -73,7 +81,7 @@ export function _noteOn(tone_index: number) {
       playFrequencyNative(tone, volume).catch(console.error);
       break;
     case "sample":
-      playFrequencySample(tone, volume).catch(console.error);
+      playFrequencySample(tone, volume, cancel).catch(console.error);
       break;
   }
   keyActive(tone_index, true);
@@ -129,7 +137,11 @@ function initOrGetAudioBuffer(): Promise<AudioBuffer> {
   }
 }
 
-async function playFrequencySample(tone: Tone, volume: number): Promise<void> {
+async function playFrequencySample(
+  tone: Tone,
+  volume: number,
+  cancel?: boolean,
+): Promise<void> {
   const localAudioContext = await initOrGetAudioContext();
   const source = localAudioContext.createBufferSource();
   source.buffer = await initOrGetAudioBuffer();
@@ -142,9 +154,11 @@ async function playFrequencySample(tone: Tone, volume: number): Promise<void> {
   tone.node = source;
   playingTones[tone.index] = tone;
   playingTonesChanged();
-  source.onended = () => {
-    noteOff(tone.index);
-  };
+  if (cancel) {
+    source.onended = () => {
+      noteOff(tone.index);
+    };
+  }
 }
 
 async function playFrequencyNative(tone: Tone, volume: number): Promise<void> {
