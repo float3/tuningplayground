@@ -214,13 +214,15 @@ export function logToDiv(message: string, notes: number[]): void {
   shareButton.textContent = "Share";
   shareButton.onclick = createAndCopyUrl(notes);
 
+  shareButton.style.marginRight = "10px";
+  p.style.marginLeft = "10px";
+
   const div = document.createElement("div");
   div.style.display = "flex";
-  div.style.justifyContent = "space-between";
+  div.style.justifyContent = "left";
   div.style.alignItems = "center";
-  div.appendChild(p);
   div.appendChild(shareButton);
-
+  div.appendChild(p);
   logContainer.insertBefore(div, logContainer.firstChild);
 }
 
