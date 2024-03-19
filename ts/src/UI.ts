@@ -9,6 +9,7 @@ import {
   stopAllTones,
 } from ".";
 import { playMIDIFile, stopMIDIFile } from "./MIDI";
+import { unescape } from "querystring";
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;
@@ -104,28 +105,23 @@ function fileInputChange(event: Event): Promise<void> {
 // }
 
 function playMarkedKeys(): void {
-  console.log("playMarkedKeys");
-  markedKeys.forEach((note) => _noteOn(note));
+  markedKeys.forEach((note) => _noteOn(note, undefined, true));
   playingTonesChanged;
 }
 
 function stop(): void {
-  console.log("stop");
   stopMIDIFile();
 }
 
 export function play(): void {
-  console.log("play");
   initOrGetMidiFile().then(playMIDIFile).catch(console.error);
 }
 
 export function DOMContentLoaded(): void {
-  console.log("DOMContentLoaded");
   handleTuningSelectChange;
 }
 
 export function handleTuningSelectChange(): void {
-  console.log("handleTuningSelectChange");
   switch (tuningSelect.value) {
     case "StepMethod":
       stepSizeParent.hidden = false;
@@ -158,8 +154,6 @@ function adjustOutputSize(): void {
 }
 
 export function playingTonesChanged(): void {
-  console.log("playingTonesChanged");
-
   const notes = Object.keys(playingTones).map(Number);
 
   if (notes.length === 0) {
