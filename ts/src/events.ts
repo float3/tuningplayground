@@ -22,6 +22,9 @@ export function onload(): void {
       keyMarked(index);
     });
   }
+  else {
+    playMarkedButton.style.display = "none";
+  }
 }
 
 export function keydown(event: KeyboardEvent): void {

@@ -20,6 +20,7 @@ console.log("static");
 document.addEventListener("DOMContentLoaded", DOMContentLoaded);
 document.addEventListener("visibilitychange", visibilityChange);
 window.addEventListener("blur", stopAllTones);
+window.addEventListener("hashchange", onload);
 window.createTone = createTone;
 wasm
   .default()
