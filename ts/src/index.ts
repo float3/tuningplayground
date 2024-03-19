@@ -12,6 +12,7 @@ import {
   playButton,
   play,
   soundMethod,
+  tranposeValue,
   // linkInputChange,
 } from "./UI";
 
@@ -58,11 +59,13 @@ export function stopAllTones(): void {
 export function noteOn(tone_index: number, velocity?: number): void {
   console.log("noteOn");
   console.log("velocity: ", velocity);
+
   _noteOn(tone_index);
   playingTonesChanged();
 }
 
-function _noteOn(tone_index: number) {
+export function _noteOn(tone_index: number) {
+  tone_index += tranposeValue;
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
   const volume = Math.pow(parseFloat(volumeSlider.value), 2);
   switch (soundMethod.value) {
@@ -78,6 +81,7 @@ function _noteOn(tone_index: number) {
 
 export function noteOff(tone_index: number): void {
   console.log("noteOff");
+  tone_index += tranposeValue;
   if (!(tone_index in playingTones)) return;
 
   switch (soundMethod.value) {

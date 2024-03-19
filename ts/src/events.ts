@@ -1,7 +1,7 @@
 import * as wasm from "wasm";
 import { heldKeys, noteOn, noteOff } from ".";
 import { stopAllTones } from ".";
-import { keyMarked, playMarkedButton, transpose } from "./UI";
+import { keyMarked, playMarkedButton } from "./UI";
 
 export function visibilityChange(): void {
   console.log("visibilityChange");
@@ -34,9 +34,8 @@ export function keydown(event: KeyboardEvent): void {
 
   if (document.activeElement?.tagName === "BODY") {
     // if (recording) { }
-    let tone_index: number = wasm.from_keymap(event.code);
+    const tone_index: number = wasm.from_keymap(event.code);
     if (tone_index === -1) return;
-    tone_index += parseInt(transpose.value);
     noteOn(tone_index);
     heldKeys[event.code] = true;
   }
@@ -45,9 +44,8 @@ export function keydown(event: KeyboardEvent): void {
 export function keyup(event: KeyboardEvent): void {
   console.log("keyup");
   // if (recording) { }
-  let tone_index: number = wasm.from_keymap(event.code);
+  const tone_index: number = wasm.from_keymap(event.code);
   if (tone_index === -1) return;
-  tone_index += parseInt(transpose.value);
   noteOff(tone_index);
   delete heldKeys[event.code];
 }

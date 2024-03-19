@@ -12,10 +12,11 @@ permissions:
 
 concurrency:
   group: "github-pages"
-  cancel-in-progress: true
+  # cancel-in-progress: true
 
 jobs:
   CI:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: checkout

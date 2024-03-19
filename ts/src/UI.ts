@@ -1,6 +1,13 @@
 import * as wasm from "wasm";
 import * as abcjs from "abcjs";
-import { markedKeys, noteOff, noteOn, playingTones, stopAllTones } from ".";
+import {
+  _noteOn,
+  markedKeys,
+  noteOff,
+  noteOn,
+  playingTones,
+  stopAllTones,
+} from ".";
 import { playMIDIFile, stopMIDIFile } from "./MIDI";
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
@@ -30,9 +37,7 @@ export const volumeSlider = document.getElementById(
   "volumeSlider",
 ) as HTMLInputElement;
 
-export const transpose = document.getElementById(
-  "transpose",
-) as HTMLInputElement;
+const transpose = document.getElementById("transpose") as HTMLInputElement;
 
 export const output = document.getElementById("output") as HTMLElement;
 
@@ -42,7 +47,13 @@ stepSize.onchange = handleTuningSelectChange;
 stopButton.onclick = stop;
 fileInput.onchange = fileInputChange;
 playMarkedButton.onclick = playMarkedKeys;
+transpose.onchange = transposeChange;
 // linkInput.onchange = linkInputChange;
+
+export let tranposeValue = 0;
+function transposeChange(): void {
+  tranposeValue = parseInt(transpose.value);
+}
 
 let midiFile: ArrayBuffer;
 let midiFilePromise: Promise<ArrayBuffer> | null = null;
@@ -94,7 +105,7 @@ function fileInputChange(event: Event): Promise<void> {
 
 function playMarkedKeys(): void {
   console.log("playMarkedKeys");
-  markedKeys.forEach((note) => noteOn(note));
+  markedKeys.forEach((note) => _noteOn(note));
   playingTonesChanged;
 }
 
@@ -210,7 +221,7 @@ export function keyMarked(tone_index: number) {
 }
 
 export function addEvents(key: Element) {
-  const note = parseInt(key.getAttribute("data-note")!);
+  const note = parseInt(key.getAttribute("data-note")!) - tranposeValue;
 
   const addEvent = (eventName: string, callback: () => void) => {
     key.addEventListener(eventName, callback);
