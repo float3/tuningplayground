@@ -4,14 +4,12 @@ import { stopAllTones } from ".";
 import { keyMarked, playMarkedButton } from "./UI";
 
 export function visibilityChange(): void {
-  console.log("visibilityChange");
   if (document.hidden) {
     stopAllTones();
   }
 }
 
 export function onload(): void {
-  console.log("onload");
   const hash = window.location.hash.substring(1);
   if (hash) {
     const notes = hash.split(",");
@@ -27,7 +25,6 @@ export function onload(): void {
 }
 
 export function keydown(event: KeyboardEvent): void {
-  console.log("keydown");
   if (!document.hasFocus()) return;
   if (event.repeat) return;
   if (event.code in heldKeys) return;
@@ -42,7 +39,6 @@ export function keydown(event: KeyboardEvent): void {
 }
 
 export function keyup(event: KeyboardEvent): void {
-  console.log("keyup");
   // if (recording) { }
   const tone_index: number = wasm.from_keymap(event.code);
   if (tone_index === -1) return;

@@ -95,7 +95,6 @@ function fileInputChange(event: Event): Promise<void> {
 }
 
 // export function linkInputChange(): void {
-//   console.log("linkInputChange");
 //   const link = linkInput.value;
 //   fetch(link)
 //     .then((response) => response.arrayBuffer())

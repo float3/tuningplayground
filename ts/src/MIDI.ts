@@ -11,7 +11,6 @@ export function requestMIDI(): void {
 }
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
-  console.log("onMIDISuccess");
   const input: WebMidi.MIDIInput = midiAccess.inputs.values().next()
     .value as WebMidi.MIDIInput;
 
@@ -23,12 +22,10 @@ function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
 }
 
 function onMIDIFailure(error: DOMException): void {
-  console.log("onMIDIFailure");
   console.error("MIDI Access failed:", error);
 }
 
 function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
-  console.log("onMIDIMessage");
   const [status, tone_index, velocity] = event.data;
   const is_note_on = (status & 240) === 144;
   const is_note_off = (status & 240) === 128;
@@ -44,13 +41,11 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
 let timeoutIds: NodeJS.Timeout[] = [];
 
 export function stopMIDIFile(): void {
-  console.log("stopMIDIFile");
   timeoutIds.forEach((id) => clearTimeout(id));
   timeoutIds = [];
 }
 
 export function playMIDIFile(midiFile: ArrayBuffer): void {
-  console.log("playMIDIFile");
 
   const midi = new Midi(midiFile);
 
