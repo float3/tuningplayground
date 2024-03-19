@@ -1,16 +1,55 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link href="/styles.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+
     <title>tuningplayground</title>
+
+    <meta name="title" content="tuningplayground" />
+    <meta
+      name="description"
+      content="somewhere to play with midi and tuning systems"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hilll.dev/tuningplayground" />
+    <meta property="og:site_name" content="" />
+    <meta property="og:title" content="tuningplayground" />
+    <meta
+      property="og:description"
+      content="somewhere to play with midi and tuning systems"
+    />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://hilll.dev/tuningplayground" />
+    <meta property="twitter:title" content="tuningplayground" />
+    <meta
+      property="twitter:description"
+      content="somewhere to play with midi and tuning systems"
+    />
+    <link rel="canonical" href="https://hilll.dev/tuningplayground" />
+    <script type="application/ld+json">
+      {
+        "url": "https://hilll.dev/tuningplayground",
+        "@type": "WebSite",
+        "headline": "tuningplayground",
+        "name": "tuningplayground",
+
+        "@context": "https://schema.org"
+      }
+    </script>
+    <link
+      rel="alternate"
+      type="application/atom+xml"
+      title="RSS"
+      href="https://hilll.dev/rss.xml"
+    />
+    <link rel="stylesheet" href="https://hilll.dev/styles.css" />
   </head>
   <style>
-    .invert-colors {
-      filter: invert(1);
-    }
-
     .container {
       display: flex;
     }
@@ -49,21 +88,27 @@
     .white-key:nth-child(1) ~ .black-key {
       margin-left: 17.5px;
     }
+
     .white-key:nth-child(3) ~ .black-key {
       margin-left: 40.5px;
     }
+
     .white-key:nth-child(5) ~ .black-key {
       margin-left: 88.5px;
     }
+
     .white-key:nth-child(6) ~ .black-key {
       margin-left: 92.5px;
     }
+
     .white-key:nth-child(8) ~ .black-key {
       margin-left: 117.5px;
     }
+
     .white-key:nth-child(10) ~ .black-key {
       margin-left: 141.5px;
     }
+
     .white-key:nth-child(12) ~ .black-key {
       margin-left: 180.5px;
     }
@@ -88,7 +133,8 @@
       display: none;
     }
   </style>
-  <body>
+
+  <body theme="auto">
     <article>
       <header>
         <h1>tuningplayground</h1>
@@ -157,7 +203,7 @@
         />
       </p>
       <p>Transpose: <input id="transpose" /></p>
-      <div id="stepSizeContainer" style="display: block">
+      <div id="stepSizeContainer" style="display: none">
         <label for="stepSize">Step Size (co-primes with 12):</label>
         <select id="stepSize">
           <option value="1">1</option>
@@ -170,12 +216,8 @@
         <label for="octaveSize">Octave Size:</label>
         <input id="octaveSize" value="12" />
       </div>
-      <div
-        id="output"
-        class="invert-colors"
-        style="background-color: white; color: black"
-      ></div>
-      <div class="keyboard">
+      <div id="output" style="background-color: white; color: black"></div>
+      <div class="keyboard dark-mode-invert">
         <!-- <div class="octave">
           <div class="white-key" data-note="0"></div>
           <div class="black-key" data-note="1"></div>

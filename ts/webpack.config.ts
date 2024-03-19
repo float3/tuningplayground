@@ -2,8 +2,6 @@ import CopyPlugin from "copy-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
 import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin";
-import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
 
 module.exports = {
@@ -25,10 +23,6 @@ module.exports = {
         test: /\.midi?$/,
         type: "asset/resource",
       },
-      {
-        test: /.s?css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
-      },
     ],
   },
   entry: "./dist/bootstrap.js",
@@ -41,7 +35,6 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         "./src/index.html",
-        "./src/styles.css",
         "./src/chords.json",
         "./src/a1.wav",
         "./src/sample.mid",
@@ -71,7 +64,6 @@ module.exports = {
       }),
       new JsonMinimizerPlugin(),
       new HTMLMinimizerPlugin(),
-      new CssMinimizerPlugin(),
     ],
   },
 };
