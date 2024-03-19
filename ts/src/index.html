@@ -69,15 +69,23 @@
     }
 
     .white-key.key-active {
-      background: #a0a0a0; /* Lighter grey for active white keys */
+      background: #a0a0a0;
     }
 
     .black-key.key-active {
-      background: #404040; /* Darker grey for active black keys */
+      background: #404040;
     }
 
     .key-marked {
       background: #d77914;
+    }
+
+    .key-active.key-marked {
+      background: #92520d;
+    }
+
+    #playMarked {
+      display: none;
     }
   </style>
   <body>
@@ -97,12 +105,13 @@
           >this one</a
         >
       </p>
-
-      <input type="file" id="fileInput" accept=".midi,.mid" />
-      <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
-      <button id="playButton">Play</button>
-      <button id="stopButton">Stop</button>
-
+      <div style="display: flex">
+        <input type="file" id="fileInput" accept=".midi,.mid" />
+        <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
+        <button id="playButton">Play</button>
+        <button id="stopButton">Stop</button>
+        <button id="playMarked">Play Marked Notes</button>
+      </div>
       <p>
         <label for="tuningSelect">Select Tuning System:</label>
         <select id="tuningSelect" name="tuningSelect">
@@ -147,7 +156,7 @@
           value="0.25"
         />
       </p>
-      <p>Transpose: <input id="transpose" value="24" /></p>
+      <p>Transpose keyboard: <input id="transpose" value="24" /></p>
       <div id="stepSizeContainer" style="display: block">
         <label for="stepSize">Step Size (co-primes with 12):</label>
         <select id="stepSize">
@@ -164,10 +173,33 @@
       <div
         id="output"
         class="invert-colors"
-        style="background-color: white; width: 100; height: 200"
+        style="background-color: white; color: black"
       ></div>
       <div class="keyboard">
+        <!-- <div class="octave">
+          <div class="white-key" data-note="0"></div>
+          <div class="black-key" data-note="1"></div>
+          <div class="white-key" data-note="2"></div>
+          <div class="black-key" data-note="3"></div>
+          <div class="white-key" data-note="4"></div>
+          <div class="white-key" data-note="5"></div>
+          <div class="black-key" data-note="6"></div>
+          <div class="white-key" data-note="7"></div>
+          <div class="black-key" data-note="8"></div>
+          <div class="white-key" data-note="9"></div>
+          <div class="black-key" data-note="10"></div>
+          <div class="white-key" data-note="11"></div>
+        </div> -->
         <div class="octave">
+          <!-- <div class="white-key" data-note="12"></div>
+          <div class="black-key" data-note="13"></div>
+          <div class="white-key" data-note="14"></div>
+          <div class="black-key" data-note="15"></div>
+          <div class="white-key" data-note="16"></div>
+          <div class="white-key" data-note="17"></div>
+          <div class="black-key" data-note="18"></div>
+          <div class="white-key" data-note="19"></div>
+          <div class="black-key" data-note="20"></div> -->
           <div class="white-key" data-note="21"></div>
           <div class="black-key" data-note="22"></div>
           <div class="white-key" data-note="23"></div>

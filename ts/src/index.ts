@@ -39,6 +39,8 @@ wasm
   .catch(console.error);
 
 export const playingTones: Record<number, Tone> = [];
+export const heldKeys: Record<string, boolean> = {};
+export const markedKeys: number[] = [];
 // let recording: boolean;
 
 export function stopAllTones(): void {
@@ -52,11 +54,14 @@ export function stopAllTones(): void {
   playingTonesChanged();
 }
 
-export const heldKeys: Record<string, boolean> = {};
-
 export function noteOn(tone_index: number, velocity?: number): void {
   console.log("noteOn");
   console.log("velocity: ", velocity);
+  _noteOn(tone_index);
+  playingTonesChanged();
+}
+
+function _noteOn(tone_index: number) {
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
   const volume = Math.pow(parseFloat(volumeSlider.value), 2);
   switch (soundMethod.value) {
@@ -67,7 +72,6 @@ export function noteOn(tone_index: number, velocity?: number): void {
       playFrequencySample(tone, volume).catch(console.error);
       break;
   }
-  playingTonesChanged();
   keyActive(tone_index, true);
 }
 
@@ -133,6 +137,9 @@ async function playFrequencySample(tone: Tone, volume: number): Promise<void> {
   tone.node = source;
   playingTones[tone.index] = tone;
   playingTonesChanged();
+  source.onended = () => {
+    noteOff(tone.index);
+  };
 }
 
 async function playFrequencyNative(tone: Tone, volume: number): Promise<void> {

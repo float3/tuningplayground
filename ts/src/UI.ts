@@ -1,8 +1,7 @@
 import * as wasm from "wasm";
 import * as abcjs from "abcjs";
-import { noteOff, noteOn, playingTones, stopAllTones } from ".";
+import { markedKeys, noteOff, noteOn, playingTones, stopAllTones } from ".";
 import { playMIDIFile, stopMIDIFile } from "./MIDI";
-import { keyboardOffset } from "./config";
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;
@@ -13,11 +12,13 @@ export const soundMethod = document.getElementById(
 // const linkInput = document.getElementById("linkInput") as HTMLInputElement;
 
 const logContainer = document.getElementById("logContainer") as HTMLDivElement;
-const output = document.getElementById("output") as HTMLDivElement;
 const stepSizeParent = stepSize.parentElement as HTMLDivElement;
 
 export const playButton = document.getElementById(
   "playButton",
+) as HTMLButtonElement;
+export const playMarkedButton = document.getElementById(
+  "playMarked",
 ) as HTMLButtonElement;
 const stopButton = document.getElementById("stopButton") as HTMLButtonElement;
 
@@ -33,19 +34,14 @@ export const transpose = document.getElementById(
   "transpose",
 ) as HTMLInputElement;
 
-const width = 150;
-const height = 150;
-
-output.style.width = width + "px";
-output.style.height = height + "px";
-output.style.backgroundColor = "white";
-output.style.color = "black";
+export const output = document.getElementById("output") as HTMLElement;
 
 octaveSize.onchange = handleTuningSelectChange;
 tuningSelect.onchange = handleTuningSelectChange;
 stepSize.onchange = handleTuningSelectChange;
 stopButton.onclick = stop;
 fileInput.onchange = fileInputChange;
+playMarkedButton.onclick = playMarkedKeys;
 // linkInput.onchange = linkInputChange;
 
 let midiFile: ArrayBuffer;
@@ -96,6 +92,12 @@ function fileInputChange(event: Event): Promise<void> {
 //     });
 // }
 
+function playMarkedKeys(): void {
+  console.log("playMarkedKeys");
+  markedKeys.forEach((note) => noteOn(note));
+  playingTonesChanged;
+}
+
 function stop(): void {
   console.log("stop");
   stopMIDIFile();
@@ -139,6 +141,11 @@ export function handleTuningSelectChange(): void {
   stopAllTones();
 }
 
+function adjustOutputSize(): void {
+  output.style.width = "300px";
+  output.style.height = "150px";
+}
+
 export function playingTonesChanged(): void {
   console.log("playingTonesChanged");
 
@@ -146,6 +153,7 @@ export function playingTonesChanged(): void {
 
   if (notes.length === 0) {
     abcjs.renderAbc("output", 'X: 1\nL: 1/1\n|""[u]|');
+    adjustOutputSize();
     return;
   }
 
@@ -158,6 +166,7 @@ export function playingTonesChanged(): void {
     const formatted_notes = wasm.convert_notes(tones.split(" "));
     chordName = wasm.get_chord_name();
     abcjs.renderAbc("output", formatted_notes);
+    adjustOutputSize();
   }
 
   logToDiv(`${tones} | ${chordName}`, notes);
@@ -185,9 +194,7 @@ export function logToDiv(message: string, notes: number[]): void {
 }
 
 export function keyActive(tone_index: number, active: boolean) {
-  const keyElement = document.querySelector(
-    `div[data-note="${tone_index - keyboardOffset}"]`,
-  );
+  const keyElement = document.querySelector(`div[data-note="${tone_index}"]`);
   if (keyElement) {
     if (active) keyElement.classList.add("key-active");
     else keyElement.classList.remove("key-active");
@@ -195,16 +202,15 @@ export function keyActive(tone_index: number, active: boolean) {
 }
 
 export function keyMarked(tone_index: number) {
-  const keyElement = document.querySelector(
-    `div[data-note="${tone_index - keyboardOffset}"]`,
-  );
+  markedKeys.push(tone_index);
+  const keyElement = document.querySelector(`div[data-note="${tone_index}"]`);
   if (keyElement) {
     keyElement.classList.add("key-marked");
   }
 }
 
 export function addEvents(key: Element) {
-  const note = parseInt(key.getAttribute("data-note")!) + keyboardOffset;
+  const note = parseInt(key.getAttribute("data-note")!);
 
   const addEvent = (eventName: string, callback: () => void) => {
     key.addEventListener(eventName, callback);
