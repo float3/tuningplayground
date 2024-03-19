@@ -195,7 +195,7 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
 
     let notes = notes.join(" ");
 
-    format!("L: 1/1 \n\"{}\"[{}]", chord, notes)
+    format!("X: 1\nL: 1/1\n|\"{}\"[{}]|", chord, notes)
 }
 
 #[cfg(feature = "wasm")]

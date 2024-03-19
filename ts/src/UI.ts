@@ -144,7 +144,10 @@ export function playingTonesChanged(): void {
 
   const notes = Object.keys(playingTones).map(Number);
 
-  if (notes.length === 0) return;
+  if (notes.length === 0) {
+    abcjs.renderAbc("output", 'X: 1\nL: 1/1\n|""[u]|');
+    return;
+  }
 
   let chordName;
   const tones = Object.values(playingTones)
@@ -154,9 +157,6 @@ export function playingTonesChanged(): void {
   if (octaveSize.value === "12") {
     const formatted_notes = wasm.convert_notes(tones.split(" "));
     chordName = wasm.get_chord_name();
-
-    console.log(formatted_notes);
-
     abcjs.renderAbc("output", formatted_notes);
   }
 
@@ -170,7 +170,7 @@ export function logToDiv(message: string, notes: number[]): void {
   const shareButton = document.createElement("button");
   shareButton.textContent = "Share";
   shareButton.onclick = function () {
-    const url = `${window.location.origin}#${notes.join(",")}`;
+    const url = `${window.location.origin + window.location.pathname}#${notes.join(",")} `;
     navigator.clipboard.writeText(url).catch(console.error);
   };
 

@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true
@@ -17,7 +18,10 @@
     "sourceType": "module",
     "project": "./tsconfig.eslint.json"
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": [
+    "@typescript-eslint"
+    //, "html"
+  ],
   "rules": {},
   "ignorePatterns": ["webpack.config.ts"]
 }

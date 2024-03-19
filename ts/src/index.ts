@@ -33,6 +33,7 @@ wasm
       addEvents(key);
     });
     onload();
+    playingTonesChanged();
     // linkInputChange();
   })
   .catch(console.error);
