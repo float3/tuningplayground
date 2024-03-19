@@ -1,4 +1,3 @@
-console.log("imports");
 import * as wasm from "wasm";
 import { Tone, createTone } from "./Tone";
 import { requestMIDI } from "./MIDI";
@@ -15,8 +14,6 @@ import {
   tranposeValue,
   // linkInputChange,
 } from "./UI";
-
-console.log("static");
 
 document.addEventListener("DOMContentLoaded", DOMContentLoaded);
 document.addEventListener("visibilitychange", visibilityChange);
@@ -46,7 +43,6 @@ export const markedKeys: number[] = [];
 // let recording: boolean;
 
 export function stopAllTones(): void {
-  console.log("stopAllTones");
   Object.keys(playingTones).forEach((key) => {
     const tone_index: number = parseInt(key);
     playingTones[tone_index].node.stop();
@@ -61,7 +57,6 @@ export function noteOn(
   velocity?: number,
   cancel?: boolean,
 ): void {
-  console.log("noteOn");
   console.log("velocity: ", velocity);
 
   _noteOn(tone_index, velocity, cancel);
@@ -88,7 +83,6 @@ export function _noteOn(
 }
 
 export function noteOff(tone_index: number): void {
-  console.log("noteOff");
   tone_index += tranposeValue;
   if (!(tone_index in playingTones)) return;
 
