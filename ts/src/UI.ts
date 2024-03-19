@@ -122,9 +122,7 @@ function playMarkedKeys(): void {
 }
 
 function sharedMarkedKeys(): void {
-  const hash = markedKeys.join(",");
-  const url = `${window.location.origin + window.location.pathname}#${hash}`;
-  navigator.clipboard.writeText(url).catch(console.error);
+  createAndCopyUrl(markedKeys)();
 }
 
 function stop(): void {
@@ -195,16 +193,26 @@ export function playingTonesChanged(): void {
   logToDiv(`${tones} | ${chordName}`, notes);
 }
 
+function createAndCopyUrl(keys: number[]): () => void {
+  const hash = generateHash(keys);
+  const url = `${window.location.origin + window.location.pathname}#${hash}`;
+  return function () {
+    navigator.clipboard.writeText(url).catch(console.error);
+  };
+}
+
+function generateHash(keys: number[]) {
+  const hash = keys.join(",");
+  return hash;
+}
+
 export function logToDiv(message: string, notes: number[]): void {
   const p = document.createElement("p");
   p.textContent = message;
 
   const shareButton = document.createElement("button");
   shareButton.textContent = "Share";
-  shareButton.onclick = function () {
-    const url = `${window.location.origin + window.location.pathname}#${notes.join(",")} `;
-    navigator.clipboard.writeText(url).catch(console.error);
-  };
+  shareButton.onclick = createAndCopyUrl(notes);
 
   const div = document.createElement("div");
   div.style.display = "flex";
@@ -255,6 +263,8 @@ export function markOrUnmarkKey(tone_index: number) {
   } else {
     markKey(tone_index);
   }
+  markedKeys.sort((a, b) => a - b);
+  window.location.hash = generateHash(markedKeys);
 }
 
 export function addEvents(key: Element) {
@@ -267,7 +277,7 @@ export function addEvents(key: Element) {
   key.addEventListener("mousedown", (event) => {
     const mouseEvent = event as MouseEvent;
     if (mouseEvent.ctrlKey) {
-      markKey(note);
+      markOrUnmarkKey(note);
     } else {
       noteOn(note);
     }
