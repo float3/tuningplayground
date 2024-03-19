@@ -20,6 +20,7 @@ static OCTAVE_SIZE: Mutex<usize> = Mutex::new(12);
 static STEP_SIZE: Mutex<usize> = Mutex::new(7);
 static TUNING_SYSTEM: Mutex<TuningSystem> =
     Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 });
+static CHORD_NAME: Mutex<String> = Mutex::new(String::new());
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen(start)]
@@ -190,9 +191,19 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
         None => "".to_string(),
     };
 
+    CHORD_NAME.lock().expect("couldn't lock").clone_from(&chord);
+
     let notes = notes.join(" ");
 
-    format!("L: 1/1 \n\"{}\"[{}]", chord, notes)
+    format!("X: 1\nL: 1/1\n|\"{}\"[{}]|", chord, notes)
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn get_chord_name() -> String {
+    #[cfg(debug_assertions)]
+    log("get_chord_name");
+    CHORD_NAME.lock().expect("couldn't lock").clone()
 }
 
 #[cfg(feature = "wasm")]

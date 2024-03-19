@@ -56,19 +56,21 @@ export function playMIDIFile(midiFile: ArrayBuffer): void {
 
   // const tempo = midi.header.tempos[0].bpm;
 
-  const track = midi.tracks[0];
+  midi.tracks.forEach((track) => {
+    const startTime: number = 0;
+    // track.notes.forEach((note) => {
+    //   startTime = note.time * midiMultiplier;
+    //   return;
+    // });
+    track.notes.forEach((note) => {
+      const noteOnTime = note.time * midiMultiplier - startTime;
+      const noteOffTime =
+        (note.time + note.duration) * midiMultiplier - startTime;
+      const velocity = note.velocity;
+      const midiNote = note.midi;
 
-  const startTime = track.notes[0].time * midiMultiplier;
-
-  track.notes.forEach((note) => {
-    console.log(note.time);
-    const noteOnTime = note.time * midiMultiplier - startTime;
-    const noteOffTime =
-      (note.time + note.duration) * midiMultiplier - startTime;
-    const velocity = note.velocity;
-    const midiNote = note.midi;
-
-    timeoutIds.push(setTimeout(() => noteOn(midiNote, velocity), noteOnTime));
-    timeoutIds.push(setTimeout(() => noteOff(midiNote), noteOffTime));
+      timeoutIds.push(setTimeout(() => noteOn(midiNote, velocity), noteOnTime));
+      timeoutIds.push(setTimeout(() => noteOff(midiNote), noteOffTime));
+    });
   });
 }

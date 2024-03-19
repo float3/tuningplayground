@@ -21,6 +21,7 @@ python -m test
 python -m generate_chords
 
 cd ../ts
+curl https://hilll.dev/styles.css -o ./src/styles.css
 npm update
 npm audit fix
 npx prettier . --write

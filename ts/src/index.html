@@ -33,6 +33,7 @@
       display: inline-block;
       position: relative;
       z-index: 1;
+      outline: 2px solid #000;
     }
 
     .black-key {
@@ -42,6 +43,7 @@
       position: absolute;
       margin-left: -7.5px;
       z-index: 2;
+      outline: 2px solid #000;
     }
 
     .white-key:nth-child(1) ~ .black-key {
@@ -66,9 +68,24 @@
       margin-left: 180.5px;
     }
 
-    .key-active {
-      background: #646464;
-      transform: translateY(-2px);
+    .white-key.key-active {
+      background: #a0a0a0;
+    }
+
+    .black-key.key-active {
+      background: #404040;
+    }
+
+    .key-marked {
+      background: #d77914;
+    }
+
+    .key-active.key-marked {
+      background: #92520d;
+    }
+
+    #playMarked {
+      display: none;
     }
   </style>
   <body>
@@ -88,12 +105,13 @@
           >this one</a
         >
       </p>
-
-      <input type="file" id="fileInput" accept=".midi,.mid" />
-      <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
-      <button id="playButton">Play</button>
-      <button id="stopButton">Stop</button>
-
+      <div style="display: flex">
+        <input type="file" id="fileInput" accept=".midi,.mid" />
+        <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
+        <button id="playButton">Play</button>
+        <button id="stopButton">Stop</button>
+        <button id="playMarked">Play Marked Notes</button>
+      </div>
       <p>
         <label for="tuningSelect">Select Tuning System:</label>
         <select id="tuningSelect" name="tuningSelect">
@@ -118,13 +136,14 @@
         </select>
       </p>
 
-      <!-- <p>
+      <p>
         <label for="soundMethod">Select Sound Method:</label>
         <select id="soundMethod" name="soundMethod">
+          <option value="sample">Sample</option>
           <option value="native">Native</option>
-          <option value="tone.js">tone.js</option>
+          <!-- <option value="tone.js">tone.js</option> -->
         </select>
-      </p> -->
+      </p>
 
       <p>
         Volume:
@@ -134,10 +153,10 @@
           min="0"
           max="1"
           step="0.01"
-          value="0.5"
+          value="0.25"
         />
       </p>
-      <p>Transpose: <input id="transpose" value="24" /></p>
+      <p>Transpose keyboard: <input id="transpose" value="24" /></p>
       <div id="stepSizeContainer" style="display: block">
         <label for="stepSize">Step Size (co-primes with 12):</label>
         <select id="stepSize">
@@ -151,120 +170,141 @@
         <label for="octaveSize">Octave Size:</label>
         <input id="octaveSize" value="12" />
       </div>
-      <div class="container">
-        <div class="keyboard">
-          <div class="octave">
-            <div class="white-key" data-note="21"></div>
-            <div class="black-key" data-note="22"></div>
-            <div class="white-key" data-note="23"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="24"></div>
-            <div class="black-key" data-note="25"></div>
-            <div class="white-key" data-note="26"></div>
-            <div class="black-key" data-note="27"></div>
-            <div class="white-key" data-note="28"></div>
-            <div class="white-key" data-note="29"></div>
-            <div class="black-key" data-note="30"></div>
-            <div class="white-key" data-note="31"></div>
-            <div class="black-key" data-note="32"></div>
-            <div class="white-key" data-note="33"></div>
-            <div class="black-key" data-note="34"></div>
-            <div class="white-key" data-note="35"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="36"></div>
-            <div class="black-key" data-note="37"></div>
-            <div class="white-key" data-note="38"></div>
-            <div class="black-key" data-note="39"></div>
-            <div class="white-key" data-note="40"></div>
-            <div class="white-key" data-note="41"></div>
-            <div class="black-key" data-note="42"></div>
-            <div class="white-key" data-note="43"></div>
-            <div class="black-key" data-note="44"></div>
-            <div class="white-key" data-note="45"></div>
-            <div class="black-key" data-note="46"></div>
-            <div class="white-key" data-note="47"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="48"></div>
-            <div class="black-key" data-note="49"></div>
-            <div class="white-key" data-note="50"></div>
-            <div class="black-key" data-note="51"></div>
-            <div class="white-key" data-note="52"></div>
-            <div class="white-key" data-note="53"></div>
-            <div class="black-key" data-note="54"></div>
-            <div class="white-key" data-note="55"></div>
-            <div class="black-key" data-note="56"></div>
-            <div class="white-key" data-note="57"></div>
-            <div class="black-key" data-note="58"></div>
-            <div class="white-key" data-note="59"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="60"></div>
-            <div class="black-key" data-note="61"></div>
-            <div class="white-key" data-note="62"></div>
-            <div class="black-key" data-note="63"></div>
-            <div class="white-key" data-note="64"></div>
-            <div class="white-key" data-note="65"></div>
-            <div class="black-key" data-note="66"></div>
-            <div class="white-key" data-note="67"></div>
-            <div class="black-key" data-note="68"></div>
-            <div class="white-key" data-note="69"></div>
-            <div class="black-key" data-note="70"></div>
-            <div class="white-key" data-note="71"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="72"></div>
-            <div class="black-key" data-note="73"></div>
-            <div class="white-key" data-note="74"></div>
-            <div class="black-key" data-note="75"></div>
-            <div class="white-key" data-note="76"></div>
-            <div class="white-key" data-note="77"></div>
-            <div class="black-key" data-note="78"></div>
-            <div class="white-key" data-note="79"></div>
-            <div class="black-key" data-note="80"></div>
-            <div class="white-key" data-note="81"></div>
-            <div class="black-key" data-note="82"></div>
-            <div class="white-key" data-note="83"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="84"></div>
-            <div class="black-key" data-note="85"></div>
-            <div class="white-key" data-note="86"></div>
-            <div class="black-key" data-note="87"></div>
-            <div class="white-key" data-note="88"></div>
-            <div class="white-key" data-note="89"></div>
-            <div class="black-key" data-note="90"></div>
-            <div class="white-key" data-note="91"></div>
-            <div class="black-key" data-note="92"></div>
-            <div class="white-key" data-note="93"></div>
-            <div class="black-key" data-note="94"></div>
-            <div class="white-key" data-note="95"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="96"></div>
-            <div class="black-key" data-note="97"></div>
-            <div class="white-key" data-note="98"></div>
-            <div class="black-key" data-note="99"></div>
-            <div class="white-key" data-note="100"></div>
-            <div class="white-key" data-note="101"></div>
-            <div class="black-key" data-note="102"></div>
-            <div class="white-key" data-note="103"></div>
-            <div class="black-key" data-note="104"></div>
-            <div class="white-key" data-note="105"></div>
-            <div class="black-key" data-note="106"></div>
-            <div class="white-key" data-note="107"></div>
-          </div>
-          <div class="octave">
-            <div class="white-key" data-note="108"></div>
-          </div>
+      <div
+        id="output"
+        class="invert-colors"
+        style="background-color: white; color: black"
+      ></div>
+      <div class="keyboard">
+        <!-- <div class="octave">
+          <div class="white-key" data-note="0"></div>
+          <div class="black-key" data-note="1"></div>
+          <div class="white-key" data-note="2"></div>
+          <div class="black-key" data-note="3"></div>
+          <div class="white-key" data-note="4"></div>
+          <div class="white-key" data-note="5"></div>
+          <div class="black-key" data-note="6"></div>
+          <div class="white-key" data-note="7"></div>
+          <div class="black-key" data-note="8"></div>
+          <div class="white-key" data-note="9"></div>
+          <div class="black-key" data-note="10"></div>
+          <div class="white-key" data-note="11"></div>
+        </div> -->
+        <div class="octave">
+          <!-- <div class="white-key" data-note="12"></div>
+          <div class="black-key" data-note="13"></div>
+          <div class="white-key" data-note="14"></div>
+          <div class="black-key" data-note="15"></div>
+          <div class="white-key" data-note="16"></div>
+          <div class="white-key" data-note="17"></div>
+          <div class="black-key" data-note="18"></div>
+          <div class="white-key" data-note="19"></div>
+          <div class="black-key" data-note="20"></div> -->
+          <div class="white-key" data-note="21"></div>
+          <div class="black-key" data-note="22"></div>
+          <div class="white-key" data-note="23"></div>
         </div>
-        <div
-          id="output"
-          class="invert-colors"
-          style="background-color: white; width: 100; height: 200"
-        ></div>
+        <div class="octave">
+          <div class="white-key" data-note="24"></div>
+          <div class="black-key" data-note="25"></div>
+          <div class="white-key" data-note="26"></div>
+          <div class="black-key" data-note="27"></div>
+          <div class="white-key" data-note="28"></div>
+          <div class="white-key" data-note="29"></div>
+          <div class="black-key" data-note="30"></div>
+          <div class="white-key" data-note="31"></div>
+          <div class="black-key" data-note="32"></div>
+          <div class="white-key" data-note="33"></div>
+          <div class="black-key" data-note="34"></div>
+          <div class="white-key" data-note="35"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="36"></div>
+          <div class="black-key" data-note="37"></div>
+          <div class="white-key" data-note="38"></div>
+          <div class="black-key" data-note="39"></div>
+          <div class="white-key" data-note="40"></div>
+          <div class="white-key" data-note="41"></div>
+          <div class="black-key" data-note="42"></div>
+          <div class="white-key" data-note="43"></div>
+          <div class="black-key" data-note="44"></div>
+          <div class="white-key" data-note="45"></div>
+          <div class="black-key" data-note="46"></div>
+          <div class="white-key" data-note="47"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="48"></div>
+          <div class="black-key" data-note="49"></div>
+          <div class="white-key" data-note="50"></div>
+          <div class="black-key" data-note="51"></div>
+          <div class="white-key" data-note="52"></div>
+          <div class="white-key" data-note="53"></div>
+          <div class="black-key" data-note="54"></div>
+          <div class="white-key" data-note="55"></div>
+          <div class="black-key" data-note="56"></div>
+          <div class="white-key" data-note="57"></div>
+          <div class="black-key" data-note="58"></div>
+          <div class="white-key" data-note="59"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="60"></div>
+          <div class="black-key" data-note="61"></div>
+          <div class="white-key" data-note="62"></div>
+          <div class="black-key" data-note="63"></div>
+          <div class="white-key" data-note="64"></div>
+          <div class="white-key" data-note="65"></div>
+          <div class="black-key" data-note="66"></div>
+          <div class="white-key" data-note="67"></div>
+          <div class="black-key" data-note="68"></div>
+          <div class="white-key" data-note="69"></div>
+          <div class="black-key" data-note="70"></div>
+          <div class="white-key" data-note="71"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="72"></div>
+          <div class="black-key" data-note="73"></div>
+          <div class="white-key" data-note="74"></div>
+          <div class="black-key" data-note="75"></div>
+          <div class="white-key" data-note="76"></div>
+          <div class="white-key" data-note="77"></div>
+          <div class="black-key" data-note="78"></div>
+          <div class="white-key" data-note="79"></div>
+          <div class="black-key" data-note="80"></div>
+          <div class="white-key" data-note="81"></div>
+          <div class="black-key" data-note="82"></div>
+          <div class="white-key" data-note="83"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="84"></div>
+          <div class="black-key" data-note="85"></div>
+          <div class="white-key" data-note="86"></div>
+          <div class="black-key" data-note="87"></div>
+          <div class="white-key" data-note="88"></div>
+          <div class="white-key" data-note="89"></div>
+          <div class="black-key" data-note="90"></div>
+          <div class="white-key" data-note="91"></div>
+          <div class="black-key" data-note="92"></div>
+          <div class="white-key" data-note="93"></div>
+          <div class="black-key" data-note="94"></div>
+          <div class="white-key" data-note="95"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="96"></div>
+          <div class="black-key" data-note="97"></div>
+          <div class="white-key" data-note="98"></div>
+          <div class="black-key" data-note="99"></div>
+          <div class="white-key" data-note="100"></div>
+          <div class="white-key" data-note="101"></div>
+          <div class="black-key" data-note="102"></div>
+          <div class="white-key" data-note="103"></div>
+          <div class="black-key" data-note="104"></div>
+          <div class="white-key" data-note="105"></div>
+          <div class="black-key" data-note="106"></div>
+          <div class="white-key" data-note="107"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="108"></div>
+        </div>
       </div>
       <div id="logContainer"></div>
     </article>

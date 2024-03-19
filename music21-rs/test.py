@@ -44,6 +44,11 @@ if __name__ == "__main__":
         # "C F A",
     ]
 
+    list = [0]
+
+    c = chord.Chord(list)
+    print(c.pitchedCommonName)
+
     for definition in chord_definitions:
         c = chord.Chord(definition)
         print(f"{definition}: {c.pitchedCommonName}")
