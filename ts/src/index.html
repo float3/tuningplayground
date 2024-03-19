@@ -1,201 +1,224 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>tuningplayground</title>
 
-  <title>tuningplayground</title>
+    <meta name="title" content="tuningplayground" />
+    <meta
+      name="description"
+      content="somewhere to play with midi and tuning systems"
+    />
 
-  <meta name="title" content="tuningplayground">
-  <meta name="description" content="somewhere to play with midi and tuning systems">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hilll.dev/tuningplayground" />
+    <meta property="og:site_name" content="" />
+    <meta property="og:title" content="tuningplayground" />
+    <meta
+      property="og:description"
+      content="somewhere to play with midi and tuning systems"
+    />
 
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://hilll.dev/tuningplayground">
-  <meta property="og:site_name" content="">
-  <meta property="og:title" content="tuningplayground">
-  <meta property="og:description" content="somewhere to play with midi and tuning systems">
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://hilll.dev/tuningplayground" />
+    <meta property="twitter:title" content="tuningplayground" />
+    <meta
+      property="twitter:description"
+      content="somewhere to play with midi and tuning systems"
+    />
+    <link rel="canonical" href="https://hilll.dev/tuningplayground" />
+    <script type="application/ld+json">
+      {
+        "url": "https://hilll.dev/tuningplayground",
+        "@type": "WebSite",
+        "headline": "tuningplayground",
+        "name": "tuningplayground",
 
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://hilll.dev/tuningplayground">
-  <meta property="twitter:title" content="tuningplayground">
-  <meta property="twitter:description" content="somewhere to play with midi and tuning systems">
-  <link rel="canonical" href="https://hilll.dev/tuningplayground">
-  <script type="application/ld+json">
-        {
-            
-            "url":"https://hilll.dev/tuningplayground",
-            "@type":"WebSite",
-            "headline":"tuningplayground",
-            "name":"tuningplayground",
-            
-            "@context":"https://schema.org"
-        }
+        "@context": "https://schema.org"
+      }
     </script>
-  <link rel="alternate" type="application/atom+xml" title="RSS" href="https://hilll.dev/rss.xml">
-  <link rel="stylesheet" href="https://hilll.dev/styles.css" />
-</head>
-<style>
-  .container {
-    display: flex;
-  }
+    <link
+      rel="alternate"
+      type="application/atom+xml"
+      title="RSS"
+      href="https://hilll.dev/rss.xml"
+    />
+    <link rel="stylesheet" href="https://hilll.dev/styles.css" />
+  </head>
+  <style>
+    .container {
+      display: flex;
+    }
 
-  .keyboard {
-    display: flex;
-    flex-direction: row;
-  }
+    .keyboard {
+      display: flex;
+      flex-direction: row;
+    }
 
-  .octave {
-    display: flex;
-    position: relative;
-  }
+    .octave {
+      display: flex;
+      position: relative;
+    }
 
-  .white-key {
-    background-color: #fff;
-    border: 1px solid #000;
-    height: 120px;
-    width: 23px;
-    display: inline-block;
-    position: relative;
-    z-index: 1;
-    outline: 2px solid #000;
-  }
+    .white-key {
+      background-color: #fff;
+      border: 1px solid #000;
+      height: 120px;
+      width: 23px;
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+      outline: 2px solid #000;
+    }
 
-  .black-key {
-    background-color: #000;
-    height: 80px;
-    width: 15px;
-    position: absolute;
-    margin-left: -7.5px;
-    z-index: 2;
-    outline: 2px solid #000;
-  }
+    .black-key {
+      background-color: #000;
+      height: 80px;
+      width: 15px;
+      position: absolute;
+      margin-left: -7.5px;
+      z-index: 2;
+      outline: 2px solid #000;
+    }
 
-  .white-key:nth-child(1)~.black-key {
-    margin-left: 17.5px;
-  }
+    .white-key:nth-child(1) ~ .black-key {
+      margin-left: 17.5px;
+    }
 
-  .white-key:nth-child(3)~.black-key {
-    margin-left: 40.5px;
-  }
+    .white-key:nth-child(3) ~ .black-key {
+      margin-left: 40.5px;
+    }
 
-  .white-key:nth-child(5)~.black-key {
-    margin-left: 88.5px;
-  }
+    .white-key:nth-child(5) ~ .black-key {
+      margin-left: 88.5px;
+    }
 
-  .white-key:nth-child(6)~.black-key {
-    margin-left: 92.5px;
-  }
+    .white-key:nth-child(6) ~ .black-key {
+      margin-left: 92.5px;
+    }
 
-  .white-key:nth-child(8)~.black-key {
-    margin-left: 117.5px;
-  }
+    .white-key:nth-child(8) ~ .black-key {
+      margin-left: 117.5px;
+    }
 
-  .white-key:nth-child(10)~.black-key {
-    margin-left: 141.5px;
-  }
+    .white-key:nth-child(10) ~ .black-key {
+      margin-left: 141.5px;
+    }
 
-  .white-key:nth-child(12)~.black-key {
-    margin-left: 180.5px;
-  }
+    .white-key:nth-child(12) ~ .black-key {
+      margin-left: 180.5px;
+    }
 
-  .white-key.key-active {
-    background: #a0a0a0;
-  }
+    .white-key.key-active {
+      background: #a0a0a0;
+    }
 
-  .black-key.key-active {
-    background: #404040;
-  }
+    .black-key.key-active {
+      background: #404040;
+    }
 
-  .key-marked {
-    background: #d77914;
-  }
+    .key-marked {
+      background: #d77914;
+    }
 
-  .key-active.key-marked {
-    background: #92520d;
-  }
+    .key-active.key-marked {
+      background: #92520d;
+    }
 
-  #playMarked {
-    display: none;
-  }
-</style>
+    #playMarked {
+      display: none;
+    }
+  </style>
 
-<body theme="auto">
-  <article>
-    <header>
-      <h1>tuningplayground</h1>
-    </header>
-    <p>
-      <noscript> hey this page needs javascript</noscript>
-    </p>
-    <p>
-      use your computer keyboard, a midi device, or provide a midi file for
-      example
-      <a href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" download="mozart_dies_irea.mid">this one</a>
-    </p>
-    <div style="display: flex">
-      <input type="file" id="fileInput" accept=".midi,.mid" />
-      <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
-      <button id="playButton">Play</button>
-      <button id="stopButton">Stop</button>
-      <button id="playMarked">Play Marked Notes</button>
-    </div>
-    <p>
-      <label for="tuningSelect">Select Tuning System:</label>
-      <select id="tuningSelect" name="tuningSelect">
-        <option value="JustIntonation">Just Intonation</option>
-        <option value="JustIntonation24">Just Intonation 24</option>
-        <option value="StepMethod">Just Intonated Step Method</option>
-        <option value="EqualTemperament">Equal Temperament</option>
-        <!-- <option value="thai">thai</option>
+  <body theme="auto">
+    <article>
+      <header>
+        <h1>tuningplayground</h1>
+      </header>
+      <p>
+        <noscript> hey this page needs javascript</noscript>
+      </p>
+      <p>
+        use your computer keyboard, a midi device, or provide a midi file for
+        example
+        <a
+          href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid"
+          download="mozart_dies_irea.mid"
+          >this one</a
+        >
+      </p>
+      <div style="display: flex">
+        <input type="file" id="fileInput" accept=".midi,.mid" />
+        <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
+        <button id="playButton">Play</button>
+        <button id="stopButton">Stop</button>
+        <button id="playMarked">Play Marked Notes</button>
+      </div>
+      <p>
+        <label for="tuningSelect">Select Tuning System:</label>
+        <select id="tuningSelect" name="tuningSelect">
+          <option value="JustIntonation">Just Intonation</option>
+          <option value="JustIntonation24">Just Intonation 24</option>
+          <option value="StepMethod">Just Intonated Step Method</option>
+          <option value="EqualTemperament">Equal Temperament</option>
+          <!-- <option value="thai">thai</option>
           <option value="Javanese">Javanese</option> -->
-        <option value="WholeTone">WholeTone</option>
-        <option value="QuarterTone">QuarterTone</option>
-        <option value="PythagoreanTuning">Pythagorean Tuning</option>
-        <option value="FiveLimit">Five Limit</option>
-        <option value="ElevenLimit">Eleven Limit</option>
-        <option value="FortythreeTone">Fortythree tone tuning</option>
-        <option value="Indian">Indian</option>
-        <option value="IndianAlt">Indian Alt</option>
-        <option value="IndianFull">Indian Full</option>
-        <!-- <option value="meantone_temperament">Meantone Temperament</option>
+          <option value="WholeTone">WholeTone</option>
+          <option value="QuarterTone">QuarterTone</option>
+          <option value="PythagoreanTuning">Pythagorean Tuning</option>
+          <option value="FiveLimit">Five Limit</option>
+          <option value="ElevenLimit">Eleven Limit</option>
+          <option value="FortythreeTone">Fortythree tone tuning</option>
+          <option value="Indian">Indian</option>
+          <option value="IndianAlt">Indian Alt</option>
+          <option value="IndianFull">Indian Full</option>
+          <!-- <option value="meantone_temperament">Meantone Temperament</option>
           <option value="well_temperament">Well Temperament</option> -->
-        <option value="equal_temperament">Equal Temperament</option>
-      </select>
-    </p>
+          <option value="equal_temperament">Equal Temperament</option>
+        </select>
+      </p>
 
-    <p>
-      <label for="soundMethod">Select Sound Method:</label>
-      <select id="soundMethod" name="soundMethod">
-        <option value="sample">Sample</option>
-        <option value="native">Native</option>
-        <!-- <option value="tone.js">tone.js</option> -->
-      </select>
-    </p>
+      <p>
+        <label for="soundMethod">Select Sound Method:</label>
+        <select id="soundMethod" name="soundMethod">
+          <option value="sample">Sample</option>
+          <option value="native">Native</option>
+          <!-- <option value="tone.js">tone.js</option> -->
+        </select>
+      </p>
 
-    <p>
-      Volume:
-      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25" />
-    </p>
-    <p>Transpose: <input id="transpose" /></p>
-    <div id="stepSizeContainer" style="display: none">
-      <label for="stepSize">Step Size (co-primes with 12):</label>
-      <select id="stepSize">
-        <option value="1">1</option>
-        <option value="5">5</option>
-        <option value="7" selected>7</option>
-        <option value="11">11</option>
-      </select>
-    </div>
-    <div id="octaveSize_container" style="display: block">
-      <label for="octaveSize">Octave Size:</label>
-      <input id="octaveSize" value="12" />
-    </div>
-    <div id="output" style="background-color: white; color: black"></div>
-    <div class="keyboard dark-mode-invert">
-      <!-- <div class="octave">
+      <p>
+        Volume:
+        <input
+          type="range"
+          id="volumeSlider"
+          min="0"
+          max="1"
+          step="0.01"
+          value="0.25"
+        />
+      </p>
+      <p>Transpose: <input id="transpose" /></p>
+      <div id="stepSizeContainer" style="display: none">
+        <label for="stepSize">Step Size (co-primes with 12):</label>
+        <select id="stepSize">
+          <option value="1">1</option>
+          <option value="5">5</option>
+          <option value="7" selected>7</option>
+          <option value="11">11</option>
+        </select>
+      </div>
+      <div id="octaveSize_container" style="display: block">
+        <label for="octaveSize">Octave Size:</label>
+        <input id="octaveSize" value="12" />
+      </div>
+      <div id="output" style="background-color: white; color: black"></div>
+      <div class="keyboard dark-mode-invert">
+        <!-- <div class="octave">
           <div class="white-key" data-note="0"></div>
           <div class="black-key" data-note="1"></div>
           <div class="white-key" data-note="2"></div>
@@ -209,8 +232,8 @@
           <div class="black-key" data-note="10"></div>
           <div class="white-key" data-note="11"></div>
         </div> -->
-      <div class="octave">
-        <!-- <div class="white-key" data-note="12"></div>
+        <div class="octave">
+          <!-- <div class="white-key" data-note="12"></div>
           <div class="black-key" data-note="13"></div>
           <div class="white-key" data-note="14"></div>
           <div class="black-key" data-note="15"></div>
@@ -219,115 +242,114 @@
           <div class="black-key" data-note="18"></div>
           <div class="white-key" data-note="19"></div>
           <div class="black-key" data-note="20"></div> -->
-        <div class="white-key" data-note="21"></div>
-        <div class="black-key" data-note="22"></div>
-        <div class="white-key" data-note="23"></div>
+          <div class="white-key" data-note="21"></div>
+          <div class="black-key" data-note="22"></div>
+          <div class="white-key" data-note="23"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="24"></div>
+          <div class="black-key" data-note="25"></div>
+          <div class="white-key" data-note="26"></div>
+          <div class="black-key" data-note="27"></div>
+          <div class="white-key" data-note="28"></div>
+          <div class="white-key" data-note="29"></div>
+          <div class="black-key" data-note="30"></div>
+          <div class="white-key" data-note="31"></div>
+          <div class="black-key" data-note="32"></div>
+          <div class="white-key" data-note="33"></div>
+          <div class="black-key" data-note="34"></div>
+          <div class="white-key" data-note="35"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="36"></div>
+          <div class="black-key" data-note="37"></div>
+          <div class="white-key" data-note="38"></div>
+          <div class="black-key" data-note="39"></div>
+          <div class="white-key" data-note="40"></div>
+          <div class="white-key" data-note="41"></div>
+          <div class="black-key" data-note="42"></div>
+          <div class="white-key" data-note="43"></div>
+          <div class="black-key" data-note="44"></div>
+          <div class="white-key" data-note="45"></div>
+          <div class="black-key" data-note="46"></div>
+          <div class="white-key" data-note="47"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="48"></div>
+          <div class="black-key" data-note="49"></div>
+          <div class="white-key" data-note="50"></div>
+          <div class="black-key" data-note="51"></div>
+          <div class="white-key" data-note="52"></div>
+          <div class="white-key" data-note="53"></div>
+          <div class="black-key" data-note="54"></div>
+          <div class="white-key" data-note="55"></div>
+          <div class="black-key" data-note="56"></div>
+          <div class="white-key" data-note="57"></div>
+          <div class="black-key" data-note="58"></div>
+          <div class="white-key" data-note="59"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="60"></div>
+          <div class="black-key" data-note="61"></div>
+          <div class="white-key" data-note="62"></div>
+          <div class="black-key" data-note="63"></div>
+          <div class="white-key" data-note="64"></div>
+          <div class="white-key" data-note="65"></div>
+          <div class="black-key" data-note="66"></div>
+          <div class="white-key" data-note="67"></div>
+          <div class="black-key" data-note="68"></div>
+          <div class="white-key" data-note="69"></div>
+          <div class="black-key" data-note="70"></div>
+          <div class="white-key" data-note="71"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="72"></div>
+          <div class="black-key" data-note="73"></div>
+          <div class="white-key" data-note="74"></div>
+          <div class="black-key" data-note="75"></div>
+          <div class="white-key" data-note="76"></div>
+          <div class="white-key" data-note="77"></div>
+          <div class="black-key" data-note="78"></div>
+          <div class="white-key" data-note="79"></div>
+          <div class="black-key" data-note="80"></div>
+          <div class="white-key" data-note="81"></div>
+          <div class="black-key" data-note="82"></div>
+          <div class="white-key" data-note="83"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="84"></div>
+          <div class="black-key" data-note="85"></div>
+          <div class="white-key" data-note="86"></div>
+          <div class="black-key" data-note="87"></div>
+          <div class="white-key" data-note="88"></div>
+          <div class="white-key" data-note="89"></div>
+          <div class="black-key" data-note="90"></div>
+          <div class="white-key" data-note="91"></div>
+          <div class="black-key" data-note="92"></div>
+          <div class="white-key" data-note="93"></div>
+          <div class="black-key" data-note="94"></div>
+          <div class="white-key" data-note="95"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="96"></div>
+          <div class="black-key" data-note="97"></div>
+          <div class="white-key" data-note="98"></div>
+          <div class="black-key" data-note="99"></div>
+          <div class="white-key" data-note="100"></div>
+          <div class="white-key" data-note="101"></div>
+          <div class="black-key" data-note="102"></div>
+          <div class="white-key" data-note="103"></div>
+          <div class="black-key" data-note="104"></div>
+          <div class="white-key" data-note="105"></div>
+          <div class="black-key" data-note="106"></div>
+          <div class="white-key" data-note="107"></div>
+        </div>
+        <div class="octave">
+          <div class="white-key" data-note="108"></div>
+        </div>
       </div>
-      <div class="octave">
-        <div class="white-key" data-note="24"></div>
-        <div class="black-key" data-note="25"></div>
-        <div class="white-key" data-note="26"></div>
-        <div class="black-key" data-note="27"></div>
-        <div class="white-key" data-note="28"></div>
-        <div class="white-key" data-note="29"></div>
-        <div class="black-key" data-note="30"></div>
-        <div class="white-key" data-note="31"></div>
-        <div class="black-key" data-note="32"></div>
-        <div class="white-key" data-note="33"></div>
-        <div class="black-key" data-note="34"></div>
-        <div class="white-key" data-note="35"></div>
-      </div>
-      <div class="octave">
-        <div class="white-key" data-note="36"></div>
-        <div class="black-key" data-note="37"></div>
-        <div class="white-key" data-note="38"></div>
-        <div class="black-key" data-note="39"></div>
-        <div class="white-key" data-note="40"></div>
-        <div class="white-key" data-note="41"></div>
-        <div class="black-key" data-note="42"></div>
-        <div class="white-key" data-note="43"></div>
-        <div class="black-key" data-note="44"></div>
-        <div class="white-key" data-note="45"></div>
-        <div class="black-key" data-note="46"></div>
-        <div class="white-key" data-note="47"></div>
-      </div>
-      <div class="octave">
-        <div class="white-key" data-note="48"></div>
-        <div class="black-key" data-note="49"></div>
-        <div class="white-key" data-note="50"></div>
-        <div class="black-key" data-note="51"></div>
-        <div class="white-key" data-note="52"></div>
-        <div class="white-key" data-note="53"></div>
-        <div class="black-key" data-note="54"></div>
-        <div class="white-key" data-note="55"></div>
-        <div class="black-key" data-note="56"></div>
-        <div class="white-key" data-note="57"></div>
-        <div class="black-key" data-note="58"></div>
-        <div class="white-key" data-note="59"></div>
-      </div>
-      <div class="octave">
-        <div class="white-key" data-note="60"></div>
-        <div class="black-key" data-note="61"></div>
-        <div class="white-key" data-note="62"></div>
-        <div class="black-key" data-note="63"></div>
-        <div class="white-key" data-note="64"></div>
-        <div class="white-key" data-note="65"></div>
-        <div class="black-key" data-note="66"></div>
-        <div class="white-key" data-note="67"></div>
-        <div class="black-key" data-note="68"></div>
-        <div class="white-key" data-note="69"></div>
-        <div class="black-key" data-note="70"></div>
-        <div class="white-key" data-note="71"></div>
-      </div>
-      <div class="octave">
-        <div class="white-key" data-note="72"></div>
-        <div class="black-key" data-note="73"></div>
-        <div class="white-key" data-note="74"></div>
-        <div class="black-key" data-note="75"></div>
-        <div class="white-key" data-note="76"></div>
-        <div class="white-key" data-note="77"></div>
-        <div class="black-key" data-note="78"></div>
-        <div class="white-key" data-note="79"></div>
-        <div class="black-key" data-note="80"></div>
-        <div class="white-key" data-note="81"></div>
-        <div class="black-key" data-note="82"></div>
-        <div class="white-key" data-note="83"></div>
-      </div>
-      <div class="octave">
-        <div class="white-key" data-note="84"></div>
-        <div class="black-key" data-note="85"></div>
-        <div class="white-key" data-note="86"></div>
-        <div class="black-key" data-note="87"></div>
-        <div class="white-key" data-note="88"></div>
-        <div class="white-key" data-note="89"></div>
-        <div class="black-key" data-note="90"></div>
-        <div class="white-key" data-note="91"></div>
-        <div class="black-key" data-note="92"></div>
-        <div class="white-key" data-note="93"></div>
-        <div class="black-key" data-note="94"></div>
-        <div class="white-key" data-note="95"></div>
-      </div>
-      <div class="octave">
-        <div class="white-key" data-note="96"></div>
-        <div class="black-key" data-note="97"></div>
-        <div class="white-key" data-note="98"></div>
-        <div class="black-key" data-note="99"></div>
-        <div class="white-key" data-note="100"></div>
-        <div class="white-key" data-note="101"></div>
-        <div class="black-key" data-note="102"></div>
-        <div class="white-key" data-note="103"></div>
-        <div class="black-key" data-note="104"></div>
-        <div class="white-key" data-note="105"></div>
-        <div class="black-key" data-note="106"></div>
-        <div class="white-key" data-note="107"></div>
-      </div>
-      <div class="octave">
-        <div class="white-key" data-note="108"></div>
-      </div>
-    </div>
-    <div id="logContainer"></div>
-  </article>
-  <script src="./bootstrap.js"></script>
-</body>
-
+      <div id="logContainer"></div>
+    </article>
+    <script src="./bootstrap.js"></script>
+  </body>
 </html>
