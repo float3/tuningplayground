@@ -4,7 +4,6 @@ import { requestMIDI } from "./MIDI";
 import { keydown, keyup, visibilityChange, onload } from "./events";
 import {
   playingTonesChanged,
-  volumeSlider,
   keyActive,
   DOMContentLoaded,
   addEvents,
@@ -12,6 +11,7 @@ import {
   play,
   soundMethod,
   tranposeValue,
+  volumeValue,
   // linkInputChange,
 } from "./UI";
 
@@ -57,8 +57,6 @@ export function noteOn(
   velocity?: number,
   cancel?: boolean,
 ): void {
-  console.log("velocity: ", velocity);
-
   _noteOn(tone_index, velocity, cancel);
   playingTonesChanged();
 }
@@ -68,9 +66,13 @@ export function _noteOn(
   velocity?: number,
   cancel?: boolean,
 ) {
+  console.log("velocity: ", velocity);
   tone_index += tranposeValue;
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
-  const volume = Math.pow(parseFloat(volumeSlider.value), 2);
+  const volume = Math.pow(volumeValue, 2);
+  // if (velocity) {
+  //   volume *= velocity / 127;
+  // }
   switch (soundMethod.value) {
     case "native":
       playFrequencyNative(tone, volume).catch(console.error);

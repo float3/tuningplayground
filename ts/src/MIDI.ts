@@ -46,7 +46,6 @@ export function stopMIDIFile(): void {
 }
 
 export function playMIDIFile(midiFile: ArrayBuffer): void {
-
   const midi = new Midi(midiFile);
 
   // const tempo = midi.header.tempos[0].bpm;
@@ -62,6 +61,7 @@ export function playMIDIFile(midiFile: ArrayBuffer): void {
       const noteOffTime =
         (note.time + note.duration) * midiMultiplier - startTime;
       const velocity = note.velocity;
+      if (velocity === 1) note.velocity = 127; // fix for some midi files
       const midiNote = note.midi;
 
       timeoutIds.push(setTimeout(() => noteOn(midiNote, velocity), noteOnTime));
