@@ -154,7 +154,7 @@ export function handleTuningSelectChange(): void {
 
 function adjustOutputSize(): void {
   output.style.width = "300px";
-  output.style.height = "150px";
+  output.style.height = "200px";
 }
 
 export function playingTonesChanged(): void {
