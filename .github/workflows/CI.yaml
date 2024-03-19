@@ -61,7 +61,6 @@ jobs:
           git fetch
           git checkout master
           ./build_release.sh
-          rm ./www/styles.css
           rm ./www/chords.json | true
           rm ./www/163.bootstrap.js.LICENSE.txt | true
           mv ./www ./www-master
@@ -69,7 +68,6 @@ jobs:
           git checkout dev
           git pull
           ./build_dev.sh
-          rm ./www/styles.css
           rm ./www/chords.json | true
           mv ./www ./www-dev
           mv ./www-master ./www/
