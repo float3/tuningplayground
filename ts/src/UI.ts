@@ -9,7 +9,6 @@ import {
   stopAllTones,
 } from ".";
 import { playMIDIFile, stopMIDIFile } from "./MIDI";
-import { unescape } from "querystring";
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;
@@ -49,6 +48,7 @@ stopButton.onclick = stop;
 fileInput.onchange = fileInputChange;
 playMarkedButton.onclick = playMarkedKeys;
 transpose.onchange = transposeChange;
+volumeSlider.onchange = volumeChange;
 // linkInput.onchange = linkInputChange;
 
 export let tranposeValue = 0;
@@ -56,12 +56,16 @@ function transposeChange(): void {
   tranposeValue = parseInt(transpose.value);
 }
 
+export let volumeValue = 0.25;
+function volumeChange(): void {
+  volumeValue = parseFloat(volumeSlider.value);
+}
+
 let midiFile: ArrayBuffer;
 let midiFilePromise: Promise<ArrayBuffer> | null = null;
 
 function initOrGetMidiFile(): Promise<ArrayBuffer> {
   if (!midiFilePromise) {
-    console.log("fetching sample.mid");
     midiFilePromise = fetch("sample.mid")
       .then((response) => response.arrayBuffer())
       .then((buffer) => {
@@ -214,7 +218,7 @@ export function keyMarked(tone_index: number) {
 }
 
 export function addEvents(key: Element) {
-  const note = parseInt(key.getAttribute("data-note")!) - tranposeValue;
+  const note = parseInt(key.getAttribute("data-note")!);
 
   const addEvent = (eventName: string, callback: () => void) => {
     key.addEventListener(eventName, callback);
