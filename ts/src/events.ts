@@ -21,8 +21,7 @@ export function onload(): void {
       // noteOn(index);
       keyMarked(index);
     });
-  }
-  else {
+  } else {
     playMarkedButton.style.display = "none";
   }
 }
