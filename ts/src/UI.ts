@@ -49,16 +49,41 @@ fileInput.onchange = fileInputChange;
 // linkInput.onchange = linkInputChange;
 
 let midiFile: ArrayBuffer;
+let midiFilePromise: Promise<ArrayBuffer> | null = null;
 
-function fileInputChange(event: Event): void {
-  const files = (event.target as HTMLInputElement).files;
-  if (files && files.length > 0) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      midiFile = e.target!.result as ArrayBuffer;
-    };
-    reader.readAsArrayBuffer(files[0]);
+function initOrGetMidiFile(): Promise<ArrayBuffer> {
+  if (!midiFilePromise) {
+    console.log("fetching sample.mid");
+    midiFilePromise = fetch("sample.mid")
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        midiFile = buffer;
+        return midiFile;
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error;
+      });
   }
+  return midiFilePromise;
+}
+
+function fileInputChange(event: Event): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const files = (event.target as HTMLInputElement).files;
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        midiFile = e.target!.result as ArrayBuffer;
+        midiFilePromise = Promise.resolve(midiFile);
+        resolve();
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(files[0]);
+    } else {
+      reject(new Error("No file selected"));
+    }
+  });
 }
 
 // export function linkInputChange(): void {
@@ -78,7 +103,7 @@ function stop(): void {
 
 export function play(): void {
   console.log("play");
-  playMIDIFile(midiFile);
+  initOrGetMidiFile().then(playMIDIFile).catch(console.error);
 }
 
 export function DOMContentLoaded(): void {
@@ -145,7 +170,7 @@ export function logToDiv(message: string, notes: number[]): void {
   const shareButton = document.createElement("button");
   shareButton.textContent = "Share";
   shareButton.onclick = function () {
-    const url = `${window.location.href}#${encodeURIComponent(notes.join("&"))}`;
+    const url = `${window.location.origin}#${notes.join(",")}`;
     navigator.clipboard.writeText(url).catch(console.error);
   };
 

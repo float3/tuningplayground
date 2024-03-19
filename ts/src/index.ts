@@ -38,7 +38,6 @@ wasm
   .catch(console.error);
 
 export const playingTones: Record<number, Tone> = [];
-let audioContext: AudioContext;
 // let recording: boolean;
 
 export function stopAllTones(): void {
@@ -61,10 +60,10 @@ export function noteOn(tone_index: number, velocity?: number): void {
   const volume = Math.pow(parseFloat(volumeSlider.value), 2);
   switch (soundMethod.value) {
     case "native":
-      playFrequencyNative(tone, volume);
+      playFrequencyNative(tone, volume).catch(console.error);
       break;
     case "sample":
-      playFrequencySample(tone, volume);
+      playFrequencySample(tone, volume).catch(console.error);
       break;
   }
   playingTonesChanged();
@@ -87,40 +86,62 @@ export function noteOff(tone_index: number): void {
   keyActive(tone_index, false);
 }
 
-function playFrequencySample(tone: Tone, volume: number): void {
-  console.log("playFrequencySample");
-  audioContext = new window.AudioContext();
-  fetch("a1.wav")
-    .then((response) =>
-      response
-        .arrayBuffer()
-        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer)),
-    )
-    .then((audioBuffer) => {
-      const source = audioContext.createBufferSource();
-      source.buffer = audioBuffer;
-      const gainNode = audioContext.createGain();
-      gainNode.gain.value = volume;
-      source.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      source.playbackRate.value = tone.freq / 220;
-      source.start();
-      tone.node = source;
-      playingTones[tone.index] = tone;
-      playingTonesChanged();
-    })
-    .catch(console.error);
+let audioContext: AudioContext | null = null;
+function initOrGetAudioContext(): Promise<AudioContext> {
+  return new Promise((resolve, reject) => {
+    try {
+      if (!audioContext) {
+        audioContext = new window.AudioContext();
+      }
+      resolve(audioContext);
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
 
-function playFrequencyNative(tone: Tone, volume: number): void {
-  console.log("playFrequencyNative");
-  audioContext = new window.AudioContext();
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
+let audioBuffer: AudioBuffer | null = null;
+function initOrGetAudioBuffer(): Promise<AudioBuffer> {
+  if (!audioBuffer) {
+    return fetch("a1.wav")
+      .then((response) => response.arrayBuffer())
+      .then((arrayBuffer) =>
+        initOrGetAudioContext().then((context) =>
+          context.decodeAudioData(arrayBuffer),
+        ),
+      )
+      .then((newAudioBuffer) => {
+        audioBuffer = newAudioBuffer;
+        return audioBuffer;
+      });
+  } else {
+    return Promise.resolve(audioBuffer);
+  }
+}
+
+async function playFrequencySample(tone: Tone, volume: number): Promise<void> {
+  const localAudioContext = await initOrGetAudioContext();
+  const source = localAudioContext.createBufferSource();
+  source.buffer = await initOrGetAudioBuffer();
+  const gainNode = localAudioContext.createGain();
   gainNode.gain.value = volume;
-  gainNode.connect(audioContext.destination);
+  source.connect(gainNode);
+  gainNode.connect(localAudioContext.destination);
+  source.playbackRate.value = tone.freq / 220;
+  source.start();
+  tone.node = source;
+  playingTones[tone.index] = tone;
+  playingTonesChanged();
+}
+
+async function playFrequencyNative(tone: Tone, volume: number): Promise<void> {
+  const localAudioContext = await initOrGetAudioContext();
+  const oscillator = localAudioContext.createOscillator();
+  const gainNode = localAudioContext.createGain();
+  gainNode.gain.value = volume;
+  gainNode.connect(localAudioContext.destination);
   oscillator.type = "square"; // TODO: make this configurable
-  oscillator.frequency.setValueAtTime(tone.freq, audioContext.currentTime);
+  oscillator.frequency.setValueAtTime(tone.freq, localAudioContext.currentTime);
   oscillator.connect(gainNode);
   oscillator.start();
   tone.node = oscillator;

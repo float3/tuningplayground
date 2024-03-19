@@ -22,6 +22,10 @@ module.exports = {
         type: "asset/resource",
       },
       {
+        test: /\.midi?$/,
+        type: "asset/resource",
+      },
+      {
         test: /.s?css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
@@ -40,6 +44,7 @@ module.exports = {
         "./src/styles.css",
         "./src/chords.json",
         "./src/a1.wav",
+        "./src/sample.mid",
       ],
       options: {
         concurrency: 100,

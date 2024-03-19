@@ -17,7 +17,7 @@ export function onload(): void {
     const notes = hash.split(",");
     notes.forEach((note) => {
       const index = parseInt(note);
-      noteOn(index);
+      // noteOn(index);
       keyMarked(index);
     });
   }
