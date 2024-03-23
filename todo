@@ -25,3 +25,7 @@
 // TODO: link to source code and to dev/master version of site
 // TODO: cache volume
 // TODO: generate embeds
+
+
+// TODO: LUT binary format, no hashmap just array
+// TODO: remove std
