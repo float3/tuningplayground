@@ -7,10 +7,7 @@
     "serve_release": "webpack-dev-server --mode production",
     "serve_dev": "webpack-dev-server --mode development"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/float3/tuningplayground.git"
-  },
+  "repository": "git+https://github.com/float3/tuningplayground.git",
   "keywords": [
     "webassembly",
     "wasm",
@@ -28,7 +25,8 @@
     "@tonejs/midi": "^2.0.28",
     "@types/webmidi": "^2.0.10",
     "abcjs": "^6.3.0",
-    "wasm": "file:../tuningplayground/pkg"
+    "wasm": "file:../tuningplayground/pkg",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",

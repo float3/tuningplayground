@@ -21,7 +21,7 @@ python -m test
 python -m generate_chords
 
 cd ../ts
-npm update
-npm audit fix
-npx prettier . --write
-npx eslint . --fix --ext .ts
+yarn upgrade
+yarn npm audit fix
+yarn prettier . --write
+yarn eslint . --fix --ext .ts
