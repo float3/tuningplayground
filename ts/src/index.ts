@@ -54,10 +54,10 @@ export function stopAllTones(): void {
 
 /**
  * Calls playingTonesChanged
- * 
- * @param tone_index 
- * @param velocity 
- * @param cancel 
+ *
+ * @param tone_index
+ * @param velocity
+ * @param cancel
  */
 export function noteOn(
   tone_index: number,
@@ -70,10 +70,10 @@ export function noteOn(
 
 /**
  * Doesn't call playingTonesChanged
- * 
- * @param tone_index 
- * @param velocity 
- * @param cancel 
+ *
+ * @param tone_index
+ * @param velocity
+ * @param cancel
  */
 export function _noteOn(
   tone_index: number,
