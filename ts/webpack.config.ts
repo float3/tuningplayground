@@ -3,12 +3,17 @@ import TerserPlugin from "terser-webpack-plugin";
 import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
 import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin";
 import path from "path";
+import exp from "constants";
 
 module.exports = {
   module: {
     rules: [
       {
         test: /\.json$/i,
+        type: "asset/resource",
+      },
+      {
+        test: /\.txt$/i,
         type: "asset/resource",
       },
       {
@@ -36,6 +41,7 @@ module.exports = {
       patterns: [
         "./src/index.html",
         "./src/chords.json",
+        "./src/chords.txt",
         "./src/a1.wav",
         "./src/sample.mid",
       ],
@@ -65,5 +71,8 @@ module.exports = {
       new JsonMinimizerPlugin(),
       new HTMLMinimizerPlugin(),
     ],
+  },
+  experiments: {
+    syncWebAssembly: true,
   },
 };

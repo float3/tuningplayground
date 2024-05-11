@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: 3.11
 
-      - name: rust
+      - name: dependencies
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
           sh rustup.sh --default-toolchain nightly --profile minimal -y
@@ -60,14 +60,14 @@ jobs:
           echo "building master"
           git fetch
           git checkout master
-          ./build_release.sh
+          ./build.sh prod
           rm ./www/chords.json | true
           rm ./www/163.bootstrap.js.LICENSE.txt | true
           mv ./www ./www-master
           echo "building dev"
           git checkout dev
           git pull
-          ./build_dev.sh
+          ./build.sh dev
           rm ./www/chords.json | true
           mv ./www ./www-dev
           mv ./www-master ./www/

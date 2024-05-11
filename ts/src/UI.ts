@@ -9,6 +9,7 @@ import {
   stopAllTones,
 } from ".";
 import { playMIDIFile, stopMIDIFile } from "./MIDI";
+import { Tone } from "./Tone";
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement;
 const stepSize = document.getElementById("stepSize") as HTMLInputElement;

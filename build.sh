@@ -3,6 +3,7 @@
 if [ "$1" = "dev" ]; then
   MODE="--dev"
   WEBPACK_MODE="development"
+  ARGS="--features console_error_panic_hook"
 elif [ "$1" = "prod" ]; then
   MODE="--release"
   WEBPACK_MODE="production"
@@ -13,8 +14,8 @@ fi
 
 rm -rf www
 cd ./tuningplayground
-wasm-pack build --target web $MODE --features console_error_panic_hook
+wasm-pack build --target web $MODE $ARGS
 cd ../ts
-yarn install
-yarn tsc
-yarn webpack --mode $WEBPACK_MODE
+npm install
+npx tsc
+npx webpack --mode $WEBPACK_MODE

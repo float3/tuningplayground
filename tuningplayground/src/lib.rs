@@ -1,5 +1,4 @@
 use keymapping::US_KEYMAP;
-use std::collections::HashMap;
 
 use std::sync::Mutex;
 use std::sync::OnceLock;
@@ -62,9 +61,6 @@ extern "C" {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tone(index: usize) -> JsValue {
-    #[cfg(debug_assertions)]
-    log("get_tone");
-
     let tun_sys: TuningSystem = *TUNING_SYSTEM.lock().expect("couldn't lock");
 
     let tone: Tone = Tone::new(tun_sys, index);
@@ -81,25 +77,26 @@ pub fn get_tone(index: usize) -> JsValue {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tuning_size() -> TypeAlias {
-    #[cfg(debug_assertions)]
-    log("get_tuning_size");
     *OCTAVE_SIZE.lock().expect("couldn't lock") as TypeAlias
 }
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn from_keymap(key: &str) -> i32 {
-    #[cfg(debug_assertions)]
-    log("from_keymap");
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
-type LUTType = HashMap<i32, String>;
+type LUTType = Vec<String>;
 
 static CHORD_LUT: OnceLock<LUTType> = OnceLock::new();
 
 fn static_data() -> &'static LUTType {
-    CHORD_LUT.get_or_init(|| serde_json::from_str(include_str!("../chords.json")).unwrap())
+    CHORD_LUT.get_or_init(|| {
+        include_str!("../../ts/src/chords.txt")
+            .split(";")
+            .map(|s| s.to_string())
+            .collect::<LUTType>()
+    })
 }
 
 pub fn convert_notes_core(input: Vec<String>) -> String {
@@ -109,12 +106,14 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
     let mut bass: String = "".to_string();
     let first: bool = true;
 
-    input.into_iter().for_each(|note_str| {
+    //if input contains "todo" return "todo"
+
+    for note_str in input.into_iter() {
         let mut chars = note_str.chars().peekable();
         let name = chars.next().expect("no name");
 
         if !('A'..='G').contains(&name) {
-            panic!("Invalid note name");
+            return note_str;
         }
 
         let accidental = match chars.peek() {
@@ -184,12 +183,9 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
             name,
             octave_str
         ));
-    });
+    }
 
-    let chord: String = match static_data().get(&bitmask) {
-        Some(chord) => chord.clone(),
-        None => "".to_string(),
-    };
+    let chord: String = static_data()[bitmask].clone();
 
     CHORD_NAME.lock().expect("couldn't lock").clone_from(&chord);
 
@@ -202,7 +198,6 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
 #[wasm_bindgen]
 pub fn get_chord_name() -> String {
     #[cfg(debug_assertions)]
-    log("get_chord_name");
     CHORD_NAME.lock().expect("couldn't lock").clone()
 }
 
@@ -210,7 +205,6 @@ pub fn get_chord_name() -> String {
 #[wasm_bindgen]
 pub fn convert_notes(notes: Vec<String>) -> String {
     #[cfg(debug_assertions)]
-    log("convert_notes");
     convert_notes_core(notes)
 }
 
@@ -218,7 +212,6 @@ pub fn convert_notes(notes: Vec<String>) -> String {
 #[wasm_bindgen]
 pub fn set_tuning_system(tuning_system: &str, octave_size: TypeAlias, step_size: TypeAlias) {
     #[cfg(debug_assertions)]
-    log("set_tuning_system");
     let tuning_system: Option<TuningSystem> = match tuning_system.to_lowercase().as_str() {
         "stepmethod" => Some(TuningSystem::StepMethod {
             octave_size,

@@ -3,7 +3,6 @@ if __name__ == "__main__":
     import sys
 
     sys.path.append("./music21")
-    import music21
     from music21 import chord
 
     chord_definitions = [

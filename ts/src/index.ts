@@ -52,6 +52,13 @@ export function stopAllTones(): void {
   playingTonesChanged();
 }
 
+/**
+ * Calls playingTonesChanged
+ * 
+ * @param tone_index 
+ * @param velocity 
+ * @param cancel 
+ */
 export function noteOn(
   tone_index: number,
   velocity?: number,
@@ -61,18 +68,25 @@ export function noteOn(
   playingTonesChanged();
 }
 
+/**
+ * Doesn't call playingTonesChanged
+ * 
+ * @param tone_index 
+ * @param velocity 
+ * @param cancel 
+ */
 export function _noteOn(
   tone_index: number,
   velocity?: number,
   cancel?: boolean,
 ) {
-  console.log("velocity: ", velocity);
   tone_index += tranposeValue;
   const tone: Tone = wasm.get_tone(tone_index) as Tone;
   const volume = Math.pow(volumeValue, 2);
   // if (velocity) {
   //   volume *= velocity / 127;
   // }
+  console.log("frequency: ", tone.freq);
   switch (soundMethod.value) {
     case "native":
       playFrequencyNative(tone, volume).catch(console.error);
