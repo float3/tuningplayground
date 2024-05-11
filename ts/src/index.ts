@@ -86,7 +86,6 @@ export function _noteOn(
   // if (velocity) {
   //   volume *= velocity / 127;
   // }
-  console.log("frequency: ", tone.freq);
   switch (soundMethod.value) {
     case "native":
       playFrequencyNative(tone, volume).catch(console.error);
