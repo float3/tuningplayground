@@ -12,4 +12,4 @@ version = "1.0.0"
 default = []
 
 [dependencies]
-lazy_static = "1.4.0"
+lazy_static = "1.5.0"

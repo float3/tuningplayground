@@ -17,9 +17,9 @@ mini-alloc = ["dep:mini-alloc"]
 wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
-console_error_panic_hook = { version = "0.1.6", optional = true }
+console_error_panic_hook = { version = "0.1.7", optional = true }
 mini-alloc = { version = "0.4.2", optional = true }
-wasm-bindgen = { version = "0.2.91", optional = true }
+wasm-bindgen = { version = "0.2.92", optional = true }
 tuning_systems = { path = "../tuning_systems" }
 keymapping = { path = "../keymapping" }
 
