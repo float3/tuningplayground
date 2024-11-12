@@ -26,4 +26,4 @@ cd ../ts
 npm update
 npm audit fix --force
 npx prettier . --write
-npx eslint . --fix --ext .ts
+npx eslint . --fix
