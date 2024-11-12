@@ -1,12 +1,56 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <title>tuningplayground</title>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains Mono&amp;family=DM Serif Display:wght@400;700&amp;family=Bricolage Grotesque:ital,wght@0,350;0,600;1,400;1,600&amp;display=swap"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="tuningplayground" />
+    <meta property="og:description" content="tuningplayground" />
+    <meta property="og:image" content="https://hilll.dev/static/og-image.png" />
+    <meta property="og:width" content="1200" />
+    <meta property="og:height" content="675" />
+    <link rel="icon" href="/static/icon.png" />
+    <meta name="description" content="tuningplayground" />
+    <meta name="generator" content="Quartz" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="/static/font/font-style.css"
+      rel="stylesheet"
+      type="text/css"
+      spa-preserve
+    />
+    <link href="/index.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script
+      src="/prescript.js"
+      type="application/javascript"
+      spa-preserve
+    ></script>
+    <script type="application/javascript" spa-preserve>
+      const fetchData = fetch("/static/contentIndex.json").then((data) =>
+        data.json(),
+      );
+    </script>
+
     <meta content="IE=edge" http-equiv="X-UA-Compatible" />
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-
-    <title>tuningplayground</title>
 
     <meta name="title" content="tuningplayground" />
     <meta
@@ -45,9 +89,9 @@
       rel="alternate"
       type="application/atom+xml"
       title="RSS"
-      href="https://hilll.dev/rss.xml"
+      href="https://hilll.dev/index.xml"
     />
-    <link rel="stylesheet" href="https://hilll.dev/styles.css" />
+    <link href="/index.css" rel="stylesheet" type="text/css" />
   </head>
   <style>
     .container {
@@ -133,12 +177,51 @@
       display: none;
     }
   </style>
-
-  <body theme="auto">
-    <article>
-      <header>
-        <h1>tuningplayground</h1>
-      </header>
+  <body data-slug="tuningplayground" theme="auto">
+    <div id="dappled-light">
+      <div id="glow"></div>
+      <div id="glow-bounce"></div>
+      <div class="perspective">
+        <div id="leaves"></div>
+        <div id="blinds">
+          <div class="shutters">
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+            <div class="shutter"></div>
+          </div>
+          <div class="vertical">
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
+      <div id="progressive-blur">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <div id="quartz-root" class="page">
+      tuningplayground
       <p>
         <noscript> hey this page needs javascript</noscript>
       </p>
@@ -352,7 +435,7 @@
         </div>
       </div>
       <div id="logContainer"></div>
-    </article>
+    </div>
     <script src="./bootstrap.js"></script>
   </body>
 </html>
