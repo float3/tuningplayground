@@ -12,12 +12,12 @@ python3 -m test
 python3 -m generate_chords
 
 cd ../
-cargo update --workspace --verbose
-cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace --verbose -- -D warnings
-cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace --verbose
-cargo fmt --all --verbose
-cargo check --all-targets --all-features --workspace --verbose
-cargo test --all-targets --all-features --workspace --verbose
+cargo update --workspace
+cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace -- -D warnings
+cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace
+cargo fmt --all
+cargo check --all-targets --all-features --workspace
+cargo test --all-targets --all-features --workspace
 
 cd ./tuningplayground
 wasm-pack build --target web --dev
