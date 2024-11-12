@@ -363,9 +363,8 @@ impl Pitch {
 
         let octave_stored = self.octave;
         let mut p = self.transpose(&Interval::new_from_name(interval_string).unwrap());
-        match octave_stored {
-            None => p.octave = None,
-            Some(_) => (),
+        if octave_stored.is_none() {
+            p.octave = None
         }
         Some(p)
     }
