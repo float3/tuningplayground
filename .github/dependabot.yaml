@@ -9,6 +9,15 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      cargo-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

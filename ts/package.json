@@ -24,28 +24,28 @@
   "dependencies": {
     "@tonejs/midi": "^2.0.28",
     "@types/webmidi": "^2.1.0",
-    "abcjs": "^6.4.4",
+    "abcjs": "^6.7.0",
     "wasm": "file:../tuningplayground/pkg"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.14.0",
-    "@types/node": "^22.9.0",
-    "@typescript-eslint/eslint-plugin": "^8.14.0",
-    "@typescript-eslint/parser": "^8.14.0",
-    "copy-webpack-plugin": "^12.0.2",
-    "eslint": "^9.14.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "globals": "^15.12.0",
-    "html-minimizer-webpack-plugin": "^5.0.0",
-    "json-minimizer-webpack-plugin": "^5.0.0",
-    "prettier": "^3.3.3",
+    "@eslint/eslintrc": "^3.3.7",
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^22.20.1",
+    "@typescript-eslint/eslint-plugin": "^8.69.0",
+    "@typescript-eslint/parser": "^8.69.0",
+    "copy-webpack-plugin": "^14.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^15.15.0",
+    "html-minimizer-webpack-plugin": "^6.0.0",
+    "json-minimizer-webpack-plugin": "^5.0.1",
+    "prettier": "^3.9.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3",
-    "webpack": "^5.96.1",
+    "typescript": "^5.9.3",
+    "webpack": "^5.110.3",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "webpack-dev-server": "^6.0.0"
   },
-  "packageManager": "pnpm@8.15.6+sha1.8105075ad0aa306138be128c017e9c41e28ecffa"
+  "packageManager": "pnpm@8.15.9"
 }

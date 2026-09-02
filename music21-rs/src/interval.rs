@@ -71,7 +71,7 @@ impl Interval {
         })
     }
 
-    pub fn new_from_name(name: &str) -> Option<Interval> {
+    pub fn new_from_name(_name: &str) -> Option<Interval> {
         todo!()
     }
 
@@ -120,7 +120,7 @@ impl Interval {
 }
 
 impl GenericInterval {
-    pub(crate) fn new(simple_directed: i32) -> GenericInterval {
+    pub(crate) fn new(_simple_directed: i32) -> GenericInterval {
         todo!("GenericInterval::new")
     }
 }
@@ -134,8 +134,8 @@ fn intervals_to_diatonic(g_int: &GenericInterval, c_int: &ChromaticInterval) -> 
 }
 
 fn get_specifier_from_generic_chromatic(
-    g_int: &GenericInterval,
-    c_int: &ChromaticInterval,
+    _g_int: &GenericInterval,
+    _c_int: &ChromaticInterval,
 ) -> String {
     todo!()
 }

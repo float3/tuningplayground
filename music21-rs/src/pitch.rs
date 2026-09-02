@@ -94,7 +94,7 @@ struct Accidental {
 }
 
 impl Accidental {
-    fn new(arg: &str) -> Accidental {
+    fn new(_arg: &str) -> Accidental {
         todo!()
     }
 }
@@ -240,8 +240,8 @@ impl Pitch {
         }
     }
 
-    fn ps_setter(&mut self, new_val: f64) {}
-    pub(crate) fn transpose(&self, arg: &Interval) -> Pitch {
+    fn ps_setter(&mut self, _new_val: f64) {}
+    pub(crate) fn transpose(&self, _arg: &Interval) -> Pitch {
         todo!()
     }
 
@@ -252,7 +252,7 @@ impl Pitch {
         new_note
     }
 
-    fn transpose_pitch(&self, arg: &Pitch) -> Pitch {
+    fn transpose_pitch(&self, _arg: &Pitch) -> Pitch {
         todo!()
     }
 
@@ -378,11 +378,11 @@ impl Pitch {
     }
 }
 
-fn convert_ps_to_step(value_out: f64) -> (StepName, Option<Accidental>) {
+fn convert_ps_to_step(_value_out: f64) -> (StepName, Option<Accidental>) {
     todo!()
 }
 
-fn convert_pitch_class_to_number(new_val: i32) -> f64 {
+fn convert_pitch_class_to_number(_new_val: i32) -> f64 {
     todo!()
 }
 
@@ -429,7 +429,7 @@ fn dissonance_score(
                 p2.octave = None;
                 match Interval::new(p1, p2) {
                     Some(interval) => intervals.push(interval),
-                    None => return std::f64::INFINITY,
+                    None => return f64::INFINITY,
                 }
             }
         }
@@ -438,7 +438,7 @@ fn dissonance_score(
             for interval in intervals.iter() {
                 match interval.interval_to_pythagorean_ratio() {
                     Some(ratio) => score_ratio += (ratio.denominator as f64).ln() * 0.03792663444,
-                    None => return std::f64::INFINITY,
+                    None => return f64::INFINITY,
                 };
             }
             score_ratio /= pitches.len() as f64;
