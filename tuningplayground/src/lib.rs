@@ -198,21 +198,18 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_chord_name() -> String {
-    #[cfg(debug_assertions)]
     CHORD_NAME.lock().expect("couldn't lock").clone()
 }
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn convert_notes(notes: Vec<String>) -> String {
-    #[cfg(debug_assertions)]
     convert_notes_core(notes)
 }
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn set_tuning_system(tuning_system: &str, octave_size: TypeAlias, step_size: TypeAlias) {
-    #[cfg(debug_assertions)]
     let tuning_system: Option<TuningSystem> = match tuning_system.to_lowercase().as_str() {
         "stepmethod" => Some(TuningSystem::StepMethod {
             octave_size,
