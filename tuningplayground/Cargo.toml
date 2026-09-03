@@ -25,3 +25,12 @@ keymapping = { path = "../keymapping" }
 
 # [dev-dependencies]
 # wasm-bindgen-test = { version = "0.3.41" }
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-Os', '--enable-bulk-memory', '--enable-nontrapping-float-to-int']
+
+[package.metadata.wasm-pack.profile.release.wasm-bindgen]
+debug-js-glue = false
+demangle-name-section = false
+dwarf-debug-info = false
+omit-default-module-path = false
